@@ -1,0 +1,19 @@
+public class EquipoInventarioModel{
+
+    public EqiupoInventarioModel(){}
+
+    public EquipoInventarioModel(String numero_inventario, String marca, String descripcion, String modelo, String numero_activo, 
+        String no_Serial, String tipo_Equipo, String estado_operativo, String ubicación, String url_imagen){
+
+        this.numeroInventario = numero_inventario;
+        this.marca = marca;
+        this.descripcion = descripcion;
+        this.modelo = modelo;
+        this.numeroActivo = numero_activo;
+        this.noSerial = no_Serial;
+        this.tipoEquipo = tipo_Equipo;
+        this.estadoOperativo = estado_operativo;
+        this.ubicación = ubicación;
+        this.urlImagen = url_imagen;
+    }
+}
