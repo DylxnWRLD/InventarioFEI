@@ -36,15 +36,15 @@ body {
 
 .logo-uv .text-uv {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 900;
   color: #1a5276;
   line-height: 1.2;
 }
 
 .logo-uv .text-uv span {
   display: block;
-  font-weight: 400;
-  color: #2e86c1;
+  font-weight: 800;
+  color: #00ab4f;
 }
 
 .search-bar {
@@ -70,7 +70,7 @@ body {
   top: 50%;
   transform: translateY(-50%);
   color: #555;
-  font-size: 18px;
+  font-size: 22px;
 }
 
 .logo-sistema {
@@ -80,20 +80,20 @@ body {
 }
 
 .logo-sistema img {
-  height: 45px;
+  height: 50px;
 }
 
 .logo-sistema .text-sistema {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 900;
   color: #1a5276;
   line-height: 1.2;
 }
 
 .logo-sistema .text-sistema span {
   display: block;
-  font-weight: 400;
-  color: #2e86c1;
+  font-weight: 800;
+  color: #00ab4f;
 }
 
 /* --- Barra de Acciones --- */
