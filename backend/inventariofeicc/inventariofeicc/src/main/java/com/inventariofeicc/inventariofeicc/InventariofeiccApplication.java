@@ -10,3 +10,4 @@ public class InventariofeiccApplication {
 		SpringApplication.run(InventariofeiccApplication.class, args);
 	}
 }
+
