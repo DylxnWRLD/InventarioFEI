@@ -16,16 +16,18 @@ target/
 .env
 .env.*
 *.env
-application.properties
-application.yml
+application-local.properties
+application-local.yml
 
+### --- IDEs & Editores de Código ---
+# VS Code
 .vscode/
 *.code-workspace
 .history/
 .DS_Store
 ._*
 
-### --- logs de ejecución ---
+### --- Logs de Ejecución ---
 *.log
 logs/
 run/
