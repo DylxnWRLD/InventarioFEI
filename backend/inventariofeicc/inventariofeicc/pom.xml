@@ -11,7 +11,7 @@
 	<groupId>com.inventariofeicc</groupId>
 	<artifactId>inventariofeicc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
+	<name>InventarioFEI</name>
 	<description/>
 	<url/>
 	<licenses>
@@ -27,7 +27,8 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>26</java.version>
+		<java.version>25</java.version>
+	 <maven.compiler.release>25</maven.compiler.release>
 	</properties>
 	<dependencies>
 		<dependency>
