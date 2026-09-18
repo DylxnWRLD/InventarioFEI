@@ -12,18 +12,48 @@
 **/application-local.properties
 **/application-local.yml
 
-### --- NetBeans / IDEs ---
+### --- STS / Eclipse ---
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### --- IntelliJ IDEA ---
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+### --- NetBeans ---
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbdist/
+**/.nb-gradle/
 **/nbactions.xml
 **/nb-configuration.xml
-.vscode/
-.idea/
-*.iml
 
-### --- Sistema Operativo ---
+### --- VS Code ---
+.vscode/
+*.code-workspace
+.history/
+
+### --- Sistema Operativo (Windows / macOS) ---
 [Dd]esktop.ini
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+$RECYCLE.BIN/
 .DS_Store
+._*
 
-### --- Logs ---
+### --- Logs & Temporales ---
 *.log
 **/logs/
+run/
+HELP.md
