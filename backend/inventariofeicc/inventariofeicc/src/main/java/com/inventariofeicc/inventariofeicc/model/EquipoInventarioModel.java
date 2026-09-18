@@ -2,40 +2,40 @@ package com.inventariofeicc.inventariofeicc.model;
 
 public class EquipoInventarioModel{
 
-    private String numeroInventario;
+    private String numero_inventario;
     private String marca;
     private String descripcion;
     private String modelo;
-    private String numeroActivo;
-    private String noSerial;
-    private String tipoEquipo;
-    private String estadoOperativo;
+    private String numero_activo;
+    private String no_serial;
+    private String tipo_equipo;
+    private String estado_operativo;
     private String ubicacion;
-    private String urlImagen;
+    private String url_imagen;
 
     public EquipoInventarioModel(){}
 
     public EquipoInventarioModel(String numero_inventario, String marca, String descripcion, String modelo, String numero_activo, 
-        String no_Serial, String tipo_Equipo, String estado_operativo, String ubicacion, String url_imagen){
+        String no_serial, String tipo_equipo, String estado_operativo, String ubicacion, String url_imagen){
 
-        this.numeroInventario = numero_inventario;
+        this.numero_inventario = numero_inventario;
         this.marca = marca;
         this.descripcion = descripcion;
         this.modelo = modelo;
-        this.numeroActivo = numero_activo;
-        this.noSerial = no_Serial;
-        this.tipoEquipo = tipo_Equipo;
-        this.estadoOperativo = estado_operativo;
+        this.numero_activo = numero_activo;
+        this.no_serial = no_serial;
+        this.tipo_equipo = tipo_equipo;
+        this.estado_operativo = estado_operativo;
         this.ubicacion = ubicacion;
-        this.urlImagen = url_imagen;
+        this.url_imagen = url_imagen;
     }
     
     public String getNumeroInventario() {
-        return numeroInventario;
+        return numero_inventario;
     }
 
     public void setNumeroInventario(String numeroInventario) {
-        this.numeroInventario = numeroInventario;
+        this.numero_inventario = numeroInventario;
     }
 
     public String getMarca() {
@@ -63,35 +63,35 @@ public class EquipoInventarioModel{
     }
 
     public String getNumeroActivo() {
-        return numeroActivo;
+        return numero_activo;
     }
 
     public void setNumeroActivo(String numeroActivo) {
-        this.numeroActivo = numeroActivo;
+        this.numero_activo = numeroActivo;
     }
 
     public String getNoSerial() {
-        return noSerial;
+        return no_serial;
     }
 
     public void setNoSerial(String noSerial) {
-        this.noSerial = noSerial;
+        this.no_serial = noSerial;
     }
 
     public String getTipoEquipo() {
-        return tipoEquipo;
+        return tipo_equipo;
     }
 
     public void setTipoEquipo(String tipoEquipo) {
-        this.tipoEquipo = tipoEquipo;
+        this.tipo_equipo = tipoEquipo;
     }
 
     public String getEstadoOperativo() {
-        return estadoOperativo;
+        return estado_operativo;
     }
 
     public void setEstadoOperativo(String estadoOperativo) {
-        this.estadoOperativo = estadoOperativo;
+        this.estado_operativo = estadoOperativo;
     }
 
     public String getUbicacion() {
@@ -103,10 +103,10 @@ public class EquipoInventarioModel{
     }
 
     public String getUrlImagen() {
-        return urlImagen;
+        return url_imagen;
     }
 
     public void setUrlImagen(String urlImagen) {
-        this.urlImagen = urlImagen;
+        this.url_imagen = urlImagen;
     }
 }
