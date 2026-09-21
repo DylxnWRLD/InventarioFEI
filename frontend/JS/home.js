@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function cargarEquipos() {
-  const contenedor = document.getElementById('contenedorTarjetas');
+  const contenedor = document.getElementById('tablita-equipos');
   contenedor.innerHTML = '<p>Cargando equipos del inventario...</p>';
 
   try {
@@ -24,7 +24,7 @@ async function cargarEquipos() {
     equipos.forEach(equipo => {
       const fila = document.createElement('tr');
       fila.innerHTML = `
-        <td>${equipo.nombre || 'Sin nombre'}</td>
+        <td>${equipo.descripcion || 'Sin descripción'}</td>
         <td>${equipo.marca || 'Sin marca'}</td>
         <td>${equipo.modelo || 'Sin modelo'}</td>
         <td>${equipo.noSerial || 'S/N'}</td>
