@@ -1,66 +1,53 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistema de Inventario FEI</title>
-    <link rel="stylesheet" href="../CSS/home.css" />
-  </head>
-  <body>
-    <!-- Encabezado -->
-    <header class="header">
-      <div class="logo-uv">
-        <img
-          src="../images/logoUV.jpg"
-          alt="Logo Universidad Veracruzana"
-        />
-        <div class="text-uv">UNIVERSIDAD<br /><span>VERACRUZANA</span></div>
-      </div>
 
-      <div class="search-bar">
-        <input type="text" placeholder="¿Qué estás buscando?" />
-        <span class="search-icon">🔍</span>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Inventario FEI</title>
+  <link rel="stylesheet" href="../CSS/home.css" />
+</head>
 
-      <div class="logo-sistema">
-        <img
-          alt="Logo Sistema"
-          src="../images/logoSistema.png"
-        />
-        <div class="text-sistema">SISTEMA DE<br /><span>INVENTARIO</span></div>
-      </div>
-    </header>
-
-    <!-- Barra de Acciones -->
-    <div class="actions-bar">
-      <button class="btn btn-blue">
-        Realizar transferencia <span class="icon"></span>
-      </button>
-      <button class="btn btn-blue">
-        Filtro de búsqueda <span class="icon"></span>
-      </button>
-      <button class="btn btn-blue">
-        Registrar equipo <span class="icon"></span>
-      </button>
+<body>
+  <!-- Encabezado -->
+  <header class="header">
+    <div class="logo-uv">
+      <img src="../images/logoUV.jpg" alt="Logo Universidad Veracruzana" />
+      <div class="text-uv">UNIVERSIDAD<br /><span>VERACRUZANA</span></div>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>N. Inventario</th>
-          <th>Descripción</th>
-          <th>Marca</th>
-          <th>Modelo</th>
-          <th>Serie</th>
-          <th>Ubicación</th>
-        </tr>
-      </thead>
-      <tbody id="tablita-equipos">
-        <!-- Aquí se llenarán los datos de los equipos -->
-      </tbody>
-    </table>
+    <div class="search-bar">
+      <input type="text" placeholder="¿Qué estás buscando?" />
+      <span class="search-icon">🔍</span>
+    </div>
 
-    <script src="../JS/home.js"></script>
-    
-  </body>
+    <div class="logo-sistema">
+      <img alt="Logo Sistema" src="../images/logoSistema.png" />
+      <div class="text-sistema">SISTEMA DE<br /><span>INVENTARIO</span></div>
+    </div>
+  </header>
+
+  <!-- Barra de Acciones -->
+  <div class="actions-bar">
+    <button class="btn btn-blue">
+      Realizar transferencia <span class="icon"></span>
+    </button>
+    <button class="btn btn-blue">
+      Filtro de búsqueda <span class="icon"></span>
+    </button>
+    <button class="btn btn-blue">
+      Registrar equipo <span class="icon"></span>
+    </button>
+  </div>
+
+  <main class="inventario-container">
+    <div id="tablita-equipos" class="equipos-grid">
+
+    </div>
+  </main>
+
+  <script src="../JS/home.js"></script>
+
+</body>
+
 </html>
