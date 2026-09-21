@@ -16,6 +16,6 @@ public interface EquipoInventarioRepository {
      * Metodo que obtiene todos los equipos de inventario de la base de datos.
      * @return
      */
-    @Select ("SELECT * FROM equipo_inventario")
+    @Select ("SELECT * FROM equipo_inventario ORDER BY numero_inventario")
     List<EquipoInventarioModel> obtenerEquipos();
 }

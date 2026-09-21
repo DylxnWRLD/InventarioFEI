@@ -24,6 +24,7 @@ async function cargarEquipos() {
     equipos.forEach(equipo => {
       const fila = document.createElement('tr');
       fila.innerHTML = `
+        <td>${equipo.numeroInventario || 'N/A'}</td>
         <td>${equipo.descripcion || 'Sin descripción'}</td>
         <td>${equipo.marca || 'Sin marca'}</td>
         <td>${equipo.modelo || 'Sin modelo'}</td>
