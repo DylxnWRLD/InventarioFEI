@@ -7,7 +7,7 @@ async function cargarEquipos() {
   contenedor.innerHTML = '<p>Cargando equipos del inventario...</p>';
 
   try {
-    const response = await fetch('http://localhost:8080/api/equipos');
+    const response = await fetch('http://localhost:8080/InventarioFEI/Equipos');
     
     if (!response.ok) {
       throw new Error(`Error en la petición: ${response.status}`);
@@ -20,31 +20,17 @@ async function cargarEquipos() {
       return;
     }
 
+    // Vamos a hacer por el momento filas de una tabla, luego usamos tarjetas
     equipos.forEach(equipo => {
-      // Si el equipo tiene url_imagen se usa, si no, se usa el icono por defecto
-      const imagenSrc = equipo.urlImagen 
-        ? equipo.urlImagen 
-        : '../images/noEncontrado.png';
-
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="card-image">
-          <img src="${imagenSrc}" alt="${equipo.modelo || 'Equipo'}" />
-        </div>
-        <div class="card-info">
-          <h3>${equipo.marca || ''} ${equipo.modelo || 'Sin modelo'}</h3>
-          <p><strong>Número de inventario:</strong> ${equipo.numeroInventario}</p>
-          <p><strong>Código Serial:</strong> ${equipo.noSerial || 'S/N'}</p>
-          <p><strong>Ubicación:</strong> ${equipo.ubicacion}</p>
-          <p><strong>Estado:</strong> ${equipo.estadoOperativo}</p>
-          <div class="card-buttons">
-            <button class="btn-card btn-red" onclick="solicitarBaja('${equipo.numeroInventario}')">Dar Baja</button>
-            <button class="btn-card btn-blue-card" onclick="editarEquipo('${equipo.numeroInventario}')">Editar</button>
-          </div>
-        </div>
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${equipo.nombre || 'Sin nombre'}</td>
+        <td>${equipo.marca || 'Sin marca'}</td>
+        <td>${equipo.modelo || 'Sin modelo'}</td>
+        <td>${equipo.noSerial || 'S/N'}</td>
+        <td>${equipo.ubicacion || 'Sin ubicación'}</td>
       `;
-      contenedor.appendChild(card);
+      contenedor.appendChild(fila);
     });
 
   } catch (error) {
