@@ -14,6 +14,10 @@ body {
 
 /* Encabezado */
 .header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -32,10 +36,11 @@ body {
 }
 
 .logo-uv .text-uv {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 900;
   color: #0068b7;
-  line-height: 1.1;
+  line-height: 0.9;
+  margin-top: 20px
 }
 
 .logo-uv .text-uv span {
@@ -43,6 +48,7 @@ body {
 }
 
 .search-bar {
+  margin-top: 15px;
   width: 47%;
   position: relative;
 }
@@ -58,14 +64,6 @@ body {
   outline: none;
 }
 
-.search-bar .search-icon {
-  position: absolute;
-  right: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-}
-
 .logo-sistema {
   display: flex;
   align-items: center;
@@ -77,10 +75,11 @@ body {
 }
 
 .logo-sistema .text-sistema {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 900;
   color: #0068b7;
-  line-height: 1.1;
+  line-height: 0.9;
+  margin-top: 20px
 }
 
 .logo-sistema .text-sistema span {
@@ -89,10 +88,16 @@ body {
 
 /* Barra de acciones */
 .actions-bar {
+  position: sticky;
+  top: 85px;
+  z-index: 900;
+  background-color: #ffffff;
+  box-shadow: 0 2px 0px rgba(0, 0, 0, 0.06);
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 22px;
+  margin-bottom: 28px;
+  padding: 20px 0;
 }
 
 .btn {
@@ -103,7 +108,8 @@ body {
   padding: 0 20px;
   border: none;
   border-radius: 25px;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 600;
   color: #fff;
   cursor: pointer;
 }
@@ -126,17 +132,18 @@ body {
 
 /* Contenedor de tarjetas */
 .inventario-container {
-  width: 78%;
-  height: 420px;
+  width: 95%;
+  height: AUTO;
   margin: 0 auto;
   overflow-y: auto;
   padding-right: 8px;
+  padding-bottom: 70px;
 }
 
 /* Grid */
 .equipos-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
 
@@ -149,6 +156,7 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
+  margin-bottom: 15px;
 }
 
 /* Imagen */
@@ -179,23 +187,23 @@ body {
 .equipo-info h3 {
   margin-bottom: 6px;
   margin-top: 6px;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 900;
   color: #111;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .equipo-info p {
-    margin: 5px 0;
-    font-size: 12px;
-    line-height: 1.3;
-    color: #222;
+  margin: 5px 0;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #222;
 }
 
 .equipo-info p strong {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 /* Botones de tarjeta */
@@ -259,10 +267,18 @@ body {
 
 /* Paginación */
 .paginacion {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 2000;
   display: flex;
   justify-content: center;
-  gap: 7px;
-  margin-top: 12px;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 0;
+  background-color: #ffffff;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .pagina {
@@ -273,13 +289,43 @@ body {
   background-color: #0068b7;
   color: #fff;
   cursor: pointer;
+  margin-bottom: 15px;
 }
 
 .pagina.activa {
   background-color: #00a651;
 }
 
-/* Responsive */
+.btn-paginacion {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #0066a1;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.btn-paginacion:hover:not(:disabled) {
+  background-color: #004f7d;
+}
+
+
+.btn-paginacion:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+#numero-pagina {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
+/* Responsividad */
 @media (max-width: 1024px) {
   .equipos-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -288,7 +334,7 @@ body {
 
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;
+    flex-direction: row;
     gap: 15px;
   }
 

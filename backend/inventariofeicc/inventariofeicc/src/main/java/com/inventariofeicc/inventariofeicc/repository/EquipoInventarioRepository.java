@@ -4,18 +4,32 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
 
 /**
- * Aqui se realizarán todas las consultas a la base de datos relacionadas con el equipo de inventario.
- * Todo con la ayuda de la dependencia de MyBatis, que nos permite mapear las consultas SQL a métodos de Java.
+ * 
+ * @author Dyl y Momen
  */
-@Mapper 
+@Mapper
 public interface EquipoInventarioRepository {
-    
+
     /**
-     * Metodo que obtiene todos los equipos de inventario de la base de datos.
-     * @return
+     * Obtiene una cantidad limitada de equipos de inventario comenzando desde
+     * un desplazamiento determinado.
+     *
+     * @param limite cantidad máxima de equipos a obtener.
+     * @param offset posición desde donde comenzar a obtener equipos.
+     * @return lista de equipos de inventario.
      */
-    @Select ("SELECT * FROM equipo_inventario WHERE numero_inventario = 'N00108161' ORDER BY numero_inventario")
-    List<EquipoInventarioModel> obtenerEquipos();
+    @Select("""
+        SELECT *
+        FROM equipo_inventario
+        ORDER BY numero_inventario ASC
+        LIMIT #{limite} OFFSET #{offset}
+        """)
+    List<EquipoInventarioModel> obtenerEquipos(
+            @Param("limite") int limite,
+            @Param("offset") int offset
+    );
 }
