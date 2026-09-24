@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 /**
  * 
  * @author Dyl y Momen
@@ -49,4 +50,33 @@ public class EquipoInventarioController {
                     .body("Ocurrió un error al listar los equipos.");
         }
     }
+
+    /*
+     * Busca equipos de inventario según un texto de búsqueda.
+     *
+     * @param textoBusqueda texto a buscar en los campos del equipo.
+     * @param pagina número de página.
+     * @return lista de equipos que coinciden con la búsqueda.
+     */
+    @GetMapping("/Equipos/Buscar")
+    public ResponseEntity<?> buscarEquipos(
+            @RequestParam(value = "q", required = false, defaultValue = "") String q,
+            @RequestParam(value = "pagina", defaultValue = "1") int pagina) {
+
+        try {
+            List<EquipoInventarioModel> equipos = EIS.buscarEquipos(q, pagina);
+            return ResponseEntity.ok(equipos);
+        } catch (IllegalArgumentException iae) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(iae.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Ocurrió un error al buscar los equipos.");
+        }
+    }
+    
+
 }

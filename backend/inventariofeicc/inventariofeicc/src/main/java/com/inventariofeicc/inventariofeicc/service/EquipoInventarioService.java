@@ -43,4 +43,29 @@ public class EquipoInventarioService {
         int offset = (pagina - 1) * limite;
         return EIR.obtenerEquipos(limite, offset);
     }
+
+    /**
+     * Validaciones necesarias para realizar la busqueda
+     * 
+     * @param textoBusqueda
+     * @param pagina
+     * @return
+     */
+    public List<EquipoInventarioModel> buscarEquipos(String textoBusqueda, int pagina) {
+        if (pagina < 1) {
+            throw new IllegalArgumentException(
+                "La página debe ser mayor o igual a 1."
+            );
+        }
+
+        if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                "El texto de búsqueda no puede estar vacío."
+            );
+        }
+
+        int limite = 30;
+        int offset = (pagina - 1) * limite;
+        return EIR.buscarEquipos(textoBusqueda, limite, offset);
+    }
 }

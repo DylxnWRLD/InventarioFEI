@@ -51,6 +51,8 @@ body {
   margin-top: 15px;
   width: 47%;
   position: relative;
+  align-items: center;
+  display: flex;
 }
 
 .search-bar input {
@@ -120,6 +122,23 @@ body {
 
 .btn-green {
   background-color: #00a651;
+}
+
+.btn-busqueda {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 36px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 40px;
+  background-color: #ffffff;
+  color: white;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .btn:hover {
