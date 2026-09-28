@@ -47,7 +47,9 @@ public interface EquipoInventarioRepository {
         FROM equipo_inventario
         WHERE numero_inventario ILIKE CONCAT('%', #{textoBusqueda}, '%')
            OR marca ILIKE CONCAT('%', #{textoBusqueda}, '%')
+           OR no_serial ILIKE CONCAT('%', #{textoBusqueda}, '%')
            OR modelo ILIKE CONCAT('%', #{textoBusqueda}, '%')
+           OR descripcion ILIKE CONCAT('%', #{textoBusqueda}, '%')
            OR ubicacion::text ILIKE CONCAT('%', #{textoBusqueda}, '%')
         ORDER BY numero_inventario ASC
         LIMIT #{limite} OFFSET #{offset}
