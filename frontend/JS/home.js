@@ -71,7 +71,11 @@ async function cargarEquipos(pagina) {
       throw new Error(`Error en la petición: ${response.status}`);
     }
 
-    const equipos = await response.json();
+    const data = await response.json();
+
+    const equipos = data.equipos;
+    const total = data.total;
+
     contenedor.innerHTML = '';
 
     if (equipos.length === 0) {
@@ -79,17 +83,20 @@ async function cargarEquipos(pagina) {
         paginaActual--;
         cargarEquipos(paginaActual);
       } else {
-        contenedor.innerHTML = '<p>No hay equipos registrados.</p>';
+        contenedor.innerHTML =
+          '<p>No hay equipos registrados.</p>';
       }
-      actualizarPaginacion(equipos.length, 'listado');
+
+      actualizarPaginacion(total, 'listado');
       return;
     }
 
     renderizarEquipos(equipos, contenedor);
-    actualizarPaginacion(equipos.length, 'listado');
+    actualizarPaginacion(total, 'listado');
 
   } catch (error) {
     console.error('Error al consultar la API REST:', error);
+
     contenedor.innerHTML =
       '<p class="mensaje-error">Error al conectar con la API.</p>';
   }
@@ -240,18 +247,25 @@ function renderizarEquipos(equipos, contenedor) {
 /**
  * Actualiza el texto de paginación y el estado de los botones.
  *
- * @param {number} cantidadResultados cantidad de equipos devueltos.
+ * @param {number} total cantidad total de resultados.
  * @param {string} modo 'listado' o 'busqueda'.
  */
-function actualizarPaginacion(cantidadResultados, modo) {
+function actualizarPaginacion(total, modo) {
   const etiqueta = document.getElementById('numero-pagina');
-  etiqueta.textContent = modo === 'busqueda'
-    ? `Página ${paginaActual} — Resultados para "${terminoBusqueda}"`
-    : `Página ${paginaActual}`;
 
-  document.getElementById('btn-anterior').disabled = paginaActual === 1;
+  const totalPaginas = Math.ceil(
+    total / equiposPorPagina
+  );
+
+  etiqueta.textContent = modo === 'busqueda'
+    ? `Página ${paginaActual} de ${totalPaginas} — Resultados para "${terminoBusqueda}"`
+    : `Página ${paginaActual} de ${totalPaginas}`;
+
+  document.getElementById('btn-anterior').disabled =
+    paginaActual === 1;
+
   document.getElementById('btn-siguiente').disabled =
-    cantidadResultados < equiposPorPagina;
+    paginaActual >= totalPaginas;
 }
 
 /**

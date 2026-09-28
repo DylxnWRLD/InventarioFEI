@@ -1,14 +1,17 @@
 package com.inventariofeicc.inventariofeicc.controller;
 
-import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
-import com.inventariofeicc.inventariofeicc.service.EquipoInventarioService;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.inventariofeicc.inventariofeicc.model.EquipoInventarioResponse;
+import com.inventariofeicc.inventariofeicc.service.EquipoInventarioService;
 
 /**
- * 
+ *
  * @author Dyl y Momen
  */
 @RestController
@@ -31,41 +34,37 @@ public class EquipoInventarioController {
      * Obtiene los equipos correspondientes a una página.
      *
      * @param pagina número de página.
-     * @return lista de equipos.
+     * @return equipos y cantidad total de registros.
      */
     @GetMapping("/Equipos")
-    public ResponseEntity<?> listaEquipos(
-            @RequestParam(defaultValue = "1") int pagina) {
-
-        try {
-            List<EquipoInventarioModel> equipos = EIS.obtenerEquipos(pagina);
-            return ResponseEntity.ok(equipos);
-        } catch (IllegalArgumentException iae) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(iae.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity
-                    .internalServerError()
-                    .body("Ocurrió un error al listar los equipos.");
-        }
+    public EquipoInventarioResponse obtenerEquipos(
+            @RequestParam(defaultValue = "1") int pagina
+    ) {
+        return EIS.obtenerEquipos(pagina);
     }
 
-    /*
+    /**
      * Busca equipos de inventario según un texto de búsqueda.
      *
-     * @param textoBusqueda texto a buscar en los campos del equipo.
+     * @param q texto de búsqueda.
      * @param pagina número de página.
-     * @return lista de equipos que coinciden con la búsqueda.
+     * @return equipos encontrados y cantidad total de coincidencias.
      */
     @GetMapping("/Equipos/Buscar")
     public ResponseEntity<?> buscarEquipos(
-            @RequestParam(value = "q", required = false, defaultValue = "") String q,
-            @RequestParam(value = "pagina", defaultValue = "1") int pagina) {
-
+            @RequestParam(
+                    value = "q",
+                    required = false,
+                    defaultValue = ""
+            ) String q,
+            @RequestParam(
+                    value = "pagina",
+                    defaultValue = "1"
+            ) int pagina
+    ) {
         try {
-            List<EquipoInventarioModel> equipos = EIS.buscarEquipos(q, pagina);
-            return ResponseEntity.ok(equipos);
+            EquipoInventarioResponse respuesta = EIS.buscarEquipos(q, pagina);
+            return ResponseEntity.ok(respuesta);
         } catch (IllegalArgumentException iae) {
             return ResponseEntity
                     .badRequest()
@@ -77,6 +76,4 @@ public class EquipoInventarioController {
                     .body("Ocurrió un error al buscar los equipos.");
         }
     }
-    
-
 }

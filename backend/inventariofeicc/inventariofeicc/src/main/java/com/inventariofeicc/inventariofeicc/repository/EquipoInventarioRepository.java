@@ -1,16 +1,17 @@
 package com.inventariofeicc.inventariofeicc.repository;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
 
 /**
- * 
+ *
  * @author Dyl y Momen
  */
-
 @Mapper
 public interface EquipoInventarioRepository {
 
@@ -33,16 +34,27 @@ public interface EquipoInventarioRepository {
             @Param("offset") int offset
     );
 
+    /**
+     * Obtiene la cantidad total de equipos registrados.
+     *
+     * @return cantidad total de equipos.
+     */
+    @Select("""
+        SELECT COUNT(*)
+        FROM equipo_inventario
+        """)
+    int contarEquipos();
 
     /**
-     * Busqueda de equipos de inventario que coincidan con un texto de búsqueda en varios campos.
-     * 
-     * @param textoBusqueda
-     * @param limite
-     * @param offset
-     * @return
+     * Busca equipos de inventario que coincidan con un texto en diferentes
+     * campos.
+     *
+     * @param textoBusqueda texto que se desea buscar.
+     * @param limite cantidad máxima de resultados.
+     * @param offset posición desde donde comenzar.
+     * @return lista de equipos encontrados.
      */
-    @Select ("""
+    @Select("""
         SELECT *
         FROM equipo_inventario
         WHERE numero_inventario ILIKE CONCAT('%', #{textoBusqueda}, '%')
@@ -58,5 +70,26 @@ public interface EquipoInventarioRepository {
             @Param("textoBusqueda") String textoBusqueda,
             @Param("limite") int limite,
             @Param("offset") int offset
+    );
+
+    /**
+     * Obtiene la cantidad total de equipos que coinciden con el texto de
+     * búsqueda.
+     *
+     * @param textoBusqueda texto que se desea buscar.
+     * @return cantidad de resultados encontrados.
+     */
+    @Select("""
+        SELECT COUNT(*)
+        FROM equipo_inventario
+        WHERE numero_inventario ILIKE CONCAT('%', #{textoBusqueda}, '%')
+           OR marca ILIKE CONCAT('%', #{textoBusqueda}, '%')
+           OR no_serial ILIKE CONCAT('%', #{textoBusqueda}, '%')
+           OR modelo ILIKE CONCAT('%', #{textoBusqueda}, '%')
+           OR descripcion ILIKE CONCAT('%', #{textoBusqueda}, '%')
+           OR ubicacion::text ILIKE CONCAT('%', #{textoBusqueda}, '%')
+        """)
+    int contarEquiposBusqueda(
+            @Param("textoBusqueda") String textoBusqueda
     );
 }
