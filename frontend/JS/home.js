@@ -143,26 +143,42 @@ async function buscarEquipos(pagina) {
       throw new Error(`Error ${response.status}: ${mensajeError}`);
     }
 
-    const equipos = await response.json();
+    const data = await response.json();
+
+    // La API devuelve:
+    // {
+    //   equipos: [...],
+    //   total: 123
+    // }
+    const equipos = data.equipos;
+    const total = data.total;
+
     contenedor.innerHTML = '';
+
+    if (!Array.isArray(equipos)) {
+      throw new Error('La API no devolvió una lista de equipos.');
+    }
 
     if (equipos.length === 0) {
       if (paginaActual > 1) {
         paginaActual--;
         buscarEquipos(paginaActual);
-      } else {
-        contenedor.innerHTML =
-          `<p>No se encontraron resultados para "<strong>${escapeHtml(terminoBusqueda)}</strong>".</p>`;
+        return;
       }
-      actualizarPaginacion(equipos.length, 'busqueda');
+
+      contenedor.innerHTML =
+        `<p>No se encontraron resultados para "<strong>${escapeHtml(terminoBusqueda)}</strong>".</p>`;
+
+      actualizarPaginacion(0, 'busqueda');
       return;
     }
 
     renderizarEquipos(equipos, contenedor);
-    actualizarPaginacion(equipos.length, 'busqueda');
+    actualizarPaginacion(total, 'busqueda');
 
   } catch (error) {
     console.error('Error al consultar la API REST:', error);
+
     contenedor.innerHTML =
       '<p class="mensaje-error">Error al conectar con la API.</p>';
   }
