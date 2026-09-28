@@ -7,6 +7,9 @@ const equiposPorPagina = 30;
 // Término de búsqueda activo (null = modo listado normal).
 let terminoBusqueda = null;
 
+// Tiempo de espera en lo que el usuario escribe y se realiza la busqueda
+let timeoutBusqueda = null; 
+
 // URL base de la API.
 const API_BASE = 'http://localhost:8080/InventarioFEI';
 
@@ -40,11 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-buscar').addEventListener('click', ejecutarBusqueda);
 
   // Enter en el input dispara la búsqueda.
-  document.getElementById('input-busqueda').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
+  document.getElementById('input-busqueda').addEventListener('input', (e) => {
+    clearTimeout(timeoutBusqueda);
+    timeoutBusqueda = setTimeout(() => {
       ejecutarBusqueda();
-    }
+    }, 300);
   });
 });
 
