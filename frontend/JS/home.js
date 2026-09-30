@@ -8,7 +8,7 @@ const equiposPorPagina = 30;
 let terminoBusqueda = null;
 
 // URL base de la API.
-const API_BASE = 'https://inventariofeicc-api.onrender.com';
+const API_BASE = 'https://inventariofeicc-api.onrender.com/InventarioFEI';
 //const API_BASE = 'http://localhost:8080/InventarioFEI';
 
 // Cuando termine de cargar el HTML.
@@ -183,7 +183,7 @@ async function buscarEquipos(pagina) {
     contenedor.innerHTML =
       '<p class="mensaje-error">Error al conectar con la API.</p>';
   }
-}ñ
+}
 
 /**
  * Limpia la búsqueda y vuelve al listado normal.
