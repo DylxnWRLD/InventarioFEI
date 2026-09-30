@@ -3,8 +3,8 @@ package com.inventariofeicc.inventariofeicc.model;
 import java.util.List;
 
 /**
- * Respuesta utilizada para devolver los equipos de una página
- * junto con la cantidad total de registros.
+ * Respuesta utilizada para devolver los equipos de una página junto con la
+ * cantidad total de registros.
  *
  * @author Dyl y Momen
  */
@@ -19,10 +19,7 @@ public class EquipoInventarioResponse {
      * @param equipos lista de equipos.
      * @param total cantidad total de equipos.
      */
-    public EquipoInventarioResponse(
-            List<EquipoInventarioModel> equipos,
-            int total
-    ) {
+    public EquipoInventarioResponse(List<EquipoInventarioModel> equipos, int total) {
         this.equipos = equipos;
         this.total = total;
     }

@@ -1,6 +1,14 @@
 package com.inventariofeicc.inventariofeicc.model;
 
-public class EquipoInventarioModel{
+/**
+ * Modelo de datos que representa un equipo dentro del inventario.
+ *
+ * Contiene informacion descriptiva, identificadores unicos de control interno,
+ * estado operativo y detalles de localizacion fisica del activo.
+ *
+ * @author Dyl y Momen
+ */
+public class EquipoInventarioModel {
 
     private String numero_inventario;
     private String marca;
@@ -13,10 +21,28 @@ public class EquipoInventarioModel{
     private String ubicacion;
     private String url_imagen;
 
-    public EquipoInventarioModel(){}
+    /**
+     * Constructor por defecto para instanciacion sin argumentos.
+     */
+    public EquipoInventarioModel() {
+    }
 
-    public EquipoInventarioModel(String numero_inventario, String marca, String descripcion, String modelo, String numero_activo, 
-        String no_serial, String tipo_equipo, String estado_operativo, String ubicacion, String url_imagen){
+    /**
+     * Constructor completo para inicializar todas las propiedades de un equipo.
+     *
+     * @param numero_inventario identificador unico de inventario.
+     * @param marca fabricante o marca del equipo.
+     * @param descripcion detalles o descripcion del equipo.
+     * @param modelo modelo asignado por el fabricante.
+     * @param numero_activo clave o codigo de activo institucional.
+     * @param no_serial numero de serie de fabricacion.
+     * @param tipo_equipo clasificacion del equipo de hardware.
+     * @param estado_operativo estatus de funcionamiento del equipo.
+     * @param ubicacion lugar fisico donde esta situado el equipo.
+     * @param url_imagen direccion web de la imagen del equipo.
+     */
+    public EquipoInventarioModel(String numero_inventario, String marca, String descripcion, String modelo, String numero_activo,
+            String no_serial, String tipo_equipo, String estado_operativo, String ubicacion, String url_imagen) {
 
         this.numero_inventario = numero_inventario;
         this.marca = marca;
@@ -29,7 +55,7 @@ public class EquipoInventarioModel{
         this.ubicacion = ubicacion;
         this.url_imagen = url_imagen;
     }
-    
+
     public String getNumeroInventario() {
         return numero_inventario;
     }

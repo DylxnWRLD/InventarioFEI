@@ -11,6 +11,10 @@ import com.inventariofeicc.inventariofeicc.model.EquipoInventarioResponse;
 import com.inventariofeicc.inventariofeicc.service.EquipoInventarioService;
 
 /**
+ * Controlador REST para la gestion y consulta de equipos de inventario.
+ *
+ * Provee endpoints para paginar el listado general de equipos y realizar
+ * busquedas filtradas por texto.
  *
  * @author Dyl y Momen
  */
@@ -22,7 +26,7 @@ public class EquipoInventarioController {
     private final EquipoInventarioService EIS;
 
     /**
-     * Constructor del controlador.
+     * Constructor para la ineycción de dependencias del servicio de inventario.
      *
      * @param EIS servicio encargado de manejar los equipos.
      */
@@ -37,9 +41,7 @@ public class EquipoInventarioController {
      * @return equipos y cantidad total de registros.
      */
     @GetMapping("/Equipos")
-    public EquipoInventarioResponse obtenerEquipos(
-            @RequestParam(defaultValue = "1") int pagina
-    ) {
+    public EquipoInventarioResponse obtenerEquipos(@RequestParam(defaultValue = "1") int pagina) {
         return EIS.obtenerEquipos(pagina);
     }
 

@@ -59,11 +59,7 @@ public class EquipoInventarioService {
      * @param pagina número de página.
      * @return equipos encontrados y cantidad total de coincidencias.
      */
-    public EquipoInventarioResponse buscarEquipos(
-            String textoBusqueda,
-            int pagina
-    ) {
-
+    public EquipoInventarioResponse buscarEquipos(String textoBusqueda, int pagina) {
         if (pagina < 1) {
             throw new IllegalArgumentException("La página debe ser mayor o igual a 1."
             );

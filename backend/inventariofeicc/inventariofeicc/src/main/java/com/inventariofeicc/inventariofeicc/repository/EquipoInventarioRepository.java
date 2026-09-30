@@ -9,6 +9,10 @@ import org.apache.ibatis.annotations.Select;
 import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
 
 /**
+ * Repositorio MyBatis para la persistencia y consulta de equipos de inventario.
+ *
+ * Provee metodos de acceso a datos para listados paginados y busquedas de
+ * múltiples criterios sobre la tabla de equipos en la base de datos PostgreSQL.
  *
  * @author Dyl y Momen
  */
