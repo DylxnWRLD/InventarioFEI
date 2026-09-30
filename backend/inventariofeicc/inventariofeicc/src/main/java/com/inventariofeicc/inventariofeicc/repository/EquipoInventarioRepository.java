@@ -29,7 +29,7 @@ public interface EquipoInventarioRepository {
      */
     @Select("""
         SELECT *
-        FROM equipo_inventario
+        FROM inventariofei.equipo_inventario
         ORDER BY numero_inventario ASC
         LIMIT #{limite} OFFSET #{offset}
         """)
@@ -45,7 +45,7 @@ public interface EquipoInventarioRepository {
      */
     @Select("""
         SELECT COUNT(*)
-        FROM equipo_inventario
+        FROM inventariofei.equipo_inventario
         """)
     int contarEquipos();
 
@@ -60,7 +60,7 @@ public interface EquipoInventarioRepository {
      */
     @Select("""
         SELECT *
-        FROM equipo_inventario
+        FROM inventariofei.equipo_inventario
         WHERE numero_inventario ILIKE CONCAT('%', #{textoBusqueda}, '%')
            OR marca ILIKE CONCAT('%', #{textoBusqueda}, '%')
            OR no_serial ILIKE CONCAT('%', #{textoBusqueda}, '%')
@@ -85,7 +85,7 @@ public interface EquipoInventarioRepository {
      */
     @Select("""
         SELECT COUNT(*)
-        FROM equipo_inventario
+        FROM inventariofei.equipo_inventario
         WHERE numero_inventario ILIKE CONCAT('%', #{textoBusqueda}, '%')
            OR marca ILIKE CONCAT('%', #{textoBusqueda}, '%')
            OR no_serial ILIKE CONCAT('%', #{textoBusqueda}, '%')
