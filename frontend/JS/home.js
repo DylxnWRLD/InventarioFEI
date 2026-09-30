@@ -7,11 +7,9 @@ const equiposPorPagina = 30;
 // Término de búsqueda activo (null = modo listado normal).
 let terminoBusqueda = null;
 
-// Tiempo de espera en lo que el usuario escribe y se realiza la busqueda
-let timeoutBusqueda = null; 
-
 // URL base de la API.
-const API_BASE = 'http://localhost:8080/InventarioFEI';
+const API_BASE = 'https://inventariofeicc-api.onrender.com';
+//const API_BASE = 'http://localhost:8080/InventarioFEI';
 
 // Cuando termine de cargar el HTML.
 document.addEventListener('DOMContentLoaded', () => {
@@ -43,11 +41,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-buscar').addEventListener('click', ejecutarBusqueda);
 
   // Enter en el input dispara la búsqueda.
-  document.getElementById('input-busqueda').addEventListener('input', (e) => {
-    clearTimeout(timeoutBusqueda);
-    timeoutBusqueda = setTimeout(() => {
+  document.getElementById('input-busqueda').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
       ejecutarBusqueda();
-    }, 300);
+    }
   });
 });
 
@@ -185,7 +183,7 @@ async function buscarEquipos(pagina) {
     contenedor.innerHTML =
       '<p class="mensaje-error">Error al conectar con la API.</p>';
   }
-}
+}ñ
 
 /**
  * Limpia la búsqueda y vuelve al listado normal.
