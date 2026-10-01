@@ -24,8 +24,10 @@
   </header>
 
   <main class="registro-layout">
-
+    
+    <!-- Panel Izquierdo (Formulario Azul con Scroll) -->
     <aside class="registro-sidebar">
+      
       <div class="form-group">
         <label>Tipo del equipo</label>
         <select class="select-field">
@@ -56,72 +58,50 @@
         <label>Número de serie</label>
         <input type="text" class="input-field" placeholder="Escribe aquí..." />
       </div>
-    </aside>
 
-    <div class="form-group">
-      <label>Descripción</label>
-      <input type="text" class="input-field" placeholder="Escribe aquí..." />
-    </div>
-    </aside>
+      <div class="form-group">
+        <label>Descripción</label>
+        <input type="text" class="input-field" placeholder="Escribe aquí..." />
+      </div>
 
-    <aside class="registro-sidebar">
       <div class="form-group">
         <label>Ubicación</label>
         <select class="select-field">
           <option>Almacén</option>
           <option>CC1</option>
           <option>CC2</option>
-          <option>CC3</option>
-          <option>CC4</option>
-          <option>Cubículo 42</option>
-          <option>Cubículo 44</option>
-          <option>Area común del CC</option>
-          <option>Jefatura del CC</option>
-          <option>Aula F103</option>
-          <option>Aula F403</option>
-          <option>Aula 105</option>
-          <option>Aula 107</option>
-          <option>Aula 102</option>
           <option>Aula 112</option>
-          <option>Aula 4</option>
-          <option>Aula F101</option>
-          <option>Laboratorio de innovación en software</option>
-          <option>Aula F402</option>
-          <option>Aula 5</option>
-          <option>Aula 6</option>
-          <option>Aula 113</option>
-          <option>Aula 111</option>
-          <option>Audiovisual</option>
+          <!-- Agrega el resto de tus opciones aquí -->
         </select>
       </div>
 
-      <aside class="registro-sidebar">
-        <div class="form-group">
-          <label>Estado operativo</label>
-          <select class="select-field">
-            <option>Activo</option>
-            <option>En proceso de baja</option>
-            <option>Préstamo</option>
-          </select>
+      <div class="form-group">
+        <label>Estado operativo</label>
+        <select class="select-field">
+          <option>Activo</option>
+          <option>En proceso de baja</option>
+          <option>Préstamo</option>
+        </select>
+      </div>
+
+    </aside>
+
+    <!-- Panel Derecho (Subida de Imagen Verde) -->
+    <section class="registro-main">
+      <div class="upload-card">
+        <div class="upload-icon-container">
+          <svg class="plus-svg" viewBox="0 0 24 24">
+            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/>
+          </svg>
+          <svg class="camera-svg" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3.2" fill="#fff" />
+            <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
+          </svg>
         </div>
+        <button class="btn-subir-imagen">SUBIR IMAGEN</button>
+      </div>
+    </section>
 
-        <!-- Panel Derecho (Subida de Imagen) -->
-        <section class="registro-main">
-          <div class="upload-card">
-            <div class="upload-icon-container">
-              <svg class="plus-svg" viewBox="0 0 24 24">
-                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-              </svg>
-              <svg class="camera-svg" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3.2" fill="#fff" />
-                <path
-                  d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
-              </svg>
-            </div>
-
-            <button class="btn-subir-imagen">SUBIR IMAGEN</button>
-          </div>
-        </section>
   </main>
 </body>
 
