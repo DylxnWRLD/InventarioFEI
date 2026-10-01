@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrar Equipo - Sistema de Inventario FEI</title>
+    <link rel="stylesheet" href="../CSS/home.css" />
+    <link rel="stylesheet" href="../CSS/altas.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="logo-uv">
+        <a href="index.html" class="btn-back">⮌</a>
+        <img
+          src="../images/logoUV.jpg"
+          alt="Logo Universidad Veracruzana"
+          loading="lazy"
+        />
+        <div class="text-uv">UNIVERSIDAD<br /><span>VERACRUZANA</span></div>
+      </div>
+
+      <div class="logo-sistema">
+        <img alt="Logo Sistema" src="../images/logoSistema.png" />
+        <div class="text-sistema">SISTEMA DE<br /><span>INVENTARIO</span></div>
+      </div>
+    </header>
+
+    <main class="registro-layout">
+
+      <aside class="registro-sidebar">
+        <div class="form-group">
+          <label>Tipo del equipo</label>
+          <select class="select-field">
+            <option>Equipo de Comunicación</option>
+            <option>Equipo de Cómputo</option>
+            <option>Perifericos</option>
+          </select>
+        </div>
+
+        <h2 class="titulo-seccion">INFORMACIÓN DEL EQUIPO</h2>
+
+        <div class="form-group">
+          <label>Marca del equipo</label>
+          <input type="text" class="input-field" placeholder="..." />
+        </div>
+
+        <div class="form-group">
+          <label>Modelo del equipo</label>
+          <input type="text" class="input-field" placeholder="..." />
+        </div>
+
+        <div class="form-group">
+          <label>Numero de Inventario</label>
+          <input type="text" class="input-field" placeholder="..." />
+        </div>
+
+        <div class="form-group">
+          <label>Numero de Serie</label>
+          <input type="text" class="input-field" placeholder="..." />
+        </div>
+      </aside>
+
+      <!-- Panel Derecho (Subida de Imagen) -->
+      <section class="registro-main">
+        <div class="upload-card">
+          <div class="upload-icon-container">
+            <svg class="plus-svg" viewBox="0 0 24 24">
+              <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
+            </svg>
+            <svg class="camera-svg" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3.2" fill="#fff" />
+              <path
+                d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"
+              />
+            </svg>
+          </div>
+
+          <button class="btn-subir-imagen">SUBIR IMAGEN</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

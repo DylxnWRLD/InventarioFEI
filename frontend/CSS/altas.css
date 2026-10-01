@@ -1,0 +1,137 @@
+    .btn-back {
+      background-color: #0068b7;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+      margin-right: 15px;
+      text-decoration: none;
+    }
+    
+    .btn-back:hover {
+      opacity: 0.9;
+    }
+
+    .header .logo-uv {
+      display: flex;
+      align-items: center;
+    }
+
+    .registro-layout {
+      display: flex;
+      height: calc(100vh - 85px); 
+      width: 100%;
+    }
+
+    .registro-sidebar {
+      background-color: #0068b7;
+      width: 320px;
+      padding: 20px 25px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .titulo-seccion {
+      font-size: 16px;
+      font-weight: 900;
+      margin-top: 20px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+
+    .input-field, .select-field {
+      background-color: #e5dfd3;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 15px;
+      font-size: 13px;
+      color: #333;
+      outline: none;
+      width: 100%;
+      font-family: "Roboto", sans-serif;
+    }
+
+    .select-field {
+      appearance: none;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+      background-repeat: no-repeat;
+      background-position: right 15px top 50%;
+      background-size: 12px auto;
+      cursor: pointer;
+    }
+
+    .registro-main {
+      flex: 1;
+      background-color: #00a651; /* Verde institucional del home.css */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .upload-card {
+      background-color: white;
+      border-radius: 30px;
+      width: 350px;
+      height: 350px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .upload-icon-container {
+      position: relative;
+      margin-bottom: 30px;
+    }
+
+    /* Icono de la cámara creado con SVG para mayor fidelidad */
+    .camera-svg {
+      width: 120px;
+      height: 90px;
+      fill: #00a651;
+    }
+
+    .plus-svg {
+      position: absolute;
+      top: -10px;
+      left: -30px;
+      width: 50px;
+      height: 50px;
+      fill: #0068b7;
+    }
+
+    .btn-subir-imagen {
+      background-color: #0068b7;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 30px;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .btn-subir-imagen:hover {
+      opacity: 0.9;
+    }

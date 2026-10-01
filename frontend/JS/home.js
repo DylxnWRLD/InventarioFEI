@@ -37,15 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Botón "Buscar".
-  document.getElementById('btn-buscar').addEventListener('click', ejecutarBusqueda);
-
   // Enter en el input dispara la búsqueda.
   document.getElementById('input-busqueda').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       ejecutarBusqueda();
     }
+  });
+
+  // Boton de Registro de Equipo
+  document.getElementById('btn-registrar-equipo').addEventListener('click', () => {
+    window.location.href = 'altas.html';
   });
 });
 
