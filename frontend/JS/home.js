@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Boton de Registro de Equipo
   document.getElementById('btn-registrar-equipo').addEventListener('click', () => {
-    window.location.href = 'altas.html';
+    window.location.href = './HTML/altas.html';
   });
 });
 
