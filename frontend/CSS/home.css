@@ -141,8 +141,8 @@ body {
   transition: background-color 0.2s;
 }
 
-.btn:hover {
-  opacity: 0.9;
+.btn-blue:hover {
+  background-color: #00a651;
 }
 
 .btn .icon {
@@ -169,7 +169,7 @@ body {
 /* Tarjeta */
 .equipo-card {
   height: 138px;
-  background-color: #faf8f1;
+  background-color: #e4dcc0;
   border-radius: 15px;
   padding: 9px;
   display: flex;
@@ -326,9 +326,8 @@ body {
   cursor: pointer;
 }
 
-
 .btn-paginacion:hover:not(:disabled) {
-  background-color: #004f7d;
+  background-color: #00a651;
 }
 
 
