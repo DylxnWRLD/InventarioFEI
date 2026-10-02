@@ -4,6 +4,9 @@ let paginaActual = 1;
 // Cantidad máxima de equipos por página.
 const equiposPorPagina = 30;
 
+// Timer para retrasar la búsqueda mientras el usuario escribe.
+let temporizadorBusqueda;
+
 // Término de búsqueda activo (null = modo listado normal).
 let terminoBusqueda = null;
 
@@ -43,6 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       ejecutarBusqueda();
     }
+  });
+
+  // Cada que busca
+  document.getElementById('input-busqueda').addEventListener('input', () => {
+    clearTimeout(temporizadorBusqueda);
+    temporizadorBusqueda = setTimeout(() => {
+      ejecutarBusqueda();
+    }, 500); // Retraso de 500 ms
   });
 
   // Boton de Registro de Equipo

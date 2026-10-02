@@ -116,5 +116,5 @@ public interface EquipoInventarioRepository {
             #{equipo.ubicacion}
         )
         """)
-        void insertarEquipo(EquipoInventarioModel equipo);
+        void registrarEquipo(EquipoInventarioModel equipo);
 }
