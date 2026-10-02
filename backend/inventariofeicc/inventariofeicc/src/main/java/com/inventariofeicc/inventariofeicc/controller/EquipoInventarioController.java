@@ -7,8 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
 import com.inventariofeicc.inventariofeicc.model.EquipoInventarioResponse;
 import com.inventariofeicc.inventariofeicc.service.EquipoInventarioService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 /**
  * Controlador REST para la gestion y consulta de equipos de inventario.
@@ -78,4 +82,22 @@ public class EquipoInventarioController {
                     .body("Ocurrió un error al buscar los equipos.");
         }
     }
+
+    @PostMapping("/Alta/Equipo")
+    public ResponseEntity<?> altaEquipos(@RequestBody EquipoInventarioModel equipo) {
+        try {
+            EIS.registrarNuevoEquipoService(equipo);
+            // EL RESPONSE ENTITY SIRVE PARA CHECAR LA RESPUESTA QUE SE OBTENGA DE LA PETICIÓN
+            return ResponseEntity.ok("Registro Exitoso de Nuevo Equipo: " + equipo.getNumeroInventario());
+
+        } catch (IllegalArgumentException iae) {
+            // ERROR EN CASO DE QUE FALTE ALGUN PARAMETRO EN EL BODY
+            return ResponseEntity.badRequest().body(iae.getMessage());
+
+        } catch (Exception e) {
+            // ERROR POR SI LA BASE DE DATOS TIENE ALGUN PROBLEMA
+            return ResponseEntity.internalServerError().body("Ocurrió un error al guardar el equipo.");
+        }
+    }
+    
 }

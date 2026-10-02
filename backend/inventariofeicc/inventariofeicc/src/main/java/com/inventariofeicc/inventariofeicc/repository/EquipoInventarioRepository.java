@@ -2,6 +2,7 @@ package com.inventariofeicc.inventariofeicc.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -96,4 +97,24 @@ public interface EquipoInventarioRepository {
     int contarEquiposBusqueda(
             @Param("textoBusqueda") String textoBusqueda
     );
+
+
+    @Insert("""
+        INSERT INTO inventariofei.equipo_inventario (
+            numero_inventario,
+            marca,
+            no_serial,
+            modelo,
+            descripcion,
+            ubicacion
+        ) VALUES (
+            #{equipo.numeroInventario},
+            #{equipo.marca},
+            #{equipo.noSerial},
+            #{equipo.modelo},
+            #{equipo.descripcion},
+            #{equipo.ubicacion}
+        )
+        """)
+        void insertarEquipo(EquipoInventarioModel equipo);
 }

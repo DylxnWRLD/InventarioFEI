@@ -1,6 +1,7 @@
 package com.inventariofeicc.inventariofeicc.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,39 @@ import com.inventariofeicc.inventariofeicc.repository.EquipoInventarioRepository
  */
 @Service
 public class EquipoInventarioService {
+
+    private static final Set<String> Ubicaciones = Set.of(
+          "CC1",
+          "CC2",
+          "CC3",
+          "CC4",
+          "AULA 4",
+          "AULA 5",
+          "AULA 6",
+          "AULA 102",
+          "AULA 105",
+          "AULA 107",   
+          "AULA 111",
+          "AULA 112",
+          "AULA 113",
+          "AULA F101",
+          "AULA F103",
+          "AULA F402",
+          "AULA F403",
+          "CUBICULO_42",
+          "CUBICULO_44",
+          "AREA_COMUN_CC",
+          "JEFATURA_CC",
+          "LAB. INNOVACION EN SOFTWARE",
+          "AUDIOVISUAL",
+          "ALMACEN"
+    );
+
+    private static final Set<String> EstadosOperativos = Set.of(
+          "ACTIVO",
+          "EN_PROCESO_DE_BAJA",
+          "PRESTAMO"
+    );
 
     private final EquipoInventarioRepository EIR;
 
@@ -76,5 +110,32 @@ public class EquipoInventarioService {
                 );
         int total = EIR.contarEquiposBusqueda(textoBusqueda);
         return new EquipoInventarioResponse(equipos, total);
+    }
+
+    /**
+     * Registra un nuevo equipo en el inventario después de validar sus datos.
+     * 
+     * @param equipo // Objeto que contiene la información del equipo a registrar.
+     */
+    public void registrarNuevoEquipoService(EquipoInventarioModel equipo) {
+        if(equipo.getNumeroInventario() == null || equipo.getNumeroInventario().isEmpty()) {
+            throw new IllegalArgumentException("El número de inventario es obligatorio.");
+        }
+        if(equipo.getEstadoOperativo() == null || equipo.getEstadoOperativo().isEmpty()) {
+            throw new IllegalArgumentException("El estado operativo es obligatorio.");
+        }
+        if(!EstadosOperativos.contains(equipo.getEstadoOperativo())) {
+            throw new IllegalArgumentException("El estado operativo proporcionado no es válido.");
+        }
+        if(equipo.getUbicacion() == null || equipo.getUbicacion().isEmpty()) {
+            throw new IllegalArgumentException("La ubicación es obligatoria.");
+        }
+        if(!Ubicaciones.contains(equipo.getUbicacion())) {
+            throw new IllegalArgumentException("La ubicación proporcionada no es válida.");
+        }
+        if(equipo.getUrlImagen() == null || equipo.getUrlImagen().isEmpty()) {
+            throw new IllegalArgumentException("La URL de la imagen es obligatoria.");
+        }
+        EIR.registrarEquipo(equipo);
     }
 }
