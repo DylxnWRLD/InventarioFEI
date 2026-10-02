@@ -5,123 +5,216 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registrar Equipo - Sistema de Inventario FEI</title>
+
   <link rel="stylesheet" href="../CSS/home.css" />
   <link rel="stylesheet" href="../CSS/altas.css" />
 </head>
 
 <body>
+
   <header class="header">
+
     <div class="logo-uv">
       <a href="../index.html" class="btn-back">⮌</a>
+
       <img src="../images/logoUV.jpg" alt="Logo Universidad Veracruzana" loading="lazy" />
-      <div class="text-uv">UNIVERSIDAD<br /><span>VERACRUZANA</span></div>
+
+      <div class="text-uv">
+        UNIVERSIDAD<br />
+        <span>VERACRUZANA</span>
+      </div>
     </div>
 
     <div class="logo-sistema">
-      <img alt="Logo Sistema" src="../images/logoSistema.png" />
-      <div class="text-sistema">SISTEMA DE<br /><span>INVENTARIO</span></div>
+
+      <img src="../images/logoSistema.png" alt="Logo Sistema" />
+
+      <div class="text-sistema">
+        SISTEMA DE<br />
+        <span>INVENTARIO</span>
+      </div>
+
     </div>
+
   </header>
 
   <main class="registro-layout">
-    
-    <!-- Panel Izquierdo (Formulario Azul con Scroll) -->
+
+    <!-- Panel izquierdo -->
     <aside class="registro-sidebar">
-      
+
       <div class="form-group">
-        <label>Tipo del equipo</label>
-        <select class="select-field">
-          <option>Equipo de Comunicación</option>
-          <option>Equipo de Cómputo</option>
-          <option>Perifericos</option>
+        <label for="tipo-equipo">Tipo del equipo</label>
+
+        <select id="tipo-equipo" class="select-field">
+          <option value="Equipo de Comunicación">
+            Equipo de Comunicación
+          </option>
+
+          <option value="Equipo de Cómputo">
+            Equipo de Cómputo
+          </option>
+
+          <option value="Periféricos">
+            Periféricos
+          </option>
         </select>
       </div>
 
-      <h2 class="titulo-seccion">INFORMACIÓN DEL EQUIPO</h2>
+      <h2 class="titulo-seccion">
+        INFORMACIÓN DEL EQUIPO
+      </h2>
 
       <div class="form-group">
-        <label>Número de inventario</label>
-        <input type="text" class="input-field" placeholder="Escribe aquí..." />
+        <label for="numero-inventario">
+          Número de inventario
+        </label>
+
+        <input type="text" id="numero-inventario" class="input-field" placeholder="Escribe aquí..." />
       </div>
 
       <div class="form-group">
-        <label>Marca del equipo</label>
-        <input type="text" class="input-field" placeholder="Escribe aquí..." />
+        <label for="marca-equipo">
+          Marca del equipo
+        </label>
+
+        <input type="text" id="marca-equipo" class="input-field" placeholder="Escribe aquí..." />
       </div>
 
       <div class="form-group">
-        <label>Modelo del equipo</label>
-        <input type="text" class="input-field" placeholder="Escribe aquí..." />
+        <label for="modelo-equipo">
+          Modelo del equipo
+        </label>
+
+        <input type="text" id="modelo-equipo" class="input-field" placeholder="Escribe aquí..." />
       </div>
 
       <div class="form-group">
-        <label>Número de serie</label>
-        <input type="text" class="input-field" placeholder="Escribe aquí..." />
+        <label for="numero-serie">
+          Número de serie
+        </label>
+
+        <input type="text" id="numero-serie" class="input-field" placeholder="Escribe aquí..." />
       </div>
 
       <div class="form-group">
-        <label>Descripción</label>
-        <input type="text" class="input-field" placeholder="Escribe aquí..." />
+        <label for="descripcion-equipo">
+          Descripción
+        </label>
+
+        <input type="text" id="descripcion-equipo" class="input-field" placeholder="Escribe aquí..." />
       </div>
 
       <div class="form-group">
-        <label>Ubicación</label>
-        <select class="select-field">
-          <option>CC1</option>
-          <option>CC2</option>
-          <option>CC3</option>
-          <option>CC4</option>
-          <option>Aula 4</option>
-          <option>Aula 5</option>
-          <option>Aula 6</option>
-          <option>Aula 102</option>
-          <option>Aula 105</option>
-          <option>Aula 107</option>
-          <option>Aula 111</option>
-          <option>Aula 112</option>
-          <option>Aula 113</option>
-          <option>Aula F101</option>
-          <option>Aula F103</option>
-          <option>Aula F402</option>
-          <option>Aula F403</option>
-          <option>Cubículo 42</option>
-          <option>Cubículo 44</option>
-          <option>Area común del CC</option>
-          <option>Jefatura del CC</option>
-          <option>Laboratorio de innovación en software</option>
-          <option>Audiovisual</option>
-          <option>Almacén</option>
+        <label for="ubicacion-equipo">
+          Ubicación
+        </label>
+
+        <select id="ubicacion-equipo" class="select-field">
+          <option value="CC1">CC1</option>
+          <option value="CC2">CC2</option>
+          <option value="CC3">CC3</option>
+          <option value="CC4">CC4</option>
+          <option value="Aula 4">Aula 4</option>
+          <option value="Aula 5">Aula 5</option>
+          <option value="Aula 6">Aula 6</option>
+          <option value="Aula 102">Aula 102</option>
+          <option value="Aula 105">Aula 105</option>
+          <option value="Aula 107">Aula 107</option>
+          <option value="Aula 111">Aula 111</option>
+          <option value="Aula 112">Aula 112</option>
+          <option value="Aula 113">Aula 113</option>
+          <option value="Aula F101">Aula F101</option>
+          <option value="Aula F103">Aula F103</option>
+          <option value="Aula F402">Aula F402</option>
+          <option value="Aula F403">Aula F403</option>
+          <option value="Cubículo 42">Cubículo 42</option>
+          <option value="Cubículo 44">Cubículo 44</option>
+          <option value="Área común del CC">
+            Área común del CC
+          </option>
+          <option value="Jefatura del CC">
+            Jefatura del CC
+          </option>
+          <option value="Laboratorio de innovación en software">
+            Laboratorio de innovación en software
+          </option>
+          <option value="Audiovisual">Audiovisual</option>
+          <option value="Almacén">Almacén</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label>Estado operativo</label>
-        <select class="select-field">
-          <option>Activo</option>
-          <option>En proceso de baja</option>
-          <option>Préstamo</option>
+        <label for="estado-operativo">
+          Estado operativo
+        </label>
+
+        <select id="estado-operativo" class="select-field">
+          <option value="Activo">Activo</option>
+
+          <option value="En proceso de baja">
+            En proceso de baja
+          </option>
+
+          <option value="Préstamo">
+            Préstamo
+          </option>
         </select>
       </div>
 
     </aside>
 
-    <!-- Panel Derecho (Subida de Imagen Verde) -->
+    <!-- Panel derecho -->
     <section class="registro-main">
+
       <div class="upload-card">
-        <div class="upload-icon-container">
+
+        <!-- Iconos iniciales -->
+        <div id="placeholder-iconos" class="upload-icon-container">
           <svg class="plus-svg" viewBox="0 0 24 24">
-            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"/>
+            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
           </svg>
+
           <svg class="camera-svg" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="3.2" fill="#fff" />
-            <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
+
+            <path
+              d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
           </svg>
         </div>
-        <button class="btn-subir-imagen">SUBIR IMAGEN</button>
+
+        <!-- Vista previa -->
+        <img id="preview-imagen" src="" alt="Vista previa del equipo" style="display: none;" />
+
+        <!-- Input oculto -->
+        <input type="file" id="input-imagen" accept="image/*" style="display: none;" />
+
+        <!-- URL de Supabase -->
+        <input type="hidden" id="url-imagen-supabase" />
+
+        <!-- Botón subir -->
+        <button type="button" id="btn-trigger-upload" class="btn-subir-imagen">
+          SUBIR IMAGEN
+        </button>
+
       </div>
+
+
+      <!-- Botón guardar -->
+      <button type="button" id="btn-guardar-equipo" class="btn-guardar-equipo">
+        GUARDAR EQUIPO
+      </button>
+
     </section>
 
   </main>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- JavaScript de altas -->
+  <script src="../JS/altas.js"></script>
+
 </body>
 
 </html>
