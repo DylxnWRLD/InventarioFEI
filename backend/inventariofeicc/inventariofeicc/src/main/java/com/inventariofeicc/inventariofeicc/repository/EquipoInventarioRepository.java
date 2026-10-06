@@ -126,5 +126,7 @@ public interface EquipoInventarioRepository {
             #{equipo.urlImagen}
         )
         """)
-        void registrarEquipo(EquipoInventarioModel equipo);
+        void registrarEquipo(
+            @Param("equipo") EquipoInventarioModel equipo
+        );
 }
