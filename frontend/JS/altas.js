@@ -60,7 +60,7 @@ inputImagen.addEventListener('change', async (event) => {
     }
 
     btnSubir.textContent = 'CAMBIAR IMAGEN';
-    alert('Imagen cargada correctamente');
+    console.log('Imagen cargada correctamente');
 
   } catch (err) {
     console.error('Error al subir a Supabase:', err);
@@ -105,7 +105,7 @@ if (btnGuardar) {
     btnGuardar.textContent = 'Guardando...';
 
     try {
-      const response = await fetch(`${API_BASE}/Equipos`, {
+      const response = await fetch(`${API_BASE}/Alta/Equipo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -118,7 +118,7 @@ if (btnGuardar) {
         throw new Error(errorText || `Error ${response.status}`);
       }
 
-      alert('¡Equipo registrado con éxito!');
+      console.log('¡Equipo registrado con éxito!');
       window.location.href = '/';
 
     } catch (error) {
