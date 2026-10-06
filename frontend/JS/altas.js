@@ -90,15 +90,15 @@ if (btnGuardar) {
     }
 
     const nuevoEquipo = {
-      numeroInventario,
-      tipoEquipo,
+      numero_inventario,
+      tipo_equipo,
       marca,
       modelo,
-      noSerial,
+      no_serial,
       descripcion,
       ubicacion,
-      estadoOperativo,
-      urlImagen
+      estado_operativo,
+      url_imagen
     };
 
     btnGuardar.disabled = true;
