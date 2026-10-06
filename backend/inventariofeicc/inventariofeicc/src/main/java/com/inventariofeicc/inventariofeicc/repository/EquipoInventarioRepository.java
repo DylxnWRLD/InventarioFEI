@@ -122,7 +122,7 @@ public interface EquipoInventarioRepository {
             #{equipo.descripcion},
             #{equipo.ubicacion}::inventariofei.tipo_ubicacion,
             #{equipo.tipo_equipo},
-            #{equipo.estado_operativo}::inventariofei.estado_operativo,
+            #{equipo.estado_operativo}::inventariofei.estado_operativo_equipo,
             #{equipo.url_imagen}
         )
         """)
