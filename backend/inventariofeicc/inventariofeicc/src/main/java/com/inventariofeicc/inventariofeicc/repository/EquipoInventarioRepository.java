@@ -120,9 +120,9 @@ public interface EquipoInventarioRepository {
             #{equipo.no_serial},
             #{equipo.modelo},
             #{equipo.descripcion},
-            #{equipo.ubicacion},
-            #{equipo.tipo_equipo},
-            #{equipo.estado_operativo},
+            #{equipo.ubicacion}::inventariofei.tipo_ubicacion,
+            #{equipo.tipo_equipo}::inventariofei.tipo_equipo,
+            #{equipo.estado_operativo}::inventariofei.estado_operativo,
             #{equipo.url_imagen}
         )
         """)
