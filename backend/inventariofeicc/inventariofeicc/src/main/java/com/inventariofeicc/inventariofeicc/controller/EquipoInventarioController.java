@@ -95,8 +95,8 @@ public class EquipoInventarioController {
             return ResponseEntity.badRequest().body(iae.getMessage());
 
         } catch (Exception e) {
-            // ERROR POR SI LA BASE DE DATOS TIENE ALGUN PROBLEMA
-            return ResponseEntity.internalServerError().body("Ocurrió un error al guardar el equipo.");
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
     
