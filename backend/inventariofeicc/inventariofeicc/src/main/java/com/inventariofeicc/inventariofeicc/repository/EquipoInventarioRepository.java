@@ -98,7 +98,11 @@ public interface EquipoInventarioRepository {
             @Param("textoBusqueda") String textoBusqueda
     );
 
-
+    /**
+     * Ingresa un nuevo equipo en la BD
+     * 
+     * @param equipo
+     */
     @Insert("""
         INSERT INTO inventariofei.equipo_inventario (
             numero_inventario,
@@ -106,14 +110,20 @@ public interface EquipoInventarioRepository {
             no_serial,
             modelo,
             descripcion,
-            ubicacion
+            ubicacion,
+            tipo_equipo,
+            estado_operativo,
+            url_imagen
         ) VALUES (
             #{equipo.numeroInventario},
             #{equipo.marca},
             #{equipo.noSerial},
             #{equipo.modelo},
             #{equipo.descripcion},
-            #{equipo.ubicacion}
+            #{equipo.ubicacion},
+            #{equipo.tipoEquipo},
+            #{equipo.estadoOperativo},
+            #{equipo.urlImagen}
         )
         """)
         void registrarEquipo(EquipoInventarioModel equipo);
