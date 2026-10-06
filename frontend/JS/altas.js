@@ -74,17 +74,17 @@ inputImagen.addEventListener('change', async (event) => {
 // Guardar equipo en Spring Boot
 if (btnGuardar) {
   btnGuardar.addEventListener('click', async () => {
-    const numeroInventario = document.getElementById('numero-inventario')?.value.trim();
-    const tipoEquipo = document.getElementById('tipo-equipo')?.value;
+    const numero_inventario = document.getElementById('numero-inventario')?.value.trim();
+    const tipo_equipo = document.getElementById('tipo-equipo')?.value;
     const marca = document.getElementById('marca-equipo')?.value.trim();
     const modelo = document.getElementById('modelo-equipo')?.value.trim();
-    const noSerial = document.getElementById('numero-serie')?.value.trim();
+    const no_serial = document.getElementById('numero-serie')?.value.trim();
     const descripcion = document.getElementById('descripcion-equipo')?.value.trim();
     const ubicacion = document.getElementById('ubicacion-equipo')?.value;
-    const estadoOperativo = document.getElementById('estado-operativo')?.value;
-    const urlImagen = inputUrlSupabase?.value || null;
+    const estado_operativo = document.getElementById('estado-operativo')?.value;
+    const url_imagen = inputUrlSupabase?.value || null;
 
-    if (!numeroInventario) {
+    if (!numero_inventario) {
       alert('Por favor ingresa el número de inventario.');
       return;
     }

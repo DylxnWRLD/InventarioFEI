@@ -115,15 +115,15 @@ public interface EquipoInventarioRepository {
             estado_operativo,
             url_imagen
         ) VALUES (
-            #{equipo.numeroInventario},
+            #{equipo.numero_inventario},
             #{equipo.marca},
-            #{equipo.noSerial},
+            #{equipo.no_serial},
             #{equipo.modelo},
             #{equipo.descripcion},
             #{equipo.ubicacion},
-            #{equipo.tipoEquipo},
-            #{equipo.estadoOperativo},
-            #{equipo.urlImagen}
+            #{equipo.tipo_equipo},
+            #{equipo.estado_operativo},
+            #{equipo.url_imagen}
         )
         """)
         void registrarEquipo(
