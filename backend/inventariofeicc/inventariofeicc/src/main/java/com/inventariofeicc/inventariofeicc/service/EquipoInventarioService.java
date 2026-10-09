@@ -30,6 +30,7 @@ public class EquipoInventarioService {
             "AULA 6",
             "AULA 102",
             "AULA 103",
+            "AULA 106",
             "AULA 105",
             "AULA 107",
             "AULA 111",
