@@ -13,7 +13,7 @@ import com.inventariofeicc.inventariofeicc.repository.EquipoInventarioRepository
  * Servicio encargado de manejar la lógica relacionada con los equipos de
  * inventario.
  *
- * @author Dyl y Momen
+ * @author Dylan y Gustavo
  */
 @Service
 public class EquipoInventarioService {
@@ -44,14 +44,12 @@ public class EquipoInventarioService {
             "JEFATURA_CC",
             "LAB. INNOVACION EN SOFTWARE",
             "AUDIOVISUAL",
-            "ALMACEN"
-    );
+            "ALMACEN");
 
     private static final Set<String> EstadosOperativos = Set.of(
             "ACTIVO",
             "EN_PROCESO_DE_BAJA",
-            "PRESTAMO"
-    );
+            "PRESTAMO");
 
     private final EquipoInventarioRepository EIR;
 
@@ -64,7 +62,7 @@ public class EquipoInventarioService {
      * Constructor del servicio.
      *
      * @param EIR repositorio encargado de realizar las consultas a la base de
-     * datos.
+     *            datos.
      */
     public EquipoInventarioService(EquipoInventarioRepository EIR) {
         this.EIR = EIR;
@@ -92,24 +90,21 @@ public class EquipoInventarioService {
      * resultados de una página determinada.
      *
      * @param textoBusqueda texto que se desea buscar.
-     * @param pagina número de página.
+     * @param pagina        número de página.
      * @return equipos encontrados y cantidad total de coincidencias.
      */
     public EquipoInventarioResponse buscarEquipos(String textoBusqueda, int pagina) {
         if (pagina < 1) {
-            throw new IllegalArgumentException("La página debe ser mayor o igual a 1."
-            );
+            throw new IllegalArgumentException("La página debe ser mayor o igual a 1.");
         }
         if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
             throw new IllegalArgumentException("El texto de búsqueda no puede estar vacío.");
         }
         int offset = (pagina - 1) * LIMITE;
-        List<EquipoInventarioModel> equipos
-                = EIR.buscarEquipos(
-                        textoBusqueda,
-                        LIMITE,
-                        offset
-                );
+        List<EquipoInventarioModel> equipos = EIR.buscarEquipos(
+                textoBusqueda,
+                LIMITE,
+                offset);
         int total = EIR.contarEquiposBusqueda(textoBusqueda);
         return new EquipoInventarioResponse(equipos, total);
     }
@@ -118,32 +113,28 @@ public class EquipoInventarioService {
      * Registra un nuevo equipo en el inventario después de validar sus datos.
      *
      * @param equipo // Objeto que contiene la información del equipo a
-     * registrar.
+     *               registrar.
      */
     public void registrarNuevoEquipoService(EquipoInventarioModel equipo) {
+        // Manda a llamar a la función del repositorio para verificar si el número de inventario ya existe
+        int equiposIguales = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario());
 
+
+        if (equipo.getNumeroInventario() == null || equipo.getNumeroInventario().isEmpty()) {
+            throw new IllegalArgumentException("El número de inventario es obligatorio.");
+        }
+        if (equiposIguales > 0) { // Si hay matches con ese numero de inventario, lanza una excepción
+            throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
+        }
         if (!equipo.getNumeroInventario().matches(CARACTERES_PERMITIDOS)) {
-            throw new IllegalArgumentException(
-                    "El número de inventario contiene caracteres no permitidos."
-            );
+            throw new IllegalArgumentException("El número de inventario contiene caracteres no permitidos.");
         }
-
-        if (equipo.getNoSerial() != null
-                && !equipo.getNoSerial().isEmpty()
-                && !equipo.getNoSerial().matches(CARACTERES_PERMITIDOS)) {
-            throw new IllegalArgumentException(
-                    "El número de serie contiene caracteres no permitidos."
-            );
+        if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_PERMITIDOS)) {
+            throw new IllegalArgumentException("El número de serie contiene caracteres no permitidos.");
         }
-
-        if (equipo.getModelo() != null
-                && !equipo.getModelo().isEmpty()
-                && !equipo.getModelo().matches(CARACTERES_PERMITIDOS)) {
-            throw new IllegalArgumentException(
-                    "El modelo contiene caracteres no permitidos."
-            );
+        if (equipo.getModelo() != null && !equipo.getModelo().isEmpty() && !equipo.getModelo().matches(CARACTERES_PERMITIDOS)) {
+            throw new IllegalArgumentException("El modelo contiene caracteres no permitidos.");
         }
-
         if (equipo.getEstadoOperativo() == null || equipo.getEstadoOperativo().isEmpty()) {
             throw new IllegalArgumentException("El estado operativo es obligatorio.");
         }
@@ -159,6 +150,7 @@ public class EquipoInventarioService {
         if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isEmpty()) {
             throw new IllegalArgumentException("La URL de la imagen es obligatoria.");
         }
+
         EIR.registrarEquipo(equipo);
     }
 }
