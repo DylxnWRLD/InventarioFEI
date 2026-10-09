@@ -128,6 +128,9 @@ public class EquipoInventarioService {
         if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_PERMITIDOS)) {
             throw new IllegalArgumentException("El número de serie contiene caracteres no permitidos.");
         }
+        if (equipo.getMarca() != null && !equipo.getMarca().isEmpty() && !equipo.getMarca().matches(CARACTERES_PERMITIDOS)) {
+            throw new IllegalArgumentException("La marca contiene caracteres no permitidos.");
+        }
         if (equipo.getModelo() != null && !equipo.getModelo().isEmpty() && !equipo.getModelo().matches(CARACTERES_PERMITIDOS)) {
             throw new IllegalArgumentException("El modelo contiene caracteres no permitidos.");
         }
