@@ -119,12 +119,8 @@ public class EquipoInventarioService {
         // Manda a llamar a la función del repositorio para verificar si el número de inventario ya existe
         int equiposIguales = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario());
 
-
         if (equipo.getNumeroInventario() == null || equipo.getNumeroInventario().isEmpty()) {
             throw new IllegalArgumentException("El número de inventario es obligatorio.");
-        }
-        if (equiposIguales > 0) { // Si hay matches con ese numero de inventario, lanza una excepción
-            throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
         }
         if (!equipo.getNumeroInventario().matches(CARACTERES_PERMITIDOS)) {
             throw new IllegalArgumentException("El número de inventario contiene caracteres no permitidos.");
@@ -149,6 +145,9 @@ public class EquipoInventarioService {
         }
         if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isEmpty()) {
             throw new IllegalArgumentException("La URL de la imagen es obligatoria.");
+        }
+        if (equiposIguales > 0) { // Si hay matches con ese numero de inventario, lanza una excepción
+            throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
         }
 
         EIR.registrarEquipo(equipo);
