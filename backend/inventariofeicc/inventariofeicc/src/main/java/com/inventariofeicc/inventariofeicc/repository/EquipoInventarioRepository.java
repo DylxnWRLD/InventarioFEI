@@ -129,4 +129,19 @@ public interface EquipoInventarioRepository {
         void registrarEquipo(
             @Param("equipo") EquipoInventarioModel equipo
         );
+
+    /**
+     * Verifica si un número de inventario ya existe en la base de datos.
+     * 
+     * @param numeroInventario
+     */
+    @Select ("""
+        SELECT COUNT(*)
+            FROM inventariofei.equipo_inventario
+            WHERE numero_inventario = #{numeroInventario}
+            """
+        )
+        Integer verificarNumeroInventarioExistente(
+            @Param("numeroInventario") String numeroInventario
+        );
 }
