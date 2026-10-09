@@ -1,5 +1,5 @@
 const SUPABASE_URL = 'https://idsdkpdonldeaqrfcttq.supabase.co';
-const SUPABASE_ANON_KEY = 'TU_ANON_KEY';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkc2RrcGRvbmxkZWFxcmZjdHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMDMzMjIsImV4cCI6MjEwNTU3OTMyMn0.-II-i_C9dpKSqleN1E15eAiOQw_HVQA32gly2SPlN5M';
 const BUCKET_NAME = 'equipos_inventario';
 
 const API_BASE = 'https://inventariofeicc-api.onrender.com/InventarioFEI';
