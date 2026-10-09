@@ -84,12 +84,12 @@ if (btnGuardar) {
     const estado_operativo = document.getElementById('estado-operativo')?.value;
     const url_imagen = inputUrlSupabase?.value || null;
 
-    /** 
+    
     if (!numero_inventario) {
       alert('Por favor ingresa el número de inventario.');
       return;
     }
-      */
+      
 
     const nuevoEquipo = {
       numero_inventario,
