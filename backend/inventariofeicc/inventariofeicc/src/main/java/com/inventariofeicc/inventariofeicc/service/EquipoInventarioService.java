@@ -38,6 +38,7 @@ public class EquipoInventarioService {
             "AULA F103",
             "AULA F402",
             "AULA F403",
+            "AULA F404",
             "CUBICULO_42",
             "CUBICULO_44",
             "AREA_COMUN_CC",
