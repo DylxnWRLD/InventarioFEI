@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
 import com.inventariofeicc.inventariofeicc.model.EquipoInventarioResponse;
 import com.inventariofeicc.inventariofeicc.service.EquipoInventarioService;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 /**
  * Controlador REST para la gestion y consulta de equipos de inventario.
@@ -99,5 +99,25 @@ public class EquipoInventarioController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
-    
+
+    /**
+     * Obtiene un equipo mediante su número de inventario.
+     *
+     * @param numeroInventario número de inventario del equipo.
+     * @return información del equipo solicitado.
+     */
+    @GetMapping("/Equipos/{numeroInventario}")
+    public ResponseEntity<?> obtenerEquipoPorNumeroInventario(@PathVariable String numeroInventario) {
+        try {
+            EquipoInventarioModel equipo = EIS.obtenerEquipoPorNumeroInventario(numeroInventario);
+            if (equipo == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(equipo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Ocurrió un error al obtener el equipo.");
+        }
+    }
+
 }

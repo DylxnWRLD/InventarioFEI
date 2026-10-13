@@ -315,7 +315,7 @@ function escapeHtml(str) {
  * ============================================================ */
 
 function solicitarBaja(numeroInventario) {
-  console.log('Iniciar proceso de baja para:', numeroInventario);
+  window.location.href = `HTML/bajas.html?numeroInventario=${encodeURIComponent(numeroInventario)}`;
 }
 
 function editarEquipo(numeroInventario) {

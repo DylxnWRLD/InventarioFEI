@@ -100,7 +100,7 @@ public interface EquipoInventarioRepository {
 
     /**
      * Ingresa un nuevo equipo en la BD
-     * 
+     *
      * @param equipo
      */
     @Insert("""
@@ -126,22 +126,37 @@ public interface EquipoInventarioRepository {
             #{equipo.url_imagen}
         )
         """)
-        void registrarEquipo(
+    void registrarEquipo(
             @Param("equipo") EquipoInventarioModel equipo
-        );
+    );
 
     /**
      * Verifica si un número de inventario ya existe en la base de datos.
-     * 
+     *
      * @param numeroInventario
      */
-    @Select ("""
+    @Select("""
         SELECT COUNT(*)
             FROM inventariofei.equipo_inventario
             WHERE numero_inventario = #{numeroInventario}
             """
-        )
-        Integer verificarNumeroInventarioExistente(
+    )
+    Integer verificarNumeroInventarioExistente(
             @Param("numeroInventario") String numeroInventario
-        );
+    );
+
+    /**
+     * Obtiene un equipo específico mediante su número de inventario.
+     *
+     * @param numeroInventario número de inventario del equipo.
+     * @return equipo encontrado o null si no existe.
+     */
+    @Select("""
+        SELECT *
+        FROM inventariofei.equipo_inventario
+        WHERE numero_inventario = #{numeroInventario}
+    """)
+    EquipoInventarioModel obtenerEquipoPorNumeroInventario(
+            @Param("numeroInventario") String numeroInventario
+    );
 }

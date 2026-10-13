@@ -66,7 +66,7 @@ public class EquipoInventarioService {
      * Constructor del servicio.
      *
      * @param EIR repositorio encargado de realizar las consultas a la base de
-     *            datos.
+     * datos.
      */
     public EquipoInventarioService(EquipoInventarioRepository EIR) {
         this.EIR = EIR;
@@ -94,7 +94,7 @@ public class EquipoInventarioService {
      * resultados de una página determinada.
      *
      * @param textoBusqueda texto que se desea buscar.
-     * @param pagina        número de página.
+     * @param pagina número de página.
      * @return equipos encontrados y cantidad total de coincidencias.
      */
     public EquipoInventarioResponse buscarEquipos(String textoBusqueda, int pagina) {
@@ -114,10 +114,23 @@ public class EquipoInventarioService {
     }
 
     /**
+     * Obtiene un equipo mediante su número de inventario.
+     *
+     * @param numeroInventario número de inventario del equipo.
+     * @return equipo encontrado o null si no existe.
+     */
+    public EquipoInventarioModel obtenerEquipoPorNumeroInventario(String numeroInventario) {
+        if (numeroInventario == null || numeroInventario.isBlank()) {
+            throw new IllegalArgumentException("El número de inventario es obligatorio.");
+        }
+        return EIR.obtenerEquipoPorNumeroInventario(numeroInventario);
+    }
+
+    /**
      * Registra un nuevo equipo en el inventario después de validar sus datos.
      *
      * @param equipo // Objeto que contiene la información del equipo a
-     *               registrar.
+     * registrar.
      */
     public void registrarNuevoEquipoService(EquipoInventarioModel equipo) {
         // Manda a llamar a la función del repositorio para verificar si el número de inventario ya existe
@@ -159,4 +172,5 @@ public class EquipoInventarioService {
 
         EIR.registrarEquipo(equipo);
     }
+
 }

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baja de Equipo - Sistema de Inventario FEI</title>
+
+  <link rel="stylesheet" href="../CSS/home.css" />
+  <link rel="stylesheet" href="../CSS/bajas.css" />
+</head>
+
+<body>
+
+  <header class="header">
+
+    <div class="logo-uv">
+      <a href="../index.html" class="btn-back">⮌</a>
+
+      <img src="../images/logoUV.jpg" alt="Logo Universidad Veracruzana" loading="lazy" />
+
+      <div class="text-uv">
+        UNIVERSIDAD<br />
+        <span>VERACRUZANA</span>
+      </div>
+    </div>
+
+    <div class="logo-sistema">
+
+      <img src="../images/logoSistema.png" alt="Logo Sistema" />
+
+      <div class="text-sistema">
+        SISTEMA DE<br />
+        <span>INVENTARIO</span>
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="registro-layout">
+
+    <!-- Panel izquierdo -->
+    <aside class="registro-sidebar">
+
+      <div class="form-group">
+        <label for="tipo-equipo">Tipo del equipo</label>
+
+        <select id="tipo-equipo" class="select-field">
+          <option value="Equipo de Comunicación">
+            Equipo de Comunicación (Switch, antenas, AP, Router, Teléfonos, Conmuntador)
+          </option>
+
+          <option value="Equipo de Cómputo">
+            Equipo de Cómputo (PC, Laptop, Tabletas, Servidores)
+          </option>
+
+          <option value="Periféricos">
+            Periféricos (Impresora, Scanner, Multifuncionales, Cámaras de videoconferencia, Discos duros externos)
+          </option>
+        </select>
+      </div>
+
+      <h2 class="titulo-seccion">
+        INFORMACIÓN DEL EQUIPO
+      </h2>
+
+      <div class="form-group">
+        <label for="numero-inventario">
+          Número de inventario
+        </label>
+
+        <input type="text" id="numero-inventario" class="input-field" placeholder="Escribe aquí..." />
+      </div>
+
+      <div class="form-group">
+        <label for="marca-equipo">
+          Marca del equipo
+        </label>
+
+        <input type="text" id="marca-equipo" class="input-field" placeholder="Escribe aquí..." />
+      </div>
+
+      <div class="form-group">
+        <label for="modelo-equipo">
+          Modelo del equipo
+        </label>
+
+        <input type="text" id="modelo-equipo" class="input-field" placeholder="Escribe aquí..." />
+      </div>
+
+      <div class="form-group">
+        <label for="numero-serie">
+          Número de serie
+        </label>
+
+        <input type="text" id="numero-serie" class="input-field" placeholder="Escribe aquí..." />
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion-equipo">
+          Descripción
+        </label>
+
+        <input type="text" id="descripcion-equipo" class="input-field" placeholder="Escribe aquí..." />
+      </div>
+
+      <div class="form-group">
+        <label for="ubicacion-equipo">
+          Ubicación
+        </label>
+
+        <select id="ubicacion-equipo" class="select-field">
+          <option value="CC1">CC1</option>
+          <option value="CC2">CC2</option>
+          <option value="CC3">CC3</option>
+          <option value="CC4">CC4</option>
+          <option value="AULA 4">Aula 4</option>
+          <option value="AULA 5">Aula 5</option>
+          <option value="AULA 6">Aula 6</option>
+          <option value="AULA 102">Aula 102</option>
+          <option value="AULA 103">Aula 103</option>
+          <option value="AULA 105">Aula 105</option>
+          <option value="AULA 106">Aula 106</option>
+          <option value="AULA 107">Aula 107</option>
+          <option value="AULA 111">Aula 111</option>
+          <option value="AULA 112">Aula 112</option>
+          <option value="AULA 113">Aula 113</option>
+          <option value="AULA F101">Aula F101</option>
+          <option value="AULA F102">Aula F102</option>
+          <option value="AULA F103">Aula F103</option>
+          <option value="AULA F402">Aula F402</option>
+          <option value="AULA F403">Aula F403</option>
+          <option value="AULA F404">Aula F404</option>
+          <option value="CUBICULO_42">Cubículo 42</option>
+          <option value="CUBICULO_44">Cubículo 44</option>
+          <option value="AREA_COMUN_CC">
+            Área común del CC
+          </option>
+          <option value="JEFATURA_CC">
+            Jefatura del CC
+          </option>
+          <option value="LAB. INNOVACION EN SOFTWARE">
+            Laboratorio de innovación en software
+          </option>
+          <option value="AUDIOVISUAL">Audiovisual</option>
+          <option value="ALMACEN">Almacén</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="estado-operativo">
+          Estado operativo
+        </label>
+
+        <select id="estado-operativo" class="select-field">
+          <option value="ACTIVO">Activo</option>
+
+          <option value="EN_PROCESO_DE_BAJA">
+            En proceso de baja
+          </option>
+
+          <option value="PRESTAMO">
+            Préstamo
+          </option>
+        </select>
+      </div>
+
+    </aside>
+
+    <!-- Panel derecho -->
+    <section class="registro-main">
+
+      <div class="upload-card">
+
+        <!-- Iconos iniciales -->
+        <div id="placeholder-iconos" class="upload-icon-container">
+          <svg class="plus-svg" viewBox="0 0 24 24">
+            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
+          </svg>
+
+          <svg class="camera-svg" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3.2" fill="#fff" />
+
+            <path
+              d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
+          </svg>
+        </div>
+
+        <!-- Vista previa -->
+        <img id="preview-imagen" src="" alt="Vista previa del equipo" style="display: none;" />
+
+        <!-- Input oculto -->
+        <input type="file" id="input-imagen" accept="image/*" style="display: none;" />
+
+        <!-- URL de Supabase -->
+        <input type="hidden" id="url-imagen-supabase" />
+
+        <!-- Botón subir -->
+        <button type="button" id="btn-trigger-upload" class="btn-subir-imagen">
+          SUBIR IMAGEN
+        </button>
+
+      </div>
+
+
+      <!-- Botón guardar -->
+      <button type="button" id="btn-guardar-equipo" class="btn-guardar-equipo">
+        CONFIRMAR
+      </button>
+
+    </section>
+
+  </main>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- JavaScript de altas -->
+  <script src="../JS/bajas.js"></script>
+
+</body>
+
+</html>
