@@ -1,10 +1,11 @@
 
 const API_BASE = 'https://inventariofeicc-api.onrender.com/InventarioFEI';
+const RUTA_FORMATO = '../formatos/abs-cb-f-25.xlsx';
 
 const parametros = new URLSearchParams(window.location.search);
 const numeroInventario = parametros.get('numeroInventario');
 
-// Obtener información del equipo
+// Obtener información del equipo seleccionado
 async function cargarEquipo() {
     if (!numeroInventario) {
         alert('No se seleccionó ningún equipo.');
@@ -29,8 +30,21 @@ async function cargarEquipo() {
         document.getElementById('numero-serie').value = equipo.noSerial ?? '';
         document.getElementById('descripcion-equipo').value = equipo.descripcion ?? '';
         document.getElementById('tipo-equipo').value = equipo.tipoEquipo ?? '';
-        document.getElementById('ubicacion-equipo').value = equipo.ubicacion ?? '';
         document.getElementById('estado-operativo').value = equipo.estadoOperativo ?? '';
+
+        // Seleccionar la ubicación correspondiente
+        const ubicacion = document.getElementById('ubicacion-equipo');
+
+        ubicacion.value = equipo.ubicacion ?? '';
+
+        // Si la ubicación no existe entre las opciones, mostrarla
+        if (equipo.ubicacion && ubicacion.value !== equipo.ubicacion) {
+            const opcion = document.createElement('option');
+            opcion.value = equipo.ubicacion;
+            opcion.textContent = equipo.ubicacion;
+            ubicacion.appendChild(opcion);
+            ubicacion.value = equipo.ubicacion;
+        }
 
         console.log('Equipo cargado:', equipo);
 
@@ -40,33 +54,48 @@ async function cargarEquipo() {
     }
 }
 
-// Seleccionar plantilla Excel
-const btnSubirExcel = document.getElementById('btn-trigger-upload');
-const inputExcel = document.getElementById('input-excel');
-const nombreArchivo = document.getElementById('nombre-archivo');
+// Mostrar automáticamente el formato de baja
+async function mostrarFormatoBaja() {
+    const visor = document.getElementById('visor-excel');
 
-btnSubirExcel.addEventListener('click', () => {
-    inputExcel.click();
-});
+    try {
+        if (typeof XLSX === 'undefined') {
+            throw new Error('No se pudo cargar la librería de Excel.');
+        }
 
-inputExcel.addEventListener('change', () => {
-    const archivo = inputExcel.files[0];
+        const respuesta = await fetch(RUTA_FORMATO);
 
-    if (!archivo) {
-        nombreArchivo.textContent = 'Ningún archivo seleccionado';
-        return;
+        if (!respuesta.ok) {
+            throw new Error('No se pudo obtener el formato de baja.');
+        }
+
+        const archivo = await respuesta.arrayBuffer();
+
+        // Leer el archivo Excel
+        const libro = XLSX.read(archivo, {
+            type: 'array'
+        });
+
+        // Seleccionar la hoja del dictamen
+        const hoja = libro.Sheets['Mobiliario -Herramientas'];
+
+        if (!hoja) {
+            throw new Error('No se encontró la hoja del dictamen.');
+        }
+
+        // Convertir la hoja en una tabla HTML
+        visor.innerHTML = XLSX.utils.sheet_to_html(hoja);
+
+        console.log('Formato de baja cargado correctamente.');
+
+    } catch (error) {
+        console.error('Error al cargar el Excel:', error);
+        visor.textContent = 'No se pudo mostrar el formato de baja.';
     }
+}
 
-    const extension = archivo.name.split('.').pop().toLowerCase();
-
-    if (!['xlsx', 'xlsm'].includes(extension)) {
-        alert('Selecciona un archivo Excel válido.');
-        inputExcel.value = '';
-        nombreArchivo.textContent = 'Ningún archivo seleccionado';
-        return;
-    }
-
-    nombreArchivo.textContent = archivo.name;
+// Ejecutar ambas funciones al abrir la pantalla
+document.addEventListener('DOMContentLoaded', () => {
+    cargarEquipo();
+    mostrarFormatoBaja();
 });
-
-document.addEventListener('DOMContentLoaded', cargarEquipo);
