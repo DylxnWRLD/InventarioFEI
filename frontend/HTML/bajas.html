@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 
@@ -43,22 +44,7 @@
 
       <div class="form-group">
         <label for="tipo-equipo">Tipo del equipo</label>
-
-        <select id="tipo-equipo" class="select-field" disabled>
-          <option value="">Selecciona un tipo de equipo</option>
-
-          <option value="Equipo de Comunicación">
-            Equipo de Comunicación (Switch, antenas, AP, Router, Teléfonos, Conmutador)
-          </option>
-
-          <option value="Equipo de Cómputo">
-            Equipo de Cómputo (PC, Laptop, Tabletas, Servidores)
-          </option>
-
-          <option value="Periféricos">
-            Periféricos (Impresora, Scanner, Multifuncionales, Cámaras de videoconferencia, Discos duros externos)
-          </option>
-        </select>
+        <input type="text" id="tipo-equipo" class="input-field" readonly />
       </div>
 
       <h2 class="titulo-seccion">
@@ -67,68 +53,32 @@
 
       <div class="form-group">
         <label for="numero-inventario">Número de inventario</label>
-
-        <input
-          type="text"
-          id="numero-inventario"
-          class="input-field"
-          readonly
-        />
+        <input type="text" id="numero-inventario" class="input-field" readonly />
       </div>
 
       <div class="form-group">
         <label for="numero-activo">Número de activo</label>
-
-        <input
-          type="text"
-          id="numero-activo"
-          class="input-field"
-          readonly
-        />
+        <input type="text" id="numero-activo" class="input-field" readonly />
       </div>
 
       <div class="form-group">
         <label for="marca-equipo">Marca del equipo</label>
-
-        <input
-          type="text"
-          id="marca-equipo"
-          class="input-field"
-          readonly
-        />
+        <input type="text" id="marca-equipo" class="input-field" readonly />
       </div>
 
       <div class="form-group">
         <label for="modelo-equipo">Modelo del equipo</label>
-
-        <input
-          type="text"
-          id="modelo-equipo"
-          class="input-field"
-          readonly
-        />
+        <input type="text" id="modelo-equipo" class="input-field" readonly />
       </div>
 
       <div class="form-group">
         <label for="numero-serie">Número de serie</label>
-
-        <input
-          type="text"
-          id="numero-serie"
-          class="input-field"
-          readonly
-        />
+        <input type="text" id="numero-serie" class="input-field" readonly />
       </div>
 
       <div class="form-group">
         <label for="descripcion-equipo">Descripción</label>
-
-        <input
-          type="text"
-          id="descripcion-equipo"
-          class="input-field"
-          readonly
-        />
+        <input type="text" id="descripcion-equipo" class="input-field" readonly />
       </div>
 
       <div class="form-group">
@@ -199,47 +149,31 @@
 
       <div class="upload-card">
 
-        <!-- Icono de Excel -->
-        <div id="placeholder-iconos" class="upload-icon-container">
+        <h2 class="titulo-seccion">
+          FORMATO DE BAJA
+        </h2>
 
-          <svg
-            class="excel-svg"
-            viewBox="0 0 24 24"
-            width="85"
-            height="85"
-            aria-hidden="true"
-          >
-            <path
-              fill="#217346"
-              d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm0 1.5L18.5 8H14V3.5zM8 13h2l1.5 2.5L13 13h2l-2.5 4L15 21h-2l-1.5-2.5L10 21H8l2.5-4L8 13z"
-            />
-          </svg>
-
-        </div>
-
-        <p id="nombre-archivo">
-          Ningún archivo seleccionado
+        <p>
+          Dictamen técnico de baja del equipo seleccionado.
         </p>
 
-        <!-- Selección de plantilla Excel -->
-        <input
-          type="file"
-          id="input-excel"
-          accept=".xlsx,.xlsm"
-          style="display: none;"
-        />
+        <!-- Visualización automática de la plantilla Excel -->
+        <div id="visor-excel" aria-live="polite">
+          Cargando formato de baja...
+        </div>
 
-        <button
-          type="button"
-          id="btn-trigger-upload"
+        <!-- Descargar plantilla original -->
+        <a
+          href="../formatos/abs-cb-f-25.xlsx"
+          download="abs-cb-f-25.xlsx"
           class="btn-subir-imagen"
         >
-          SUBIR FORMATO EXCEL
-        </button>
+          DESCARGAR FORMATO
+        </a>
 
       </div>
 
-      <!-- Botón para confirmar -->
+      <!-- Botón de confirmación -->
       <button
         type="button"
         id="btn-guardar-equipo"
@@ -253,6 +187,10 @@
 
   </main>
 
+  <!-- Librería para leer archivos Excel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- JavaScript del módulo de bajas -->
   <script src="../JS/bajas.js"></script>
 
 </body>
