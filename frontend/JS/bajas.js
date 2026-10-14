@@ -120,6 +120,11 @@ function agregarEquipo(equipo) {
         return;
     }
 
+    if (equiposSeleccionados.length >= 10) {
+        alert('El formato permite un máximo de 10 equipos.');
+        return;
+    }
+
     equiposSeleccionados.push(equipo);
 
     actualizarSeleccion();
@@ -180,6 +185,7 @@ function actualizarSeleccion() {
     if (texto) {
         buscarEquipos();
     }
+    actualizarFormatoExcel();
 }
 
 // Mostrar automáticamente la plantilla Excel
@@ -209,7 +215,7 @@ async function mostrarFormatoBaja() {
             throw new Error('No se encontró la hoja del dictamen.');
         }
 
-        visor.innerHTML = XLSX.utils.sheet_to_html(hoja);
+        actualizarFormatoExcel();
 
         console.log('Formato de baja cargado correctamente.');
 
@@ -241,8 +247,8 @@ function actualizarFormatoExcel() {
         T: 'modelo'
     };
 
-    // Recorrer los equipos seleccionados
-    equiposSeleccionados.forEach((equipo, indice) => {
+    // Recorrer un máximo de 10 equipos
+    equiposSeleccionados.slice(0, 10).forEach((equipo, indice) => {
         const fila = 12 + indice;
 
         // Recorrer los campos que queremos completar
