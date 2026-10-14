@@ -60,6 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-registrar-equipo').addEventListener('click', () => {
     window.location.href = './HTML/altas.html';
   });
+
+    // Boton de Bajas de Equipo
+  document.getElementById('btn-bajas-equipo').addEventListener('click', () => {
+    window.location.href = './HTML/bajas.html';
+  });
 });
 
 /* ============================================================
@@ -254,13 +259,6 @@ function renderizarEquipos(equipos, contenedor) {
         </p>
 
         <div class="equipo-botones">
-          <button
-            class="btn-baja"
-            onclick="solicitarBaja('${equipo.numeroInventario || ''}')"
-          >
-            Dar Baja
-          </button>
-
           <button
             class="btn-editar"
             onclick="editarEquipo('${equipo.numeroInventario || ''}')"

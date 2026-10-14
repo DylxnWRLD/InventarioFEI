@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Baja de Equipo - Sistema de Inventario FEI</title>
+  <title>Baja de Equipos - Sistema de Inventario FEI</title>
 
   <link rel="stylesheet" href="../CSS/home.css" />
   <link rel="stylesheet" href="../CSS/bajas.css" />
@@ -27,12 +27,14 @@
     </div>
 
     <div class="logo-sistema">
+
       <img src="../images/logoSistema.png" alt="Logo Sistema" />
 
       <div class="text-sistema">
         SISTEMA DE<br />
         <span>INVENTARIO</span>
       </div>
+
     </div>
 
   </header>
@@ -42,105 +44,59 @@
     <!-- Panel izquierdo -->
     <aside class="registro-sidebar">
 
-      <div class="form-group">
-        <label for="tipo-equipo">Tipo del equipo</label>
-        <input type="text" id="tipo-equipo" class="input-field" readonly />
-      </div>
-
       <h2 class="titulo-seccion">
-        INFORMACIÓN DEL EQUIPO
+        BUSCAR EQUIPOS
       </h2>
 
       <div class="form-group">
-        <label for="numero-inventario">Número de inventario</label>
-        <input type="text" id="numero-inventario" class="input-field" readonly />
+        <label for="buscar-equipo">
+           Busca el equipo aquí...
+        </label>
+
+        <input
+          type="search"
+          id="buscar-equipo"
+          class="input-field"
+          placeholder="Buscar equipo..."
+          autocomplete="off"
+        />
       </div>
 
-      <div class="form-group">
-        <label for="numero-activo">Número de activo</label>
-        <input type="text" id="numero-activo" class="input-field" readonly />
+      <button
+        type="button"
+        id="btn-buscar-equipo"
+        class="btn-buscar-equipo"
+      >
+        Buscar
+      </button>
+
+      <!-- Resultados de la búsqueda -->
+      <h2 class="titulo-seccion">
+        RESULTADOS
+      </h2>
+
+      <div id="resultados-busqueda" class="resultados-busqueda" aria-live="polite">
+        <p>Busca un equipo para visualizar sus datos.</p>
       </div>
 
-      <div class="form-group">
-        <label for="marca-equipo">Marca del equipo</label>
-        <input type="text" id="marca-equipo" class="input-field" readonly />
+      <!-- Lista de equipos para la baja -->
+      <h2 class="titulo-seccion">
+        EQUIPOS SELECCIONADOS
+        (<span id="contador-equipos">0</span>)
+      </h2>
+
+      <div id="equipos-seleccionados" class="equipos-seleccionados">
+        <p>No hay equipos seleccionados.</p>
       </div>
 
-      <div class="form-group">
-        <label for="modelo-equipo">Modelo del equipo</label>
-        <input type="text" id="modelo-equipo" class="input-field" readonly />
-      </div>
-
-      <div class="form-group">
-        <label for="numero-serie">Número de serie</label>
-        <input type="text" id="numero-serie" class="input-field" readonly />
-      </div>
-
-      <div class="form-group">
-        <label for="descripcion-equipo">Descripción</label>
-        <input type="text" id="descripcion-equipo" class="input-field" readonly />
-      </div>
-
-      <div class="form-group">
-        <label for="ubicacion-equipo">Ubicación</label>
-
-        <select id="ubicacion-equipo" class="select-field" disabled>
-          <option value="">Selecciona una ubicación</option>
-
-          <option value="CC1">CC1</option>
-          <option value="CC2">CC2</option>
-          <option value="CC3">CC3</option>
-          <option value="CC4">CC4</option>
-
-          <option value="AULA 4">Aula 4</option>
-          <option value="AULA 5">Aula 5</option>
-          <option value="AULA 6">Aula 6</option>
-          <option value="AULA 102">Aula 102</option>
-          <option value="AULA 103">Aula 103</option>
-          <option value="AULA 105">Aula 105</option>
-          <option value="AULA 106">Aula 106</option>
-          <option value="AULA 107">Aula 107</option>
-          <option value="AULA 111">Aula 111</option>
-          <option value="AULA 112">Aula 112</option>
-          <option value="AULA 113">Aula 113</option>
-
-          <option value="AULA F101">Aula F101</option>
-          <option value="AULA F102">Aula F102</option>
-          <option value="AULA F103">Aula F103</option>
-          <option value="AULA F402">Aula F402</option>
-          <option value="AULA F403">Aula F403</option>
-          <option value="AULA F404">Aula F404</option>
-
-          <option value="CUBICULO_42">Cubículo 42</option>
-          <option value="CUBICULO_44">Cubículo 44</option>
-
-          <option value="AREA_COMUN_CC">
-            Área común del CC
-          </option>
-
-          <option value="JEFATURA_CC">
-            Jefatura del CC
-          </option>
-
-          <option value="LAB. INNOVACION EN SOFTWARE">
-            Laboratorio de innovación en software
-          </option>
-
-          <option value="AUDIOVISUAL">Audiovisual</option>
-          <option value="ALMACEN">Almacén</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="estado-operativo">Estado operativo</label>
-
-        <select id="estado-operativo" class="select-field" disabled>
-          <option value="">Selecciona un estado</option>
-          <option value="ACTIVO">Activo</option>
-          <option value="EN_PROCESO_DE_BAJA">En proceso de baja</option>
-          <option value="PRESTAMO">Préstamo</option>
-        </select>
-      </div>
+      <button
+        type="button"
+        id="btn-limpiar-seleccion"
+        class="btn-limpiar-seleccion"
+        disabled
+      >
+        Quitar todos
+      </button>
 
     </aside>
 
@@ -154,40 +110,41 @@
         </h2>
 
         <p>
-          Dictamen técnico de baja del equipo seleccionado.
+          Dictamen técnico de baja de los equipos seleccionados.
         </p>
 
-        <!-- Visualización automática de la plantilla Excel -->
+        <!-- Visualización del Excel -->
         <div id="visor-excel" aria-live="polite">
           Cargando formato de baja...
         </div>
 
-        <!-- Descargar plantilla original -->
+        <!-- Descargar formato -->
         <a
           href="../formatos/abs-cb-f-25.xlsx"
           download="abs-cb-f-25.xlsx"
+          id="btn-descargar-formato"
           class="btn-subir-imagen"
         >
-          DESCARGAR FORMATO
+          DESCARGAR PLANTILLA ORIGINAL
         </a>
 
       </div>
 
-      <!-- Botón de confirmación -->
+      <!-- Botón para generar el documento -->
       <button
         type="button"
-        id="btn-guardar-equipo"
+        id="btn-generar-excel"
         class="btn-guardar-equipo"
         disabled
       >
-        CONFIRMAR
+        GENERAR EXCEL DE BAJA
       </button>
 
     </section>
 
   </main>
 
-  <!-- Librería para leer archivos Excel -->
+  <!-- Librería para trabajar con Excel -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <!-- JavaScript del módulo de bajas -->
