@@ -219,6 +219,55 @@ async function mostrarFormatoBaja() {
     }
 }
 
+
+function actualizarFormatoExcel() {
+    if (!libroExcel) {
+        return;
+    }
+
+    const visor = document.getElementById('visor-excel');
+    const hojaOriginal = libroExcel.Sheets['Mobiliario -Herramientas'];
+
+    // Crear una copia de las referencias de las celdas
+    const hoja = { ...hojaOriginal };
+
+    // Relacionar columnas del Excel con propiedades del equipo
+    const columnas = {
+        B: 'numeroActivo',
+        E: 'numeroInventario',
+        H: 'descripcion',
+        N: 'noSerial',
+        Q: 'marca',
+        T: 'modelo'
+    };
+
+    // Recorrer los equipos seleccionados
+    equiposSeleccionados.forEach((equipo, indice) => {
+        const fila = 12 + indice;
+
+        // Recorrer los campos que queremos completar
+        Object.entries(columnas).forEach(([columna, propiedad]) => {
+            const celda = `${columna}${fila}`;
+            const valor = equipo[propiedad] ?? '';
+
+            // Conservar el estilo de la celda original
+            hoja[celda] = {
+                ...hojaOriginal[celda],
+                t: 's',
+                v: String(valor)
+            };
+
+            // Evitar que una fórmula anterior sustituya el valor
+            delete hoja[celda].f;
+            delete hoja[celda].w;
+        });
+    });
+
+    // Mostrar el Excel con los equipos seleccionados
+    visor.innerHTML = XLSX.utils.sheet_to_html(hoja);
+}
+
+
 // Eventos
 btnBuscar.addEventListener('click', buscarEquipos);
 
