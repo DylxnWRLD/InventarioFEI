@@ -9,10 +9,64 @@ const equiposSeleccionadosContenedor = document.getElementById('equipos-seleccio
 const contadorEquipos = document.getElementById('contador-equipos');
 const btnLimpiar = document.getElementById('btn-limpiar-seleccion');
 const btnGenerar = document.getElementById('btn-generar-excel');
+const comboDictamen = document.getElementById('combo-dictamen');
 
 const equiposSeleccionados = [];
+let catalogoDictamen = [];
+let dictamenSeleccionado = null;
 let libroExcel = null;
 let identificadorBusqueda = 0;
+
+// Cargar las opciones del dictamen desde la base de datos
+async function cargarCatalogoDictamen() {
+    try {
+        const respuesta = await fetch(`${API_BASE}/Dictamen`);
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudo obtener el catálogo de dictamen.');
+        }
+
+        const catalogo = await respuesta.json();
+
+        if (!Array.isArray(catalogo)) {
+            throw new Error('La respuesta del servidor no contiene el catálogo de dictamen.');
+        }
+
+        catalogoDictamen = catalogo;
+        dictamenSeleccionado = null;
+
+        comboDictamen.replaceChildren();
+
+        const opcionPorDefecto = document.createElement('option');
+        opcionPorDefecto.value = '';
+        opcionPorDefecto.textContent = 'Seleccione un dictamen...';
+        comboDictamen.appendChild(opcionPorDefecto);
+
+        catalogoDictamen.forEach(articulo => {
+            const opcion = document.createElement('option');
+            opcion.value = articulo.idArticulo;
+            opcion.textContent = articulo.articulo;
+            comboDictamen.appendChild(opcion);
+        });
+
+        comboDictamen.disabled = false;
+        comboDictamen.value = '';
+
+        actualizarFormatoExcel();
+
+    } catch (error) {
+        console.error('Error al cargar el catálogo de dictamen:', error);
+
+        comboDictamen.replaceChildren();
+
+        const opcionError = document.createElement('option');
+        opcionError.value = '';
+        opcionError.textContent = 'No se pudieron cargar los dictámenes';
+        comboDictamen.appendChild(opcionError);
+
+        comboDictamen.disabled = true;
+    }
+}
 
 // Buscar equipos en PostgreSQL
 async function buscarEquipos() {
@@ -269,6 +323,20 @@ function actualizarFormatoExcel() {
         });
     });
 
+    // Escribir el dictamen seleccionado en el recuadro
+    // "Supuesto del artículo 54" (celdas combinadas U10:AI10)
+    const celdaSupuesto = 'U10';
+
+    hoja[celdaSupuesto] = {
+        ...hojaOriginal[celdaSupuesto],
+        t: 's',
+        v: dictamenSeleccionado ? dictamenSeleccionado.articulo : ''
+    };
+
+    // Evitar que una fórmula anterior sustituya el valor
+    delete hoja[celdaSupuesto].f;
+    delete hoja[celdaSupuesto].w;
+
     // Mostrar el Excel con los equipos seleccionados
     visor.innerHTML = XLSX.utils.sheet_to_html(hoja);
 }
@@ -288,8 +356,19 @@ btnLimpiar.addEventListener('click', () => {
     actualizarSeleccion();
 });
 
+comboDictamen.addEventListener('change', () => {
+    const idArticulo = Number(comboDictamen.value);
+
+    dictamenSeleccionado = idArticulo
+        ? catalogoDictamen.find(articulo => articulo.idArticulo === idArticulo) || null
+        : null;
+
+    actualizarFormatoExcel();
+});
+
 // Inicializar módulo
 document.addEventListener('DOMContentLoaded', () => {
     mostrarFormatoBaja();
+    cargarCatalogoDictamen();
     actualizarSeleccion();
 });
