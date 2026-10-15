@@ -341,6 +341,7 @@
     margin: 5px 0;
     font-size: 13px;
     overflow-wrap: anywhere;
+    font-weight: bold;
 }
 
 .tarjeta-seleccionada {
@@ -351,6 +352,7 @@
     width: 100%;
     box-sizing: border-box;
     border: 1px solid #ddd;
+    margin-top: 10px;
 }
 
 .tarjeta-seleccionada p {
@@ -368,10 +370,23 @@
     margin-top: 10px;
     cursor: pointer;
     font-weight: bold;
+    margin-left: 60%;
 }
 
 .btn-quitar-equipo {
     background-color: #00a651;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 60%;
+}
+
+.btn-limpiar-seleccion {
+    background-color: #ff3038;
     color: white;
     border: none;
     border-radius: 20px;
