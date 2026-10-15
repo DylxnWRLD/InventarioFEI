@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="es">
 
@@ -49,26 +48,16 @@
       </h2>
 
       <div class="form-group">
-        <label for="buscar-equipo">
-           Busca el equipo aquí...
-        </label>
 
-        <input
-          type="search"
-          id="buscar-equipo"
-          class="input-field"
-          placeholder="Buscar equipo..."
-          autocomplete="off"
-        />
+        <input type="search" id="buscar-equipo" class="input-field" placeholder="Buscar equipo..." autocomplete="off" />
+
+        <button type="button" id="btn-buscar-equipo" class="btn-buscar-equipo">
+          Buscar
+        </button>
+
       </div>
 
-      <button
-        type="button"
-        id="btn-buscar-equipo"
-        class="btn-buscar-equipo"
-      >
-        Buscar
-      </button>
+
 
       <!-- Resultados de la búsqueda -->
       <h2 class="titulo-seccion">
@@ -89,12 +78,7 @@
         <p>No hay equipos seleccionados.</p>
       </div>
 
-      <button
-        type="button"
-        id="btn-limpiar-seleccion"
-        class="btn-limpiar-seleccion"
-        disabled
-      >
+      <button type="button" id="btn-limpiar-seleccion" class="btn-limpiar-seleccion" disabled>
         Quitar todos
       </button>
 
@@ -119,24 +103,15 @@
         </div>
 
         <!-- Descargar formato -->
-        <a
-          href="../formatos/abs-cb-f-25.xlsx"
-          download="abs-cb-f-25.xlsx"
-          id="btn-descargar-formato"
-          class="btn-subir-imagen"
-        >
+        <a href="../formatos/abs-cb-f-25.xlsx" download="abs-cb-f-25.xlsx" id="btn-descargar-formato"
+          class="btn-subir-imagen">
           DESCARGAR PLANTILLA ORIGINAL
         </a>
 
       </div>
 
       <!-- Botón para generar el documento -->
-      <button
-        type="button"
-        id="btn-generar-excel"
-        class="btn-guardar-equipo"
-        disabled
-      >
+      <button type="button" id="btn-generar-excel" class="btn-guardar-equipo" disabled>
         GENERAR EXCEL DE BAJA
       </button>
 

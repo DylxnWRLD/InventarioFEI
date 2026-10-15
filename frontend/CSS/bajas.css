@@ -73,7 +73,7 @@
 /* Campos del formulario */
 .form-group {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 5px;
 }
 
@@ -95,14 +95,25 @@
 .select-field {
     background-color: #e5dfd3;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 10px 15px;
-    font-size: 13px;
+    font-size: 12px;
     color: #333;
     outline: none;
-    width: 100%;
+    width: 80%;
     box-sizing: border-box;
     font-family: "Roboto", sans-serif;
+}
+
+.btn-buscar-equipo {
+    background-color: #00a651;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
 }
 
 .select-field {
@@ -349,6 +360,17 @@
 }
 
 .btn-agregar-equipo {
+    background-color: #00a651;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-quitar-equipo {
     background-color: #00a651;
     color: white;
     border: none;
