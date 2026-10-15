@@ -332,6 +332,22 @@
     overflow-wrap: anywhere;
 }
 
+.tarjeta-seleccionada {
+    background-color: white;
+    color: #333;
+    padding: 15px;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+}
+
+.tarjeta-seleccionada p {
+    margin: 5px 0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
 .btn-agregar-equipo {
     background-color: #00a651;
     color: white;
