@@ -311,7 +311,7 @@
     }
 }
 
-.equipos-seleccionados {
+.tarjetas-resultados {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
