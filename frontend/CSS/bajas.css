@@ -401,6 +401,36 @@
     cursor: not-allowed;
 }
 
+/* Combo box del dictamen (catálogo desde la base de datos) */
+.grupo-dictamen {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.grupo-dictamen label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.grupo-dictamen .select-field {
+    width: 100%;
+    padding: 12px 30px 12px 15px;
+    cursor: pointer;
+    white-space: normal;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.grupo-dictamen .select-field:disabled {
+    opacity: 0.7;
+    cursor: progress;
+}
+
+.grupo-dictamen .select-field:not(:disabled) {
+    cursor: pointer;
+}
+
 
 /* ==========================================
    CONTENIDO DE TARJETAS
