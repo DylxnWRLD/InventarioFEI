@@ -400,3 +400,184 @@
     background-color: #999;
     cursor: not-allowed;
 }
+
+
+/* ==========================================
+   CONTENIDO DE TARJETAS
+========================================== */
+
+.contenido-tarjeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Información del equipo */
+.informacion-equipo {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Texto de cada campo */
+.informacion-equipo p {
+    margin: 5px 0;
+    font-weight: 400;
+}
+
+/* Etiquetas en negritas */
+.informacion-equipo strong {
+    font-weight: 700;
+}
+
+/* Valores normales */
+.informacion-equipo span {
+    font-weight: 400;
+}
+
+/* Descripción */
+.descripcion-equipo {
+    margin-bottom: 10px !important;
+    font-weight: 400;
+}
+
+
+/* ==========================================
+   IMÁGENES DE SUPABASE
+========================================== */
+
+.imagen-equipo {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background-color: #f5f5f5;
+    padding: 5px;
+}
+
+
+/* ==========================================
+   BOTONES DE TARJETAS
+========================================== */
+
+.btn-agregar-equipo,
+.btn-quitar-equipo {
+    margin-top: 12px;
+}
+
+
+/* ==========================================
+   FILTRO DE EQUIPOS ACTIVOS
+========================================== */
+
+#btn-filtro-activos {
+    padding: 10px 15px;
+    margin-left: 10px;
+    border: 1px solid #166534;
+    border-radius: 6px;
+    background-color: white;
+    color: #166534;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Filtro activado */
+#btn-filtro-activos.activo {
+    background-color: #166534;
+    color: white;
+}
+
+#btn-filtro-activos:hover {
+    background-color: #dcfce7;
+}
+
+#btn-filtro-activos.activo:hover {
+    background-color: #14532d;
+}
+
+/* ==========================================
+   PANTALLAS PEQUEÑAS
+========================================== */
+
+@media (max-width: 600px) {
+    .contenido-tarjeta {
+        gap: 10px;
+    }
+
+    .imagen-equipo {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+
+/* ==========================================
+   DISTRIBUCIÓN DEL BUSCADOR
+========================================== */
+
+
+.imagen-equipo {
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+}
+
+/* Contenedor principal */
+.grupo-busqueda {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 12px;
+}
+
+/* Input y BUSCAR en la misma fila */
+.fila-busqueda {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+/* Campo de búsqueda */
+.fila-busqueda .input-field {
+    flex: 1;
+    width: 0;
+    min-width: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Botón BUSCAR */
+.fila-busqueda .btn-buscar-equipo {
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+    padding: 10px 15px;
+}
+
+/* Botón SOLO ACTIVOS centrado debajo */
+.grupo-busqueda .btn-filtro-activos {
+    display: block;
+    width: 100%;
+    margin-right: 15px;
+    height: 40px;
+    text-align: left;
+    border: 1px solid #166534;
+    border-radius: 8px;
+    background-color: white;
+    color: #166534;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Filtro activado */
+.grupo-busqueda .btn-filtro-activos.activo {
+    background-color: #166534;
+    color: white;
+}

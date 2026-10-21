@@ -47,12 +47,19 @@
         BUSCAR EQUIPOS
       </h2>
 
-      <div class="form-group">
+      <div class="form-group grupo-busqueda">
 
-        <input type="search" id="buscar-equipo" class="input-field" placeholder="Buscar equipo..." autocomplete="off" />
+        <div class="fila-busqueda">
+          <input type="search" id="buscar-equipo" class="input-field" placeholder="Buscar equipo..."
+            autocomplete="on" />
 
-        <button type="button" id="btn-buscar-equipo" class="btn-buscar-equipo">
-          Buscar
+          <button type="button" id="btn-buscar-equipo" class="btn-buscar-equipo">
+            Buscar
+          </button>
+        </div>
+
+        <button type="button" id="btn-filtro-activos" class="btn-filtro-activos" aria-pressed="false">
+          Mostrar solo equipos activos
         </button>
 
       </div>

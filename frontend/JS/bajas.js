@@ -2,6 +2,7 @@
 const API_BASE = 'https://inventariofeicc-api.onrender.com/InventarioFEI';
 const RUTA_FORMATO = '../formatos/abs-cb-f-25.xlsx';
 
+// Elementos HTML
 const inputBusqueda = document.getElementById('buscar-equipo');
 const btnBuscar = document.getElementById('btn-buscar-equipo');
 const resultadosBusqueda = document.getElementById('resultados-busqueda');
@@ -9,17 +10,126 @@ const equiposSeleccionadosContenedor = document.getElementById('equipos-seleccio
 const contadorEquipos = document.getElementById('contador-equipos');
 const btnLimpiar = document.getElementById('btn-limpiar-seleccion');
 const btnGenerar = document.getElementById('btn-generar-excel');
+const btnFiltroActivos = document.getElementById('btn-filtro-activos');
 
+// Variables generales
 const equiposSeleccionados = [];
 let libroExcel = null;
 let identificadorBusqueda = 0;
 
-// Buscar equipos en PostgreSQL
+// Filtro de equipos
+let soloActivos = false;
+let resultadosActuales = [];
+
+// Imagen alternativa cuando no existe una imagen en Supabase
+const IMAGEN_PREDETERMINADA = '../images/noEncontrado.png';
+
+
+
+// ==========================================
+// FUNCIONES PARA CONSTRUIR LAS TARJETAS
+// ==========================================
+
+// Crear campo con etiqueta en negrita y valor normal
+function crearCampo(etiqueta, valor) {
+    const parrafo = document.createElement('p');
+
+    const negrita = document.createElement('strong');
+    negrita.textContent = `${etiqueta}: `;
+
+    const contenido = document.createElement('span');
+    contenido.textContent = valor ?? 'No disponible';
+
+    parrafo.append(negrita, contenido);
+
+    return parrafo;
+}
+
+
+// Crear imagen del equipo usando su URL de Supabase
+function crearImagenEquipo(equipo) {
+    const imagen = document.createElement('img');
+
+    imagen.className = 'imagen-equipo';
+    imagen.alt = `Imagen del equipo ${equipo.numeroInventario}`;
+    imagen.loading = 'lazy';
+
+    // Si no hay URL, utilizar imagen predeterminada
+    imagen.src = equipo.urlImagen || IMAGEN_PREDETERMINADA;
+
+    // Si falla la imagen de Supabase, mostrar imagen alternativa
+    imagen.addEventListener('error', () => {
+        if (imagen.src !== new URL(
+            IMAGEN_PREDETERMINADA,
+            document.baseURI
+        ).href) {
+            imagen.src = IMAGEN_PREDETERMINADA;
+        }
+    });
+
+    return imagen;
+}
+
+
+// Crear información del equipo
+function crearInformacionEquipo(equipo) {
+    const informacion = document.createElement('div');
+    informacion.className = 'informacion-equipo';
+
+    const descripcion = document.createElement('p');
+    descripcion.className = 'descripcion-equipo';
+    descripcion.textContent = equipo.descripcion || 'Sin descripción';
+
+    const inventario = crearCampo(
+        'Inventario',
+        equipo.numeroInventario
+    );
+
+    const marca = crearCampo(
+        'Marca',
+        equipo.marca || 'Sin marca'
+    );
+
+    const estado = crearCampo(
+        'Estado',
+        equipo.estadoOperativo || 'No disponible'
+    );
+
+    informacion.append(
+        descripcion,
+        inventario,
+        marca,
+        estado
+    );
+
+    return informacion;
+}
+
+
+// Crear estructura de información e imagen
+function crearContenidoTarjeta(equipo) {
+    const contenido = document.createElement('div');
+    contenido.className = 'contenido-tarjeta';
+
+    const informacion = crearInformacionEquipo(equipo);
+    const imagen = crearImagenEquipo(equipo);
+
+    contenido.append(informacion, imagen);
+
+    return contenido;
+}
+
+
+// ==========================================
+// BUSCAR EQUIPOS EN POSTGRESQL
+// ==========================================
+
 async function buscarEquipos() {
     const textoBusqueda = inputBusqueda.value.trim();
     const busquedaActual = ++identificadorBusqueda;
 
     if (!textoBusqueda) {
+        resultadosActuales = [];
         resultadosBusqueda.textContent = 'Ingresa el número de inventario';
         return;
     }
@@ -44,10 +154,14 @@ async function buscarEquipos() {
         const equipos = datos.equipos;
 
         if (!Array.isArray(equipos)) {
-            throw new Error('La respuesta del servidor no contiene una lista de equipos.');
+            throw new Error(
+                'La respuesta del servidor no contiene una lista de equipos.'
+            );
         }
 
-        mostrarResultados(equipos);
+        resultadosActuales = equipos;
+
+        aplicarFiltroResultados();
 
     } catch (error) {
         if (busquedaActual !== identificadorBusqueda) {
@@ -55,16 +169,60 @@ async function buscarEquipos() {
         }
 
         console.error('Error al buscar equipos:', error);
-        resultadosBusqueda.textContent = 'Ocurrió un error durante la búsqueda.';
+
+        resultadosActuales = [];
+        resultadosBusqueda.textContent =
+            'Ocurrió un error durante la búsqueda.';
     }
 }
 
-// Mostrar resultados de búsqueda
+
+// ==========================================
+// FILTRAR EQUIPOS ACTIVOS
+// ==========================================
+
+function aplicarFiltroResultados() {
+    const equiposFiltrados = soloActivos
+        ? resultadosActuales.filter(
+            equipo => equipo.estadoOperativo === 'ACTIVO'
+        )
+        : resultadosActuales;
+
+    mostrarResultados(equiposFiltrados);
+}
+
+
+// Alternar entre activos y todos los resultados
+function alternarFiltroActivos() {
+    soloActivos = !soloActivos;
+
+    btnFiltroActivos.classList.toggle('activo', soloActivos);
+
+    btnFiltroActivos.textContent = soloActivos
+        ? 'Mostrar todos los equipos'
+        : 'Mostrar solo equipos activos';
+
+    btnFiltroActivos.setAttribute(
+        'aria-pressed',
+        String(soloActivos)
+    );
+
+    aplicarFiltroResultados();
+}
+
+
+// ==========================================
+// MOSTRAR RESULTADOS DE BÚSQUEDA
+// ==========================================
+
 function mostrarResultados(equipos) {
     resultadosBusqueda.replaceChildren();
 
     if (equipos.length === 0) {
-        resultadosBusqueda.textContent = 'No se encontraron equipos.';
+        resultadosBusqueda.textContent = soloActivos
+            ? 'No se encontraron equipos activos.'
+            : 'No se encontraron equipos.';
+
         return;
     }
 
@@ -72,42 +230,45 @@ function mostrarResultados(equipos) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-resultado';
 
-        const descripcion = document.createElement('p');
-        descripcion.textContent = equipo.descripcion || 'Sin descripción';
+        // Información e imagen del equipo
+        const contenido = crearContenidoTarjeta(equipo);
 
-        const inventario = document.createElement('p');
-        inventario.textContent = `Inventario: ${equipo.numeroInventario}`;
-
-        const marca = document.createElement('p');
-        marca.textContent = `Marca: ${equipo.marca || 'Sin marca'}`;
-
-        const estado = document.createElement('p');
-        estado.textContent = `Estado: ${equipo.estadoOperativo || 'No disponible'}`;
-
+        // Botón agregar
         const boton = document.createElement('button');
+
         boton.type = 'button';
         boton.className = 'btn-agregar-equipo';
 
         const agregado = equiposSeleccionados.some(
-            seleccionado => seleccionado.numeroInventario === equipo.numeroInventario
+            seleccionado =>
+                seleccionado.numeroInventario === equipo.numeroInventario
         );
 
         boton.textContent = agregado ? 'AGREGADO' : 'AGREGAR';
-        boton.disabled = agregado || equipo.estadoOperativo === 'EN_PROCESO_DE_BAJA';
+
+        boton.disabled =
+            agregado ||
+            equipo.estadoOperativo === 'EN_PROCESO_DE_BAJA';
 
         boton.addEventListener('click', () => {
             agregarEquipo(equipo);
         });
 
-        tarjeta.append(descripcion, inventario, marca, estado, boton);
+        tarjeta.append(contenido, boton);
+
         resultadosBusqueda.appendChild(tarjeta);
     });
 }
 
-// Agregar un equipo a la lista
+
+// ==========================================
+// AGREGAR EQUIPO A LA LISTA
+// ==========================================
+
 function agregarEquipo(equipo) {
     const existe = equiposSeleccionados.some(
-        seleccionado => seleccionado.numeroInventario === equipo.numeroInventario
+        seleccionado =>
+            seleccionado.numeroInventario === equipo.numeroInventario
     );
 
     if (existe) {
@@ -130,7 +291,11 @@ function agregarEquipo(equipo) {
     actualizarSeleccion();
 }
 
-// Eliminar un equipo seleccionado
+
+// ==========================================
+// ELIMINAR EQUIPO SELECCIONADO
+// ==========================================
+
 function eliminarEquipo(numeroInventario) {
     const indice = equiposSeleccionados.findIndex(
         equipo => equipo.numeroInventario === numeroInventario
@@ -143,7 +308,11 @@ function eliminarEquipo(numeroInventario) {
     actualizarSeleccion();
 }
 
-// Actualizar lista de equipos seleccionados
+
+// ==========================================
+// ACTUALIZAR EQUIPOS SELECCIONADOS
+// ==========================================
+
 function actualizarSeleccion() {
     equiposSeleccionadosContenedor.replaceChildren();
 
@@ -155,17 +324,21 @@ function actualizarSeleccion() {
     btnGenerar.disabled = true;
 
     if (equiposSeleccionados.length === 0) {
-        equiposSeleccionadosContenedor.textContent = 'No hay equipos seleccionados.';
+        equiposSeleccionadosContenedor.textContent =
+            'No hay equipos seleccionados.';
+
     } else {
         equiposSeleccionados.forEach(equipo => {
             const tarjeta = document.createElement('div');
+
             tarjeta.className = 'tarjeta-seleccionada';
 
-            const informacion = document.createElement('p');
-            informacion.textContent =
-                `${equipo.numeroInventario} - ${equipo.descripcion || 'Sin descripción'}`;
+            // Información e imagen del equipo
+            const contenido = crearContenidoTarjeta(equipo);
 
+            // Botón quitar
             const botonEliminar = document.createElement('button');
+
             botonEliminar.type = 'button';
             botonEliminar.textContent = 'QUITAR';
             botonEliminar.className = 'btn-quitar-equipo';
@@ -174,21 +347,24 @@ function actualizarSeleccion() {
                 eliminarEquipo(equipo.numeroInventario);
             });
 
-            tarjeta.append(informacion, botonEliminar);
+            tarjeta.append(contenido, botonEliminar);
+
             equiposSeleccionadosContenedor.appendChild(tarjeta);
         });
     }
 
-    // Actualizar botones de los resultados visibles
-    const texto = inputBusqueda.value.trim();
+    // Actualizar botones AGREGAR / AGREGADO
+    aplicarFiltroResultados();
 
-    if (texto) {
-        buscarEquipos();
-    }
+    // Actualizar el formato Excel
     actualizarFormatoExcel();
 }
 
-// Mostrar automáticamente la plantilla Excel
+
+// ==========================================
+// MOSTRAR AUTOMÁTICAMENTE LA PLANTILLA EXCEL
+// ==========================================
+
 async function mostrarFormatoBaja() {
     const visor = document.getElementById('visor-excel');
 
@@ -226,6 +402,10 @@ async function mostrarFormatoBaja() {
 }
 
 
+// ==========================================
+// ACTUALIZAR FORMATO EXCEL
+// ==========================================
+
 function actualizarFormatoExcel() {
     if (!libroExcel) {
         return;
@@ -234,10 +414,10 @@ function actualizarFormatoExcel() {
     const visor = document.getElementById('visor-excel');
     const hojaOriginal = libroExcel.Sheets['Mobiliario -Herramientas'];
 
-    // Crear una copia de las referencias de las celdas
+    // Copia de las referencias de las celdas
     const hoja = { ...hojaOriginal };
 
-    // Relacionar columnas del Excel con propiedades del equipo
+    // Columnas del Excel relacionadas con propiedades del equipo
     const columnas = {
         B: 'numeroActivo',
         E: 'numeroInventario',
@@ -251,12 +431,11 @@ function actualizarFormatoExcel() {
     equiposSeleccionados.slice(0, 10).forEach((equipo, indice) => {
         const fila = 12 + indice;
 
-        // Recorrer los campos que queremos completar
         Object.entries(columnas).forEach(([columna, propiedad]) => {
             const celda = `${columna}${fila}`;
             const valor = equipo[propiedad] ?? '';
 
-            // Conservar el estilo de la celda original
+            // Conservar estilo de la celda original
             hoja[celda] = {
                 ...hojaOriginal[celda],
                 t: 's',
@@ -269,26 +448,39 @@ function actualizarFormatoExcel() {
         });
     });
 
-    // Mostrar el Excel con los equipos seleccionados
+    // Mostrar Excel con equipos seleccionados
     visor.innerHTML = XLSX.utils.sheet_to_html(hoja);
 }
 
 
-// Eventos
+// ==========================================
+// EVENTOS
+// ==========================================
+
+// Buscar equipos
 btnBuscar.addEventListener('click', buscarEquipos);
 
+// Buscar al presionar Enter
 inputBusqueda.addEventListener('keydown', (evento) => {
     if (evento.key === 'Enter') {
         buscarEquipos();
     }
 });
 
+// Filtrar activos
+btnFiltroActivos.addEventListener('click', alternarFiltroActivos);
+
+// Limpiar selección
 btnLimpiar.addEventListener('click', () => {
     equiposSeleccionados.length = 0;
     actualizarSeleccion();
 });
 
-// Inicializar módulo
+
+// ==========================================
+// INICIALIZAR MÓDULO
+// ==========================================
+
 document.addEventListener('DOMContentLoaded', () => {
     mostrarFormatoBaja();
     actualizarSeleccion();
