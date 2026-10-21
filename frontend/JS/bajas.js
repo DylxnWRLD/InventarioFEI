@@ -1,8 +1,16 @@
 
 const API_BASE = 'https://inventariofeicc-api.onrender.com/InventarioFEI';
 const RUTA_FORMATO = '../formatos/abs-cb-f-25.xlsx';
+const IMAGEN_PREDETERMINADA = '../images/noEncontrado.png';
 
-// Elementos HTML
+const NOMBRE_HOJA = 'Mobiliario -Herramientas';
+const MAX_EQUIPOS = 10;
+const FILA_INICIAL = 12;
+
+// ==========================================
+// ELEMENTOS HTML
+// ==========================================
+
 const inputBusqueda = document.getElementById('buscar-equipo');
 const btnBuscar = document.getElementById('btn-buscar-equipo');
 const resultadosBusqueda = document.getElementById('resultados-busqueda');
@@ -12,123 +20,89 @@ const btnLimpiar = document.getElementById('btn-limpiar-seleccion');
 const btnGenerar = document.getElementById('btn-generar-excel');
 const comboDictamen = document.getElementById('combo-dictamen');
 const btnFiltroActivos = document.getElementById('btn-filtro-activos');
+const visorExcel = document.getElementById('visor-excel');
 
-// Variables generales
+// ==========================================
+// VARIABLES GENERALES
+// ==========================================
+
 const equiposSeleccionados = [];
+
 let catalogoDictamen = [];
 let dictamenSeleccionado = null;
 let libroExcel = null;
 let identificadorBusqueda = 0;
 
-// Cargar las opciones del dictamen desde la base de datos
-async function cargarCatalogoDictamen() {
-    try {
-        const respuesta = await fetch(`${API_BASE}/Dictamen`);
-
-        if (!respuesta.ok) {
-            throw new Error('No se pudo obtener el catálogo de dictamen.');
-        }
-
-        const catalogo = await respuesta.json();
-
-        if (!Array.isArray(catalogo)) {
-            throw new Error('La respuesta del servidor no contiene el catálogo de dictamen.');
-        }
-
-        catalogoDictamen = catalogo;
-        dictamenSeleccionado = null;
-
-        comboDictamen.replaceChildren();
-
-        const opcionPorDefecto = document.createElement('option');
-        opcionPorDefecto.value = '';
-        opcionPorDefecto.textContent = 'Seleccione un dictamen...';
-        comboDictamen.appendChild(opcionPorDefecto);
-
-        catalogoDictamen.forEach(articulo => {
-            const opcion = document.createElement('option');
-            opcion.value = articulo.idArticulo;
-            opcion.textContent = articulo.articulo;
-            comboDictamen.appendChild(opcion);
-        });
-
-        comboDictamen.disabled = false;
-        comboDictamen.value = '';
-
-        actualizarFormatoExcel();
-
-    } catch (error) {
-        console.error('Error al cargar el catálogo de dictamen:', error);
-
-        comboDictamen.replaceChildren();
-
-        const opcionError = document.createElement('option');
-        opcionError.value = '';
-        opcionError.textContent = 'No se pudieron cargar los dictámenes';
-        comboDictamen.appendChild(opcionError);
-
-        comboDictamen.disabled = true;
-    }
-}
-
-// Cargar las opciones del dictamen desde la base de datos
-async function cargarCatalogoDictamen() {
-    try {
-        const respuesta = await fetch(`${API_BASE}/Dictamen`);
-
-        if (!respuesta.ok) {
-            throw new Error('No se pudo obtener el catálogo de dictamen.');
-        }
-
-        const catalogo = await respuesta.json();
-
-        if (!Array.isArray(catalogo)) {
-            throw new Error('La respuesta del servidor no contiene el catálogo de dictamen.');
-        }
-
-        catalogoDictamen = catalogo;
-        dictamenSeleccionado = null;
-
-        comboDictamen.replaceChildren();
-
-        const opcionPorDefecto = document.createElement('option');
-        opcionPorDefecto.value = '';
-        opcionPorDefecto.textContent = 'Seleccione un dictamen...';
-        comboDictamen.appendChild(opcionPorDefecto);
-
-        catalogoDictamen.forEach(articulo => {
-            const opcion = document.createElement('option');
-            opcion.value = articulo.idArticulo;
-            opcion.textContent = articulo.articulo;
-            comboDictamen.appendChild(opcion);
-        });
-
-        comboDictamen.disabled = false;
-        comboDictamen.value = '';
-
-        actualizarFormatoExcel();
-
-    } catch (error) {
-        console.error('Error al cargar el catálogo de dictamen:', error);
-
-        comboDictamen.replaceChildren();
-
-        const opcionError = document.createElement('option');
-        opcionError.value = '';
-        opcionError.textContent = 'No se pudieron cargar los dictámenes';
-        comboDictamen.appendChild(opcionError);
-
-        comboDictamen.disabled = true;
-    }
-}
-
-// Filtro de equipos
 let soloActivos = false;
 let resultadosActuales = [];
 
-// Imagen alternativa cuando no existe una imagen en Supabase
-const IMAGEN_PREDETERMINADA = '../images/noEncontrado.png';
 
+// ==========================================
+// CARGAR CATÁLOGO DE DICTÁMENES
+// ==========================================
+
+async function cargarCatalogoDictamen() {
+    try {
+        const respuesta = await fetch(`${API_BASE}/Dictamen`);
+
+        if (!respuesta.ok) {
+            throw new Error('No se pudo obtener el catálogo de dictamen.');
+        }
+
+        const catalogo = await respuesta.json();
+
+        if (!Array.isArray(catalogo)) {
+            throw new Error(
+                'La respuesta del servidor no contiene el catálogo de dictamen.'
+            );
+        }
+
+        catalogoDictamen = catalogo;
+        dictamenSeleccionado = null;
+
+        comboDictamen.replaceChildren();
+
+        const opcionPorDefecto = document.createElement('option');
+        opcionPorDefecto.value = '';
+        opcionPorDefecto.textContent = 'Seleccione un dictamen...';
+
+        comboDictamen.appendChild(opcionPorDefecto);
+
+        catalogoDictamen.forEach(articulo => {
+            const opcion = document.createElement('option');
+
+            opcion.value = articulo.idArticulo;
+            opcion.textContent = articulo.articulo;
+
+            comboDictamen.appendChild(opcion);
+        });
+
+        comboDictamen.disabled = false;
+        comboDictamen.value = '';
+
+        actualizarFormatoExcel();
+        actualizarEstadoBotonGenerar();
+
+    } catch (error) {
+        console.error('Error al cargar el catálogo de dictamen:', error);
+
+        catalogoDictamen = [];
+        dictamenSeleccionado = null;
+
+        comboDictamen.replaceChildren();
+
+        const opcionError = document.createElement('option');
+        opcionError.value = '';
+        opcionError.textContent = 'No se pudieron cargar los dictámenes';
+
+        comboDictamen.appendChild(opcionError);
+
+        comboDictamen.disabled = true;
+
+        actualizarFormatoExcel();
+        actualizarEstadoBotonGenerar();
+    }
+}
 
 
 // ==========================================
@@ -159,15 +133,16 @@ function crearImagenEquipo(equipo) {
     imagen.alt = `Imagen del equipo ${equipo.numeroInventario}`;
     imagen.loading = 'lazy';
 
-    // Si no hay URL, utilizar imagen predeterminada
     imagen.src = equipo.urlImagen || IMAGEN_PREDETERMINADA;
 
-    // Si falla la imagen de Supabase, mostrar imagen alternativa
+    // Mostrar imagen alternativa si falla la carga
     imagen.addEventListener('error', () => {
-        if (imagen.src !== new URL(
+        const rutaAlternativa = new URL(
             IMAGEN_PREDETERMINADA,
             document.baseURI
-        ).href) {
+        ).href;
+
+        if (imagen.src !== rutaAlternativa) {
             imagen.src = IMAGEN_PREDETERMINADA;
         }
     });
@@ -235,7 +210,10 @@ async function buscarEquipos() {
 
     if (!textoBusqueda) {
         resultadosActuales = [];
-        resultadosBusqueda.textContent = 'Ingresa el número de inventario';
+
+        resultadosBusqueda.textContent =
+            'Ingresa el número de inventario';
+
         return;
     }
 
@@ -252,6 +230,7 @@ async function buscarEquipos() {
 
         const datos = await respuesta.json();
 
+        // Ignorar respuestas de búsquedas anteriores
         if (busquedaActual !== identificadorBusqueda) {
             return;
         }
@@ -276,6 +255,7 @@ async function buscarEquipos() {
         console.error('Error al buscar equipos:', error);
 
         resultadosActuales = [];
+
         resultadosBusqueda.textContent =
             'Ocurrió un error durante la búsqueda.';
     }
@@ -335,10 +315,8 @@ function mostrarResultados(equipos) {
         const tarjeta = document.createElement('div');
         tarjeta.className = 'tarjeta-resultado';
 
-        // Información e imagen del equipo
         const contenido = crearContenidoTarjeta(equipo);
 
-        // Botón agregar
         const boton = document.createElement('button');
 
         boton.type = 'button';
@@ -349,11 +327,17 @@ function mostrarResultados(equipos) {
                 seleccionado.numeroInventario === equipo.numeroInventario
         );
 
-        boton.textContent = agregado ? 'AGREGADO' : 'AGREGAR';
+        const enProcesoDeBaja =
+            equipo.estadoOperativo === 'EN_PROCESO_DE_BAJA';
+
+        boton.textContent = agregado
+            ? 'AGREGADO'
+            : 'AGREGAR';
 
         boton.disabled =
             agregado ||
-            equipo.estadoOperativo === 'EN_PROCESO_DE_BAJA';
+            enProcesoDeBaja ||
+            equiposSeleccionados.length >= MAX_EQUIPOS;
 
         boton.addEventListener('click', () => {
             agregarEquipo(equipo);
@@ -386,8 +370,8 @@ function agregarEquipo(equipo) {
         return;
     }
 
-    if (equiposSeleccionados.length >= 10) {
-        alert('El formato permite un máximo de 10 equipos.');
+    if (equiposSeleccionados.length >= MAX_EQUIPOS) {
+        alert(`El formato permite un máximo de ${MAX_EQUIPOS} equipos.`);
         return;
     }
 
@@ -425,9 +409,6 @@ function actualizarSeleccion() {
 
     btnLimpiar.disabled = equiposSeleccionados.length === 0;
 
-    // Se activará cuando implementemos la generación del archivo
-    btnGenerar.disabled = true;
-
     if (equiposSeleccionados.length === 0) {
         equiposSeleccionadosContenedor.textContent =
             'No hay equipos seleccionados.';
@@ -435,13 +416,10 @@ function actualizarSeleccion() {
     } else {
         equiposSeleccionados.forEach(equipo => {
             const tarjeta = document.createElement('div');
-
             tarjeta.className = 'tarjeta-seleccionada';
 
-            // Información e imagen del equipo
             const contenido = crearContenidoTarjeta(equipo);
 
-            // Botón quitar
             const botonEliminar = document.createElement('button');
 
             botonEliminar.type = 'button';
@@ -458,11 +436,11 @@ function actualizarSeleccion() {
         });
     }
 
-    // Actualizar botones AGREGAR / AGREGADO
     aplicarFiltroResultados();
 
-    // Actualizar el formato Excel
     actualizarFormatoExcel();
+
+    actualizarEstadoBotonGenerar();
 }
 
 
@@ -471,8 +449,6 @@ function actualizarSeleccion() {
 // ==========================================
 
 async function mostrarFormatoBaja() {
-    const visor = document.getElementById('visor-excel');
-
     try {
         if (typeof XLSX === 'undefined') {
             throw new Error('No se pudo cargar la librería de Excel.');
@@ -487,42 +463,53 @@ async function mostrarFormatoBaja() {
         const archivo = await respuesta.arrayBuffer();
 
         libroExcel = XLSX.read(archivo, {
-            type: 'array'
+            type: 'array',
+            cellStyles: true
         });
 
-        const hoja = libroExcel.Sheets['Mobiliario -Herramientas'];
+        const hoja = libroExcel.Sheets[NOMBRE_HOJA];
 
         if (!hoja) {
             throw new Error('No se encontró la hoja del dictamen.');
         }
 
         actualizarFormatoExcel();
+        actualizarEstadoBotonGenerar();
 
         console.log('Formato de baja cargado correctamente.');
 
     } catch (error) {
         console.error('Error al cargar el Excel:', error);
-        visor.textContent = 'No se pudo mostrar el formato de baja.';
+
+        libroExcel = null;
+
+        visorExcel.textContent =
+            'No se pudo mostrar el formato de baja.';
+
+        actualizarEstadoBotonGenerar();
     }
 }
 
 
 // ==========================================
-// ACTUALIZAR FORMATO EXCEL
+// CREAR HOJA EXCEL ACTUALIZADA
 // ==========================================
 
-function actualizarFormatoExcel() {
+function crearHojaActualizada() {
     if (!libroExcel) {
-        return;
+        return null;
     }
 
-    const visor = document.getElementById('visor-excel');
-    const hojaOriginal = libroExcel.Sheets['Mobiliario -Herramientas'];
+    const hojaOriginal = libroExcel.Sheets[NOMBRE_HOJA];
 
-    // Copia de las referencias de las celdas
+    if (!hojaOriginal) {
+        return null;
+    }
+
+    // Copia de la estructura original de la hoja
     const hoja = { ...hojaOriginal };
 
-    // Columnas del Excel relacionadas con propiedades del equipo
+    // Columnas relacionadas con las propiedades del equipo
     const columnas = {
         B: 'numeroActivo',
         E: 'numeroInventario',
@@ -532,57 +519,154 @@ function actualizarFormatoExcel() {
         T: 'modelo'
     };
 
-    // Recorrer un máximo de 10 equipos
-    equiposSeleccionados.slice(0, 10).forEach((equipo, indice) => {
-        const fila = 12 + indice;
+    // Escribir valor conservando las propiedades existentes
+    function escribirCelda(direccion, valor) {
+        const celdaOriginal = hojaOriginal[direccion] || {};
 
-        Object.entries(columnas).forEach(([columna, propiedad]) => {
-            const celda = `${columna}${fila}`;
-            const valor = equipo[propiedad] ?? '';
+        hoja[direccion] = {
+            ...celdaOriginal,
+            t: 's',
+            v: String(valor ?? '')
+        };
 
-            // Conservar estilo de la celda original
-            hoja[celda] = {
-                ...hojaOriginal[celda],
-                t: 's',
-                v: String(valor)
-            };
+        // Eliminar fórmula y valor formateado anterior
+        delete hoja[direccion].f;
+        delete hoja[direccion].w;
+    }
 
-            // Evitar que una fórmula anterior sustituya el valor
-            delete hoja[celda].f;
-            delete hoja[celda].w;
+    // Limpiar las 10 filas destinadas a equipos
+    for (let indice = 0; indice < MAX_EQUIPOS; indice++) {
+        const fila = FILA_INICIAL + indice;
+
+        Object.keys(columnas).forEach(columna => {
+            escribirCelda(`${columna}${fila}`, '');
         });
-    });
+    }
 
-    // Escribir el dictamen seleccionado en el recuadro
-    // "Supuesto del artículo 54" (celdas combinadas U10:AI10)
-    const celdaSupuesto = 'U10';
+    // Escribir los equipos seleccionados
+    equiposSeleccionados.slice(0, MAX_EQUIPOS).forEach(
+        (equipo, indice) => {
+            const fila = FILA_INICIAL + indice;
 
-    hoja[celdaSupuesto] = {
-        ...hojaOriginal[celdaSupuesto],
-        t: 's',
-        v: dictamenSeleccionado ? dictamenSeleccionado.articulo : ''
-    };
+            Object.entries(columnas).forEach(
+                ([columna, propiedad]) => {
+                    const direccion = `${columna}${fila}`;
+                    const valor = equipo[propiedad] ?? '';
 
-    // Evitar que una fórmula anterior sustituya el valor
-    delete hoja[celdaSupuesto].f;
-    delete hoja[celdaSupuesto].w;
+                    escribirCelda(direccion, valor);
+                }
+            );
+        }
+    );
 
-    // Escribir el dictamen seleccionado en el recuadro
-    // "Supuesto del artículo 54" (celdas combinadas U10:AI10)
-    const celdaSupuesto = 'U10';
+    // Escribir el dictamen en la celda U10
+    // Corresponde al recuadro combinado U10:AI10
+    escribirCelda(
+        'U10',
+        dictamenSeleccionado
+            ? dictamenSeleccionado.articulo
+            : ''
+    );
 
-    hoja[celdaSupuesto] = {
-        ...hojaOriginal[celdaSupuesto],
-        t: 's',
-        v: dictamenSeleccionado ? dictamenSeleccionado.articulo : ''
-    };
+    return hoja;
+}
 
-    // Evitar que una fórmula anterior sustituya el valor
-    delete hoja[celdaSupuesto].f;
-    delete hoja[celdaSupuesto].w;
 
-    // Mostrar Excel con equipos seleccionados
-    visor.innerHTML = XLSX.utils.sheet_to_html(hoja);
+// ==========================================
+// ACTUALIZAR VISTA PREVIA DEL EXCEL
+// ==========================================
+
+function actualizarFormatoExcel() {
+    if (!libroExcel) {
+        return;
+    }
+
+    try {
+        const hoja = crearHojaActualizada();
+
+        if (!hoja) {
+            throw new Error('No se pudo preparar la hoja Excel.');
+        }
+
+        visorExcel.innerHTML = XLSX.utils.sheet_to_html(hoja);
+
+    } catch (error) {
+        console.error('Error al actualizar el Excel:', error);
+
+        visorExcel.textContent =
+            'No se pudo actualizar la vista previa del formato.';
+    }
+}
+
+
+// ==========================================
+// ACTIVAR O DESACTIVAR BOTÓN GENERAR
+// ==========================================
+
+function actualizarEstadoBotonGenerar() {
+    const hayEquipos = equiposSeleccionados.length > 0;
+    const hayDictamen = dictamenSeleccionado !== null;
+    const hayFormato = libroExcel !== null;
+
+    btnGenerar.disabled = !(
+        hayEquipos &&
+        hayDictamen &&
+        hayFormato
+    );
+}
+
+
+// ==========================================
+// GENERAR Y DESCARGAR EXCEL
+// ==========================================
+
+function generarExcel() {
+    if (!libroExcel) {
+        alert('El formato Excel todavía no está disponible.');
+        return;
+    }
+
+    if (equiposSeleccionados.length === 0) {
+        alert('Debes seleccionar al menos un equipo.');
+        return;
+    }
+
+    if (!dictamenSeleccionado) {
+        alert('Debes seleccionar un dictamen.');
+        return;
+    }
+
+    try {
+        const hojaActualizada = crearHojaActualizada();
+
+        if (!hojaActualizada) {
+            throw new Error('No se pudo generar la hoja Excel.');
+        }
+
+        // Conservar las demás hojas del libro original
+        const libroGenerado = {
+            ...libroExcel,
+            Sheets: {
+                ...libroExcel.Sheets,
+                [NOMBRE_HOJA]: hojaActualizada
+            }
+        };
+
+        // Nombre del archivo generado
+        const nombreArchivo = 'Formato_Baja_Equipos_FEI.xlsx';
+
+        XLSX.writeFile(libroGenerado, nombreArchivo, {
+            bookType: 'xlsx',
+            cellStyles: true
+        });
+
+        console.log('Formato Excel generado correctamente.');
+
+    } catch (error) {
+        console.error('Error al generar el Excel:', error);
+
+        alert('No se pudo generar el formato Excel.');
+    }
 }
 
 
@@ -590,18 +674,22 @@ function actualizarFormatoExcel() {
 // EVENTOS
 // ==========================================
 
-// Buscar equipos
+// Buscar equipos mediante el botón
 btnBuscar.addEventListener('click', buscarEquipos);
 
 // Buscar al presionar Enter
 inputBusqueda.addEventListener('keydown', (evento) => {
     if (evento.key === 'Enter') {
+        evento.preventDefault();
         buscarEquipos();
     }
 });
 
-// Filtrar activos
-btnFiltroActivos.addEventListener('click', alternarFiltroActivos);
+// Filtrar equipos activos
+btnFiltroActivos.addEventListener(
+    'click',
+    alternarFiltroActivos
+);
 
 // Limpiar selección
 btnLimpiar.addEventListener('click', () => {
@@ -609,33 +697,44 @@ btnLimpiar.addEventListener('click', () => {
     actualizarSeleccion();
 });
 
+// Seleccionar dictamen
 comboDictamen.addEventListener('change', () => {
-    const idArticulo = Number(comboDictamen.value);
+    const idArticulo = comboDictamen.value;
 
     dictamenSeleccionado = idArticulo
-        ? catalogoDictamen.find(articulo => articulo.idArticulo === idArticulo) || null
+        ? catalogoDictamen.find(
+            articulo => String(articulo.idArticulo) === idArticulo
+        ) || null
         : null;
 
     actualizarFormatoExcel();
+    actualizarEstadoBotonGenerar();
 });
 
-comboDictamen.addEventListener('change', () => {
-    const idArticulo = Number(comboDictamen.value);
-
-    dictamenSeleccionado = idArticulo
-        ? catalogoDictamen.find(articulo => articulo.idArticulo === idArticulo) || null
-        : null;
-
-    actualizarFormatoExcel();
-});
+// Generar y descargar archivo Excel
+btnGenerar.addEventListener('click', generarExcel);
 
 
 // ==========================================
 // INICIALIZAR MÓDULO
 // ==========================================
 
-document.addEventListener('DOMContentLoaded', () => {
+function inicializarModulo() {
+    comboDictamen.disabled = true;
+    btnGenerar.disabled = true;
+
+    actualizarSeleccion();
+
     mostrarFormatoBaja();
     cargarCatalogoDictamen();
-    actualizarSeleccion();
-});
+}
+
+// Funciona con scripts normales o deferidos
+if (document.readyState === 'loading') {
+    document.addEventListener(
+        'DOMContentLoaded',
+        inicializarModulo
+    );
+} else {
+    inicializarModulo();
+}
