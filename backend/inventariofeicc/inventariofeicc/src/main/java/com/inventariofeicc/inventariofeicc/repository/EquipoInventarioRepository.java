@@ -113,7 +113,8 @@ public interface EquipoInventarioRepository {
             ubicacion,
             tipo_equipo,
             estado_operativo,
-            url_imagen
+            url_imagen,
+            fecha_registro
         ) VALUES (
             #{equipo.numero_inventario},
             #{equipo.marca},
@@ -123,7 +124,8 @@ public interface EquipoInventarioRepository {
             #{equipo.ubicacion}::inventariofei.tipo_ubicacion,
             #{equipo.tipo_equipo},
             #{equipo.estado_operativo}::inventariofei.estado_operativo_equipo,
-            #{equipo.url_imagen}
+            #{equipo.url_imagen},
+            #{equipo.fechaRegistro}
         )
         """)
     void registrarEquipo(

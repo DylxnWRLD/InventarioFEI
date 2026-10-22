@@ -78,9 +78,16 @@ if (btnGuardar) {
     const descripcion = document.getElementById('descripcion-equipo')?.value.trim();
     const ubicacion = document.getElementById('ubicacion-equipo')?.value;
     const estadoOperativo = document.getElementById('estado-operativo')?.value;
+    const fechaRegistro = document.getElementById('fecha-registro')?.value;
+
 
     if (!numeroInventario) {
       alert('Por favor ingresa el número de inventario.');
+      return;
+    }
+
+    if (!fechaRegistro) {
+      alert('Por favor selecciona la fecha de registro del equipo.');
       return;
     }
 
@@ -101,7 +108,8 @@ if (btnGuardar) {
         descripcion,
         ubicacion,
         estadoOperativo,
-        urlImagen: imagenSubida?.url || null
+        urlImagen: imagenSubida?.url || null,
+        fechaRegistro,
       };
 
       const response = await fetch(`${API_BASE}/Alta/Equipo`, {

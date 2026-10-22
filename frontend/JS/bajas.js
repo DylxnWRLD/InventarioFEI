@@ -14,7 +14,10 @@ const FILA_INICIAL = 12;
 const inputBusqueda = document.getElementById('buscar-equipo');
 const btnBuscar = document.getElementById('btn-buscar-equipo');
 const resultadosBusqueda = document.getElementById('resultados-busqueda');
-const equiposSeleccionadosContenedor = document.getElementById('equipos-seleccionados');
+
+const equiposSeleccionadosContenedor =
+    document.getElementById('equipos-seleccionados');
+
 const contadorEquipos = document.getElementById('contador-equipos');
 const btnLimpiar = document.getElementById('btn-limpiar-seleccion');
 const btnGenerar = document.getElementById('btn-generar-excel');
@@ -30,12 +33,13 @@ const equiposSeleccionados = [];
 
 let catalogoDictamen = [];
 let dictamenSeleccionado = null;
-let libroExcel = null;
-let identificadorBusqueda = 0;
 
+let libroExcel = null;
+let archivoExcelOriginal = null;
+
+let identificadorBusqueda = 0;
 let soloActivos = false;
 let resultadosActuales = [];
-
 
 // ==========================================
 // CARGAR CATÁLOGO DE DICTÁMENES
@@ -96,7 +100,6 @@ async function cargarCatalogoDictamen() {
         opcionError.textContent = 'No se pudieron cargar los dictámenes';
 
         comboDictamen.appendChild(opcionError);
-
         comboDictamen.disabled = true;
 
         actualizarFormatoExcel();
@@ -104,12 +107,10 @@ async function cargarCatalogoDictamen() {
     }
 }
 
-
 // ==========================================
-// FUNCIONES PARA CONSTRUIR LAS TARJETAS
+// CREAR CAMPOS DE INFORMACIÓN
 // ==========================================
 
-// Crear campo con etiqueta en negrita y valor normal
 function crearCampo(etiqueta, valor) {
     const parrafo = document.createElement('p');
 
@@ -124,8 +125,10 @@ function crearCampo(etiqueta, valor) {
     return parrafo;
 }
 
+// ==========================================
+// CREAR IMAGEN DEL EQUIPO
+// ==========================================
 
-// Crear imagen del equipo usando su URL de Supabase
 function crearImagenEquipo(equipo) {
     const imagen = document.createElement('img');
 
@@ -135,7 +138,6 @@ function crearImagenEquipo(equipo) {
 
     imagen.src = equipo.urlImagen || IMAGEN_PREDETERMINADA;
 
-    // Mostrar imagen alternativa si falla la carga
     imagen.addEventListener('error', () => {
         const rutaAlternativa = new URL(
             IMAGEN_PREDETERMINADA,
@@ -150,15 +152,18 @@ function crearImagenEquipo(equipo) {
     return imagen;
 }
 
+// ==========================================
+// CREAR INFORMACIÓN DEL EQUIPO
+// ==========================================
 
-// Crear información del equipo
 function crearInformacionEquipo(equipo) {
     const informacion = document.createElement('div');
     informacion.className = 'informacion-equipo';
 
     const descripcion = document.createElement('p');
     descripcion.className = 'descripcion-equipo';
-    descripcion.textContent = equipo.descripcion || 'Sin descripción';
+    descripcion.textContent =
+        equipo.descripcion || 'Sin descripción';
 
     const inventario = crearCampo(
         'Inventario',
@@ -175,18 +180,26 @@ function crearInformacionEquipo(equipo) {
         equipo.estadoOperativo || 'No disponible'
     );
 
+    const ubicacion = crearCampo(
+        'Ubicacion',
+        equipo.ubicacion || 'No disponible'
+    );
+
     informacion.append(
         descripcion,
         inventario,
         marca,
-        estado
+        estado,
+        ubicacion
     );
 
     return informacion;
 }
 
+// ==========================================
+// CREAR CONTENIDO DE TARJETA
+// ==========================================
 
-// Crear estructura de información e imagen
 function crearContenidoTarjeta(equipo) {
     const contenido = document.createElement('div');
     contenido.className = 'contenido-tarjeta';
@@ -198,7 +211,6 @@ function crearContenidoTarjeta(equipo) {
 
     return contenido;
 }
-
 
 // ==========================================
 // BUSCAR EQUIPOS EN POSTGRESQL
@@ -261,7 +273,6 @@ async function buscarEquipos() {
     }
 }
 
-
 // ==========================================
 // FILTRAR EQUIPOS ACTIVOS
 // ==========================================
@@ -276,8 +287,10 @@ function aplicarFiltroResultados() {
     mostrarResultados(equiposFiltrados);
 }
 
+// ==========================================
+// ALTERNAR FILTRO DE ACTIVOS
+// ==========================================
 
-// Alternar entre activos y todos los resultados
 function alternarFiltroActivos() {
     soloActivos = !soloActivos;
 
@@ -294,7 +307,6 @@ function alternarFiltroActivos() {
 
     aplicarFiltroResultados();
 }
-
 
 // ==========================================
 // MOSTRAR RESULTADOS DE BÚSQUEDA
@@ -330,9 +342,13 @@ function mostrarResultados(equipos) {
         const enProcesoDeBaja =
             equipo.estadoOperativo === 'EN_PROCESO_DE_BAJA';
 
-        boton.textContent = agregado
-            ? 'AGREGADO'
-            : 'AGREGAR';
+        if (agregado) {
+            boton.textContent = 'AGREGADO';
+        } else if (enProcesoDeBaja) {
+            boton.textContent = 'EN PROCESO DE BAJA';
+        } else {
+            boton.textContent = 'AGREGAR';
+        }
 
         boton.disabled =
             agregado ||
@@ -348,7 +364,6 @@ function mostrarResultados(equipos) {
         resultadosBusqueda.appendChild(tarjeta);
     });
 }
-
 
 // ==========================================
 // AGREGAR EQUIPO A LA LISTA
@@ -380,7 +395,6 @@ function agregarEquipo(equipo) {
     actualizarSeleccion();
 }
 
-
 // ==========================================
 // ELIMINAR EQUIPO SELECCIONADO
 // ==========================================
@@ -396,7 +410,6 @@ function eliminarEquipo(numeroInventario) {
 
     actualizarSeleccion();
 }
-
 
 // ==========================================
 // ACTUALIZAR EQUIPOS SELECCIONADOS
@@ -443,9 +456,8 @@ function actualizarSeleccion() {
     actualizarEstadoBotonGenerar();
 }
 
-
 // ==========================================
-// MOSTRAR AUTOMÁTICAMENTE LA PLANTILLA EXCEL
+// CARGAR PLANTILLA EXCEL ORIGINAL
 // ==========================================
 
 async function mostrarFormatoBaja() {
@@ -462,6 +474,10 @@ async function mostrarFormatoBaja() {
 
         const archivo = await respuesta.arrayBuffer();
 
+        // Guardar el archivo original para la descarga
+        archivoExcelOriginal = archivo;
+
+        // Cargar una representación para la vista previa
         libroExcel = XLSX.read(archivo, {
             type: 'array',
             cellStyles: true
@@ -482,6 +498,7 @@ async function mostrarFormatoBaja() {
         console.error('Error al cargar el Excel:', error);
 
         libroExcel = null;
+        archivoExcelOriginal = null;
 
         visorExcel.textContent =
             'No se pudo mostrar el formato de baja.';
@@ -490,9 +507,8 @@ async function mostrarFormatoBaja() {
     }
 }
 
-
 // ==========================================
-// CREAR HOJA EXCEL ACTUALIZADA
+// CREAR HOJA PARA LA VISTA PREVIA
 // ==========================================
 
 function crearHojaActualizada() {
@@ -506,20 +522,21 @@ function crearHojaActualizada() {
         return null;
     }
 
-    // Copia de la estructura original de la hoja
+    // Copia superficial de la hoja original
     const hoja = { ...hojaOriginal };
 
-    // Columnas relacionadas con las propiedades del equipo
     const columnas = {
         B: 'numeroActivo',
         E: 'numeroInventario',
         H: 'descripcion',
         N: 'noSerial',
         Q: 'marca',
-        T: 'modelo'
+        T: 'modelo',
+        W: 'fechaRegistro'
+
     };
 
-    // Escribir valor conservando las propiedades existentes
+    // Modificar valor sin alterar la hoja original
     function escribirCelda(direccion, valor) {
         const celdaOriginal = hojaOriginal[direccion] || {};
 
@@ -529,12 +546,11 @@ function crearHojaActualizada() {
             v: String(valor ?? '')
         };
 
-        // Eliminar fórmula y valor formateado anterior
         delete hoja[direccion].f;
         delete hoja[direccion].w;
     }
 
-    // Limpiar las 10 filas destinadas a equipos
+    // Limpiar los espacios de los 10 equipos
     for (let indice = 0; indice < MAX_EQUIPOS; indice++) {
         const fila = FILA_INICIAL + indice;
 
@@ -543,7 +559,7 @@ function crearHojaActualizada() {
         });
     }
 
-    // Escribir los equipos seleccionados
+    // Agregar los datos de los equipos seleccionados
     equiposSeleccionados.slice(0, MAX_EQUIPOS).forEach(
         (equipo, indice) => {
             const fila = FILA_INICIAL + indice;
@@ -559,8 +575,7 @@ function crearHojaActualizada() {
         }
     );
 
-    // Escribir el dictamen en la celda U10
-    // Corresponde al recuadro combinado U10:AI10
+    // Dictamen seleccionado
     escribirCelda(
         'U10',
         dictamenSeleccionado
@@ -570,7 +585,6 @@ function crearHojaActualizada() {
 
     return hoja;
 }
-
 
 // ==========================================
 // ACTUALIZAR VISTA PREVIA DEL EXCEL
@@ -598,7 +612,6 @@ function actualizarFormatoExcel() {
     }
 }
 
-
 // ==========================================
 // ACTIVAR O DESACTIVAR BOTÓN GENERAR
 // ==========================================
@@ -606,7 +619,10 @@ function actualizarFormatoExcel() {
 function actualizarEstadoBotonGenerar() {
     const hayEquipos = equiposSeleccionados.length > 0;
     const hayDictamen = dictamenSeleccionado !== null;
-    const hayFormato = libroExcel !== null;
+
+    const hayFormato =
+        libroExcel !== null &&
+        archivoExcelOriginal !== null;
 
     btnGenerar.disabled = !(
         hayEquipos &&
@@ -615,13 +631,106 @@ function actualizarEstadoBotonGenerar() {
     );
 }
 
+// ==========================================
+// MODIFICAR CELDAS XML DEL EXCEL ORIGINAL
+// ==========================================
+
+function escaparXML(valor) {
+    return String(valor ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+}
+
+// Modificar únicamente una celda del XML original
+// ==========================================
+// MODIFICAR CELDAS XML DEL EXCEL ORIGINAL
+// ==========================================
+
+function escribirCeldaXML(documento, direccion, valor) {
+
+    const namespace =
+        'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+
+    // Obtener todas las celdas de la hoja
+    const celdas = documento.getElementsByTagNameNS(
+        namespace,
+        'c'
+    );
+
+    // Buscar la celda por su dirección: B12, E12, etc.
+    const celda = Array.from(celdas).find(
+        elemento => elemento.getAttribute('r') === direccion
+    );
+
+    // Verificar que la celda exista
+    if (!celda) {
+        throw new Error(
+            `No se encontró la celda ${direccion} en la plantilla.`
+        );
+    }
+
+    // Eliminar únicamente el contenido anterior
+    // f = fórmula
+    // v = valor
+    // is = texto interno
+    Array.from(celda.children).forEach(elemento => {
+
+        if (['f', 'v', 'is'].includes(elemento.localName)) {
+            celda.removeChild(elemento);
+        }
+
+    });
+
+    // Indicar que el contenido será texto
+    celda.setAttribute('t', 'inlineStr');
+
+    // Crear el contenedor para el texto
+    const contenedor = documento.createElementNS(
+        namespace,
+        'is'
+    );
+
+    // Crear el elemento de texto
+    const texto = documento.createElementNS(
+        namespace,
+        't'
+    );
+
+    // Conservar los espacios
+    texto.setAttributeNS(
+        'http://www.w3.org/XML/1998/namespace',
+        'xml:space',
+        'preserve'
+    );
+
+    // Asignar el nuevo valor
+    texto.textContent = String(valor ?? '');
+
+    // Agregar el texto a su contenedor
+    contenedor.appendChild(texto);
+
+    // Agregar el contenedor a la celda
+    celda.appendChild(contenedor);
+}
 
 // ==========================================
-// GENERAR Y DESCARGAR EXCEL
+// GENERAR Y DESCARGAR EXCEL CON FORMATO
 // ==========================================
 
-function generarExcel() {
-    if (!libroExcel) {
+// ==========================================
+// GENERAR Y DESCARGAR EXCEL CON FORMATO
+// ==========================================
+
+async function generarExcel() {
+
+    // ==========================================
+    // VALIDACIONES
+    // ==========================================
+
+    if (!archivoExcelOriginal) {
         alert('El formato Excel todavía no está disponible.');
         return;
     }
@@ -636,45 +745,326 @@ function generarExcel() {
         return;
     }
 
-    try {
-        const hojaActualizada = crearHojaActualizada();
+    if (typeof JSZip === 'undefined') {
+        alert('No se encontró la biblioteca JSZip.');
+        return;
+    }
 
-        if (!hojaActualizada) {
-            throw new Error('No se pudo generar la hoja Excel.');
+    try {
+
+        btnGenerar.disabled = true;
+
+        // ==========================================
+        // 1. ABRIR PLANTILLA ORIGINAL
+        // ==========================================
+
+        const zip = await JSZip.loadAsync(
+            archivoExcelOriginal
+        );
+
+        // Hoja Mobiliario -Herramientas
+        const rutaHoja = 'xl/worksheets/sheet2.xml';
+
+        const archivoHoja = zip.file(rutaHoja);
+
+        if (!archivoHoja) {
+            throw new Error(
+                'No se encontró la hoja de mobiliario.'
+            );
         }
 
-        // Conservar las demás hojas del libro original
-        const libroGenerado = {
-            ...libroExcel,
-            Sheets: {
-                ...libroExcel.Sheets,
-                [NOMBRE_HOJA]: hojaActualizada
-            }
+        // Leer contenido XML
+        const xmlHoja = await archivoHoja.async('string');
+
+        // ==========================================
+        // 2. CONVERTIR XML EN DOCUMENTO
+        // ==========================================
+
+        const parser = new DOMParser();
+
+        const documento = parser.parseFromString(
+            xmlHoja,
+            'application/xml'
+        );
+
+        // Verificar errores en XML
+        if (
+            documento.getElementsByTagName('parsererror').length > 0
+        ) {
+            throw new Error(
+                'No se pudo interpretar el XML del Excel.'
+            );
+        }
+
+        // ==========================================
+        // 3. DEFINIR COLUMNAS
+        // ==========================================
+
+        const columnas = {
+            B: 'numeroActivo',
+            E: 'numeroInventario',
+            H: 'descripcion',
+            N: 'noSerial',
+            Q: 'marca',
+            T: 'modelo',
+            W: 'fechaRegistro'
+
         };
 
-        // Nombre del archivo generado
-        const nombreArchivo = 'Formato_Baja_Equipos_FEI.xlsx';
+        // ==========================================
+        // 4. LIMPIAR FILAS DE EQUIPOS
+        // ==========================================
 
-        XLSX.writeFile(libroGenerado, nombreArchivo, {
-            bookType: 'xlsx',
-            cellStyles: true
+        for (
+            let indice = 0;
+            indice < MAX_EQUIPOS;
+            indice++
+        ) {
+
+            const fila = FILA_INICIAL + indice;
+
+            Object.keys(columnas).forEach(columna => {
+
+                escribirCeldaXML(
+                    documento,
+                    `${columna}${fila}`,
+                    ''
+                );
+
+            });
+        }
+
+        // ==========================================
+        // 5. INSERTAR EQUIPOS SELECCIONADOS
+        // ==========================================
+
+        equiposSeleccionados
+            .slice(0, MAX_EQUIPOS)
+            .forEach((equipo, indice) => {
+
+                const fila = FILA_INICIAL + indice;
+
+                Object.entries(columnas).forEach(
+                    ([columna, propiedad]) => {
+
+                        const direccion = `${columna}${fila}`;
+
+                        const valor = equipo[propiedad] ?? '';
+
+                        escribirCeldaXML(
+                            documento,
+                            direccion,
+                            valor
+                        );
+
+                    }
+                );
+
+            });
+
+        // ==========================================
+        // 6. INSERTAR DICTAMEN
+        // ==========================================
+
+        escribirCeldaXML(
+            documento,
+            'U10',
+            dictamenSeleccionado.articulo
+        );
+
+        // ==========================================
+        // 7. GUARDAR HOJA MODIFICADA
+        // ==========================================
+
+        const serializador = new XMLSerializer();
+
+        const xmlActualizado =
+            serializador.serializeToString(documento);
+
+        zip.file(
+            rutaHoja,
+            xmlActualizado
+        );
+
+        // ==========================================
+        // 8. ELIMINAR CADENA DE CÁLCULO ANTERIOR
+        // ==========================================
+
+        // Algunas fórmulas fueron reemplazadas por valores.
+        // Por eso eliminamos la cadena de cálculo anterior.
+        zip.remove('xl/calcChain.xml');
+
+        // ==========================================
+        // 9. ACTUALIZAR RELACIONES DEL LIBRO
+        // ==========================================
+
+        const rutaRelaciones =
+            'xl/_rels/workbook.xml.rels';
+
+        const archivoRelaciones =
+            zip.file(rutaRelaciones);
+
+        if (!archivoRelaciones) {
+            throw new Error(
+                'No se encontraron las relaciones del libro.'
+            );
+        }
+
+        let xmlRelaciones =
+            await archivoRelaciones.async('string');
+
+        // Eliminar referencia a calcChain.xml
+        xmlRelaciones = xmlRelaciones.replace(
+            /<Relationship\b(?=[^>]*\bType="[^"]*\/calcChain")[^>]*\/>/g,
+            ''
+        );
+
+        zip.file(
+            rutaRelaciones,
+            xmlRelaciones
+        );
+
+        // ==========================================
+        // 10. ACTUALIZAR TIPOS DE CONTENIDO
+        // ==========================================
+
+        const rutaTipos = '[Content_Types].xml';
+
+        const archivoTipos = zip.file(rutaTipos);
+
+        if (!archivoTipos) {
+            throw new Error(
+                'No se encontraron los tipos de contenido.'
+            );
+        }
+
+        let xmlTipos =
+            await archivoTipos.async('string');
+
+        // Eliminar declaración de calcChain.xml
+        xmlTipos = xmlTipos.replace(
+            /<Override\b(?=[^>]*\bPartName="\/xl\/calcChain\.xml")[^>]*\/>/g,
+            ''
+        );
+
+        zip.file(
+            rutaTipos,
+            xmlTipos
+        );
+
+        // ==========================================
+        // 11. CONFIGURAR RECÁLCULO DE FÓRMULAS
+        // ==========================================
+
+        const rutaLibro = 'xl/workbook.xml';
+
+        const archivoLibro = zip.file(rutaLibro);
+
+        if (!archivoLibro) {
+            throw new Error(
+                'No se encontró la configuración del libro.'
+            );
+        }
+
+        let xmlLibro =
+            await archivoLibro.async('string');
+
+        // Actualizar la configuración existente
+        if (/<calcPr\b/.test(xmlLibro)) {
+
+            xmlLibro = xmlLibro.replace(
+                /<calcPr\b[^>]*\/>/,
+                '<calcPr calcMode="auto" fullCalcOnLoad="1"/>'
+            );
+
+        } else {
+
+            // Agregar configuración si no existe
+            xmlLibro = xmlLibro.replace(
+                /<\/workbook>/,
+                '<calcPr calcMode="auto" fullCalcOnLoad="1"/></workbook>'
+            );
+
+        }
+
+        zip.file(
+            rutaLibro,
+            xmlLibro
+        );
+
+        // ==========================================
+        // 12. GENERAR ARCHIVO EXCEL
+        // ==========================================
+
+        const archivoFinal = await zip.generateAsync({
+
+            type: 'blob',
+
+            mimeType:
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+            compression: 'DEFLATE',
+
+            compressionOptions: {
+                level: 6
+            }
+
         });
 
-        console.log('Formato Excel generado correctamente.');
+        // ==========================================
+        // 13. DESCARGAR ARCHIVO
+        // ==========================================
+
+        const url = URL.createObjectURL(
+            archivoFinal
+        );
+
+        const enlace = document.createElement('a');
+
+        enlace.href = url;
+
+        enlace.download =
+            'formato_baja.xlsx';
+
+        document.body.appendChild(enlace);
+
+        enlace.click();
+
+        enlace.remove();
+
+        // Liberar memoria
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 1000);
+
+        console.log(
+            'Archivo Excel generado correctamente.'
+        );
 
     } catch (error) {
-        console.error('Error al generar el Excel:', error);
 
-        alert('No se pudo generar el formato Excel.');
+        console.error(
+            'Error al generar el Excel:',
+            error
+        );
+
+        alert(
+            'No se pudo generar el formato Excel.\n\n' +
+            'Motivo: ' + error.message
+        );
+
+    } finally {
+
+        actualizarEstadoBotonGenerar();
+
     }
 }
-
 
 // ==========================================
 // EVENTOS
 // ==========================================
 
-// Buscar equipos mediante el botón
+// Buscar equipos mediante botón
 btnBuscar.addEventListener('click', buscarEquipos);
 
 // Buscar al presionar Enter
@@ -685,7 +1075,7 @@ inputBusqueda.addEventListener('keydown', (evento) => {
     }
 });
 
-// Filtrar equipos activos
+// Filtro de activos
 btnFiltroActivos.addEventListener(
     'click',
     alternarFiltroActivos
@@ -694,6 +1084,7 @@ btnFiltroActivos.addEventListener(
 // Limpiar selección
 btnLimpiar.addEventListener('click', () => {
     equiposSeleccionados.length = 0;
+
     actualizarSeleccion();
 });
 
@@ -703,7 +1094,8 @@ comboDictamen.addEventListener('change', () => {
 
     dictamenSeleccionado = idArticulo
         ? catalogoDictamen.find(
-            articulo => String(articulo.idArticulo) === idArticulo
+            articulo =>
+                String(articulo.idArticulo) === idArticulo
         ) || null
         : null;
 
@@ -711,9 +1103,8 @@ comboDictamen.addEventListener('change', () => {
     actualizarEstadoBotonGenerar();
 });
 
-// Generar y descargar archivo Excel
+// Descargar Excel
 btnGenerar.addEventListener('click', generarExcel);
-
 
 // ==========================================
 // INICIALIZAR MÓDULO
@@ -729,7 +1120,7 @@ function inicializarModulo() {
     cargarCatalogoDictamen();
 }
 
-// Funciona con scripts normales o deferidos
+// Ejecutar al cargar el documento
 if (document.readyState === 'loading') {
     document.addEventListener(
         'DOMContentLoaded',

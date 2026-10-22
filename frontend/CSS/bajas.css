@@ -370,6 +370,7 @@
     margin-top: 10px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 12px;
     margin-left: 60%;
 }
 
@@ -552,7 +553,7 @@
 
 .imagen-equipo {
     width: 100px;
-    height: 100px;
+    height: 130px;
     background-color: #ffffff;
 }
 

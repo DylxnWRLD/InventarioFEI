@@ -1,5 +1,7 @@
 package com.inventariofeicc.inventariofeicc.model;
 
+import java.time.LocalDate;
+
 /**
  * Modelo de datos que representa un equipo dentro del inventario.
  *
@@ -20,6 +22,7 @@ public class EquipoInventarioModel {
     private String estado_operativo;
     private String ubicacion;
     private String url_imagen;
+    private LocalDate fechaRegistro;
 
     /**
      * Constructor por defecto para instanciacion sin argumentos.
@@ -135,4 +138,16 @@ public class EquipoInventarioModel {
     public void setUrlImagen(String url_imagen) {
         this.url_imagen = url_imagen;
     }
+
+    public LocalDate getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDate fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+    
+    
+    
+    
 }
