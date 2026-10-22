@@ -179,7 +179,7 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException( "El número de inventario contiene caracteres no permitidos.");
         }
 
-        if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_IDENTIFICADORES)) {
+        if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_TEXTO)) {
             throw new IllegalArgumentException("El número de serie contiene caracteres no permitidos.");
         }
 
