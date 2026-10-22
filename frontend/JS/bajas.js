@@ -724,6 +724,20 @@ function escribirCeldaXML(documento, direccion, valor) {
 // GENERAR Y DESCARGAR EXCEL CON FORMATO
 // ==========================================
 
+function obtenerFechaExcel() {
+    const hoy = new Date();
+
+    const inicioExcel = Date.UTC(1899, 11, 30);
+
+    const fechaActual = Date.UTC(
+        hoy.getFullYear(),
+        hoy.getMonth(),
+        hoy.getDate()
+    );
+
+    return (fechaActual - inicioExcel) / 86400000;
+}
+
 async function generarExcel() {
 
     // ==========================================
@@ -831,7 +845,42 @@ async function generarExcel() {
                     ''
                 );
 
+
             });
+        }
+
+        function escribirFechaExcel(documento, direccion, valor) {
+
+            const namespace =
+                'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
+
+            const celdas = documento.getElementsByTagNameNS(
+                namespace,
+                'c'
+            );
+
+            const celda = Array.from(celdas).find(
+                elemento => elemento.getAttribute('r') === direccion
+            );
+
+            if (!celda) {
+                throw new Error(`No se encontró la celda ${direccion}.`);
+            }
+
+            // Eliminar fórmula y valor anteriores
+            Array.from(celda.children).forEach(elemento => {
+                if (['f', 'v', 'is'].includes(elemento.localName)) {
+                    celda.removeChild(elemento);
+                }
+            });
+
+            // Guardar fecha como número de Excel
+            celda.setAttribute('t', 'n');
+
+            const valorXML = documento.createElementNS(namespace, 'v');
+            valorXML.textContent = String(valor);
+
+            celda.appendChild(valorXML);
         }
 
         // ==========================================
@@ -870,6 +919,12 @@ async function generarExcel() {
             documento,
             'U10',
             dictamenSeleccionado.articulo
+        );
+        // Fecha de elaboración del formato de baja
+        escribirFechaExcel(
+            documento,
+            'AG4',
+            obtenerFechaExcel()
         );
 
         // ==========================================

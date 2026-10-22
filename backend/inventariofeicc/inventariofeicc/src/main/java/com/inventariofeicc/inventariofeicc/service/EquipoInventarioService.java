@@ -1,5 +1,6 @@
 package com.inventariofeicc.inventariofeicc.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -10,17 +11,30 @@ import com.inventariofeicc.inventariofeicc.model.EquipoInventarioResponse;
 import com.inventariofeicc.inventariofeicc.repository.EquipoInventarioRepository;
 
 /**
- * Servicio encargado de manejar la lógica relacionada con los equipos de
- * inventario.
+ * Servicio encargado de gestionar las operaciones relacionadas con los equipos
+ * de inventario.
  *
  * @author Dylan y Gustavo
  */
 @Service
 public class EquipoInventarioService {
 
-    private static final String CARACTERES_PERMITIDOS = "^[A-Za-z0-9_/-]+$";
+    /**
+     * Caracteres permitidos para los identificadores de equipos.
+     */
+    private static final String CARACTERES_IDENTIFICADORES
+            = "^[A-Za-z0-9_/-]+$";
 
-    private static final Set<String> Ubicaciones = Set.of(
+    /**
+     * Caracteres permitidos para los campos de texto.
+     */
+    private static final String CARACTERES_TEXTO
+            = "^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ0-9_ ./()-]+$";
+
+    /**
+     * Ubicaciones válidas para los equipos de inventario.
+     */
+    private static final Set<String> UBICACIONES = Set.of(
             "CC1",
             "CC2",
             "CC3",
@@ -30,8 +44,8 @@ public class EquipoInventarioService {
             "AULA 6",
             "AULA 102",
             "AULA 103",
-            "AULA 106",
             "AULA 105",
+            "AULA 106",
             "AULA 107",
             "AULA 111",
             "AULA 112",
@@ -48,40 +62,48 @@ public class EquipoInventarioService {
             "JEFATURA_CC",
             "LAB. INNOVACION EN SOFTWARE",
             "AUDIOVISUAL",
-            "ALMACEN");
-
-    private static final Set<String> EstadosOperativos = Set.of(
-            "ACTIVO",
-            "EN_PROCESO_DE_BAJA",
-            "PRESTAMO");
-
-    private final EquipoInventarioRepository EIR;
+            "ALMACEN"
+    );
 
     /**
-     * Cantidad máxima de equipos que se muestran por página.
+     * Estados operativos permitidos para los equipos.
+     */
+    private static final Set<String> ESTADOS_OPERATIVOS = Set.of(
+            "ACTIVO",
+            "EN_PROCESO_DE_BAJA",
+            "PRESTAMO"
+    );
+
+    /**
+     * Cantidad máxima de equipos por página.
      */
     private static final int LIMITE = 30;
 
     /**
-     * Constructor del servicio.
+     * Repositorio para el acceso a los datos de inventario.
+     */
+    private final EquipoInventarioRepository EIR;
+
+    /**
+     * Constructor para la inyección del repositorio.
      *
-     * @param EIR repositorio encargado de realizar las consultas a la base de
-     * datos.
+     * @param EIR repositorio de equipos de inventario.
      */
     public EquipoInventarioService(EquipoInventarioRepository EIR) {
         this.EIR = EIR;
     }
 
     /**
-     * Obtiene los equipos correspondientes a una página junto con la cantidad
-     * total de equipos registrados.
+     * Obtiene una lista paginada de equipos.
      *
-     * @param pagina número de página solicitada.
-     * @return equipos de la página y total de registros.
+     * @param pagina número de página solicitado.
+     * @return equipos encontrados y total de registros.
+     * @throws IllegalArgumentException si la página es inválida.
      */
     public EquipoInventarioResponse obtenerEquipos(int pagina) {
+
         if (pagina < 1) {
-            throw new IllegalArgumentException("El número de página debe ser mayor o igual a 1.");
+            throw new IllegalArgumentException("El número de página debe ser mayor o igual a 1");
         }
         int offset = (pagina - 1) * LIMITE;
         List<EquipoInventarioModel> equipos = EIR.obtenerEquipos(LIMITE, offset);
@@ -90,26 +112,33 @@ public class EquipoInventarioService {
     }
 
     /**
-     * Busca equipos de inventario que coincidan con un texto y devuelve los
-     * resultados de una página determinada.
+     * Busca equipos mediante un texto de búsqueda.
      *
-     * @param textoBusqueda texto que se desea buscar.
-     * @param pagina número de página.
-     * @return equipos encontrados y cantidad total de coincidencias.
+     * @param textoBusqueda texto utilizado para la búsqueda.
+     * @param pagina número de página solicitado.
+     * @return equipos coincidentes y total de resultados.
+     * @throws IllegalArgumentException si los parámetros son inválidos.
      */
     public EquipoInventarioResponse buscarEquipos(String textoBusqueda, int pagina) {
+
         if (pagina < 1) {
-            throw new IllegalArgumentException("La página debe ser mayor o igual a 1.");
+            throw new IllegalArgumentException("La página debe ser mayor o igual a 1");
         }
+
         if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
             throw new IllegalArgumentException("El texto de búsqueda no puede estar vacío.");
         }
+
         int offset = (pagina - 1) * LIMITE;
+        String textoNormalizado = textoBusqueda.trim();
+
         List<EquipoInventarioModel> equipos = EIR.buscarEquipos(
-                textoBusqueda,
-                LIMITE,
-                offset);
-        int total = EIR.contarEquiposBusqueda(textoBusqueda);
+                        textoNormalizado,
+                        LIMITE,
+                        offset
+                );
+
+        int total = EIR.contarEquiposBusqueda(textoNormalizado);
         return new EquipoInventarioResponse(equipos, total);
     }
 
@@ -118,59 +147,88 @@ public class EquipoInventarioService {
      *
      * @param numeroInventario número de inventario del equipo.
      * @return equipo encontrado o null si no existe.
+     * @throws IllegalArgumentException si el número es inválido.
      */
     public EquipoInventarioModel obtenerEquipoPorNumeroInventario(String numeroInventario) {
+
         if (numeroInventario == null || numeroInventario.isBlank()) {
             throw new IllegalArgumentException("El número de inventario es obligatorio.");
         }
-        return EIR.obtenerEquipoPorNumeroInventario(numeroInventario);
+
+        return EIR.obtenerEquipoPorNumeroInventario(numeroInventario.trim());
     }
 
     /**
-     * Registra un nuevo equipo en el inventario después de validar sus datos.
+     * Valida y registra un nuevo equipo de inventario.
      *
-     * @param equipo // Objeto que contiene la información del equipo a
-     * registrar.
+     * @param equipo información del equipo que se desea registrar.
+     * @throws IllegalArgumentException si los datos son inválidos o el equipo
+     * ya existe.
      */
     public void registrarNuevoEquipoService(EquipoInventarioModel equipo) {
-        // Manda a llamar a la función del repositorio para verificar si el número de inventario ya existe
-        int equiposIguales = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario());
 
-        if (equipo.getNumeroInventario() == null || equipo.getNumeroInventario().isEmpty()) {
+        if (equipo == null) {
+            throw new IllegalArgumentException("La información del equipo es obligatoria.");
+        }
+
+        if (equipo.getNumeroInventario() == null || equipo.getNumeroInventario().isBlank()) {
             throw new IllegalArgumentException("El número de inventario es obligatorio.");
         }
-        if (!equipo.getNumeroInventario().matches(CARACTERES_PERMITIDOS)) {
-            throw new IllegalArgumentException("El número de inventario contiene caracteres no permitidos.");
+
+        if (!equipo.getNumeroInventario().matches(CARACTERES_IDENTIFICADORES)) {
+            throw new IllegalArgumentException( "El número de inventario contiene caracteres no permitidos.");
         }
-        if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_PERMITIDOS)) {
+
+        if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_IDENTIFICADORES)) {
             throw new IllegalArgumentException("El número de serie contiene caracteres no permitidos.");
         }
-        if (equipo.getMarca() != null && !equipo.getMarca().isEmpty() && !equipo.getMarca().matches(CARACTERES_PERMITIDOS)) {
+
+        if (equipo.getMarca() != null && !equipo.getMarca().isEmpty() && !equipo.getMarca().matches(CARACTERES_TEXTO)) {
             throw new IllegalArgumentException("La marca contiene caracteres no permitidos.");
         }
-        if (equipo.getModelo() != null && !equipo.getModelo().isEmpty() && !equipo.getModelo().matches(CARACTERES_PERMITIDOS)) {
+
+        if (equipo.getModelo() != null && !equipo.getModelo().isEmpty()&& !equipo.getModelo().matches(CARACTERES_TEXTO)) {
             throw new IllegalArgumentException("El modelo contiene caracteres no permitidos.");
         }
-        if (equipo.getEstadoOperativo() == null || equipo.getEstadoOperativo().isEmpty()) {
-            throw new IllegalArgumentException("El estado operativo es obligatorio.");
+
+        if (equipo.getEstadoOperativo() == null || equipo.getEstadoOperativo().isBlank()) {
+            throw new IllegalArgumentException( "El estado operativo es obligatorio.");
         }
-        if (!EstadosOperativos.contains(equipo.getEstadoOperativo())) {
+
+        if (!ESTADOS_OPERATIVOS.contains(equipo.getEstadoOperativo())) {
             throw new IllegalArgumentException("El estado operativo proporcionado no es válido.");
         }
-        if (equipo.getUbicacion() == null || equipo.getUbicacion().isEmpty()) {
+
+        if (equipo.getUbicacion() == null || equipo.getUbicacion().isBlank()) {
+
             throw new IllegalArgumentException("La ubicación es obligatoria.");
         }
-        if (!Ubicaciones.contains(equipo.getUbicacion())) {
-            throw new IllegalArgumentException("La ubicación proporcionada no es válida.");
+
+        if (!UBICACIONES.contains(equipo.getUbicacion())) {
+            throw new IllegalArgumentException("La ubicación proporcionada no es válida." );
         }
-        if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isEmpty()) {
+
+        LocalDate fechaRegistro = equipo.getFechaRegistro();
+
+        if (fechaRegistro == null) {
+            throw new IllegalArgumentException("La fecha de registro del equipo es obligatoria.");
+        }
+
+        if (fechaRegistro.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de registro no puede ser posterior a la fecha actual.");
+        }
+
+        if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isBlank()) {
             throw new IllegalArgumentException("La URL de la imagen es obligatoria.");
         }
-        if (equiposIguales > 0) { // Si hay matches con ese numero de inventario, lanza una excepción
+
+        int equiposIguales = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario() );
+
+        if (equiposIguales > 0) {
             throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
         }
 
+        // Registrar equipo
         EIR.registrarEquipo(equipo);
     }
-
 }
