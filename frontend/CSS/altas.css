@@ -187,3 +187,42 @@
     .header {
       padding-left: 3%;
     }
+
+    .fecha-registro {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: #333;
+      background-color: #fff;
+
+      width: 100%;
+      height: 40px;
+      padding: 0 12px;
+      margin-top: 5px;
+
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+
+      outline: none;
+      cursor: pointer;
+
+      transition: border-color 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    /* Cuando el usuario selecciona el campo */
+    .fecha-registro:focus {
+      border-color: #006b4f;
+      box-shadow: 0 0 0 3px rgba(0, 107, 79, 0.12);
+    }
+
+    /* Cuando el usuario pasa el cursor */
+    .fecha-registro:hover {
+      border-color: #888;
+    }
+
+    /* Icono del calendario */
+    .fecha-registro::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.7;
+    }
