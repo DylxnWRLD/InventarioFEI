@@ -810,6 +810,16 @@ async function generarExcel() {
             );
         }
 
+        // Quitar protección de la hoja en el archivo generado
+        const protecciones = documento.getElementsByTagNameNS(
+            'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+            'sheetProtection'
+        );
+
+        while (protecciones.length > 0) {
+            protecciones[0].parentNode.removeChild(protecciones[0]);
+        }
+
         // ==========================================
         // 3. DEFINIR COLUMNAS
         // ==========================================
