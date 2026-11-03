@@ -930,11 +930,24 @@ async function generarExcel() {
             'U10',
             dictamenSeleccionado.articulo
         );
-        // Fecha de elaboración del formato de baja
-        escribirFechaExcel(
+
+
+        // ==========================================
+        // DATOS AUTOMÁTICOS
+        // ==========================================
+
+        // Nombre del responsable
+        escribirCeldaXML(
             documento,
-            'AG4',
-            obtenerFechaExcel()
+            'A25',
+            'Octavio Enrique Ochoa Martínez'
+        );
+
+        // Dependencia
+        escribirCeldaXML(
+            documento,
+            'A8',
+            '0075'
         );
 
         // ==========================================
