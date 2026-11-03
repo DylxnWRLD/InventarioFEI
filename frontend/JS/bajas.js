@@ -948,6 +948,12 @@ async function generarExcel() {
             'Octavio Enrique Ochoa Martínez'
         );
 
+         escribirCeldaXML(
+            documento,
+            'E8',
+            'Facultad de Estadística e Informática'
+        );
+
         // Dependencia
         escribirCeldaXML(
             documento,
