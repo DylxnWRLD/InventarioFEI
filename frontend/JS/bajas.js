@@ -7,6 +7,8 @@ const NOMBRE_HOJA = 'Mobiliario -Herramientas';
 const MAX_EQUIPOS = 10;
 const FILA_INICIAL = 12;
 
+const PERMITIR_EQUIPOS_EN_BAJA = true;
+
 // ==========================================
 // ELEMENTOS HTML
 // ==========================================
@@ -344,7 +346,7 @@ function mostrarResultados(equipos) {
 
         if (agregado) {
             boton.textContent = 'AGREGADO';
-        } else if (enProcesoDeBaja) {
+        } else if (enProcesoDeBaja && !PERMITIR_EQUIPOS_EN_BAJA) {
             boton.textContent = 'EN PROCESO DE BAJA';
         } else {
             boton.textContent = 'AGREGAR';
@@ -352,7 +354,7 @@ function mostrarResultados(equipos) {
 
         boton.disabled =
             agregado ||
-            enProcesoDeBaja ||
+            (enProcesoDeBaja && !PERMITIR_EQUIPOS_EN_BAJA) ||
             equiposSeleccionados.length >= MAX_EQUIPOS;
 
         boton.addEventListener('click', () => {
@@ -380,7 +382,10 @@ function agregarEquipo(equipo) {
         return;
     }
 
-    if (equipo.estadoOperativo === 'EN_PROCESO_DE_BAJA') {
+    if (
+        equipo.estadoOperativo === 'EN_PROCESO_DE_BAJA' &&
+        !PERMITIR_EQUIPOS_EN_BAJA
+    ) {
         alert('El equipo ya se encuentra en proceso de baja.');
         return;
     }
