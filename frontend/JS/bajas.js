@@ -17,8 +17,7 @@ const inputBusqueda = document.getElementById('buscar-equipo');
 const btnBuscar = document.getElementById('btn-buscar-equipo');
 const resultadosBusqueda = document.getElementById('resultados-busqueda');
 
-const equiposSeleccionadosContenedor =
-    document.getElementById('equipos-seleccionados');
+const equiposSeleccionadosContenedor = document.getElementById('equipos-seleccionados');
 
 const contadorEquipos = document.getElementById('contador-equipos');
 const btnLimpiar = document.getElementById('btn-limpiar-seleccion');
@@ -616,6 +615,10 @@ function crearHojaActualizada() {
 
         delete hoja[direccion].f;
         delete hoja[direccion].w;
+        // La plantilla puede conservar HTML vacío de una fórmula anterior.
+        // sheet_to_html prioriza ese HTML sobre el nuevo valor de la celda.
+        delete hoja[direccion].h;
+        delete hoja[direccion].r;
     }
 
     // Limpiar los espacios de los 10 equipos
@@ -796,10 +799,6 @@ function escribirCeldaXML(documento, direccion, valor) {
 // GENERAR Y DESCARGAR EXCEL CON FORMATO
 // ==========================================
 
-// ==========================================
-// GENERAR Y DESCARGAR EXCEL CON FORMATO
-// ==========================================
-
 function obtenerFechaExcel(fecha) {
     const [anio, mes, dia] = fecha.split('-').map(Number);
 
@@ -850,7 +849,8 @@ async function generarExcel() {
         if (!campo.reportValidity()) return;
     }
     const baja = obtenerDatosBaja();
-    const equiposDelFormato = equiposSeleccionados.map(equipo => ({ ...equipo,
+    const equiposDelFormato = equiposSeleccionados.map(equipo => ({
+        ...equipo,
         motivoTecnicoBaja: equipo.motivoTecnicoBaja.trim()
     }));
     const articuloDelFormato = dictamenSeleccionado.articulo;
@@ -1041,7 +1041,7 @@ async function generarExcel() {
             baja.dictaminador
         );
 
-         escribirCeldaXML(
+        escribirCeldaXML(
             documento,
             'E8',
             baja.unidadResponsableOrigen
