@@ -126,6 +126,43 @@
 }
 
 /* Panel derecho */
+.datos-baja {
+    border: 0;
+    padding: 0;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.datos-baja legend {
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.datos-baja .input-field,
+.motivo-baja {
+    width: 100%;
+}
+
+.motivo-baja {
+    display: block;
+    min-height: 70px;
+    resize: vertical;
+    margin: 8px 0;
+}
+
+#estado-baja {
+    margin: 0;
+    color: white;
+    text-align: center;
+}
+
+#estado-baja a {
+    color: white;
+    font-weight: bold;
+}
+
 .registro-main {
     flex: 1;
     min-width: 0;

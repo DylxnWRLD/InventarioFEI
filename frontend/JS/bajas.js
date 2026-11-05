@@ -7,7 +7,7 @@ const NOMBRE_HOJA = 'Mobiliario -Herramientas';
 const MAX_EQUIPOS = 10;
 const FILA_INICIAL = 12;
 
-const PERMITIR_EQUIPOS_EN_BAJA = true;
+const PERMITIR_EQUIPOS_EN_BAJA = false;
 
 // ==========================================
 // ELEMENTOS HTML
@@ -26,6 +26,12 @@ const btnGenerar = document.getElementById('btn-generar-excel');
 const comboDictamen = document.getElementById('combo-dictamen');
 const btnFiltroActivos = document.getElementById('btn-filtro-activos');
 const visorExcel = document.getElementById('visor-excel');
+const datosBaja = document.getElementById('datos-baja');
+const inputDictaminador = document.getElementById('dictaminador');
+const inputUr = document.getElementById('ur-baja');
+const inputUnidadOrigen = document.getElementById('unidad-responsable-origen');
+const inputFechaBaja = document.getElementById('fecha-baja');
+const estadoBaja = document.getElementById('estado-baja');
 
 // ==========================================
 // VARIABLES GENERALES
@@ -42,6 +48,45 @@ let archivoExcelOriginal = null;
 let identificadorBusqueda = 0;
 let soloActivos = false;
 let resultadosActuales = [];
+let generandoBaja = false;
+let urlUltimaDescarga = null;
+
+function obtenerDatosBaja() {
+    return {
+        dictaminador: inputDictaminador.value.trim(),
+        ur: inputUr.value.trim(),
+        unidadResponsableOrigen: inputUnidadOrigen.value.trim(),
+        fechaBaja: inputFechaBaja.value,
+        idArticulo: dictamenSeleccionado?.idArticulo,
+        equipos: equiposSeleccionados.map(equipo => ({
+            numeroInventario: equipo.numeroInventario,
+            motivoTecnicoBaja: (equipo.motivoTecnicoBaja || '').trim()
+        }))
+    };
+}
+
+async function registrarBajas(baja) {
+    let respuesta;
+    try {
+        respuesta = await fetch(`${API_BASE}/Baja/Equipos`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(baja)
+        });
+    } catch (error) {
+        throw new Error('No se pudo confirmar el registro. Revisa la conexión y vuelve a buscar los equipos antes de reintentar.');
+    }
+    if (!respuesta.ok) {
+        const texto = await respuesta.text();
+        let mensaje = 'No se pudieron registrar las bajas.';
+        try {
+            mensaje = JSON.parse(texto).mensaje || mensaje;
+        } catch (error) {
+            // Un proxy puede responder HTML o texto en lugar del JSON de la API.
+        }
+        throw new Error(mensaje);
+    }
+}
 
 // ==========================================
 // CARGAR CATÁLOGO DE DICTÁMENES
@@ -353,6 +398,7 @@ function mostrarResultados(equipos) {
         }
 
         boton.disabled =
+            generandoBaja ||
             agregado ||
             (enProcesoDeBaja && !PERMITIR_EQUIPOS_EN_BAJA) ||
             equiposSeleccionados.length >= MAX_EQUIPOS;
@@ -372,6 +418,7 @@ function mostrarResultados(equipos) {
 // ==========================================
 
 function agregarEquipo(equipo) {
+    if (generandoBaja) return;
     const existe = equiposSeleccionados.some(
         seleccionado =>
             seleccionado.numeroInventario === equipo.numeroInventario
@@ -395,7 +442,7 @@ function agregarEquipo(equipo) {
         return;
     }
 
-    equiposSeleccionados.push(equipo);
+    equiposSeleccionados.push({ ...equipo, motivoTecnicoBaja: '' });
 
     actualizarSeleccion();
 }
@@ -405,6 +452,7 @@ function agregarEquipo(equipo) {
 // ==========================================
 
 function eliminarEquipo(numeroInventario) {
+    if (generandoBaja) return;
     const indice = equiposSeleccionados.findIndex(
         equipo => equipo.numeroInventario === numeroInventario
     );
@@ -425,7 +473,7 @@ function actualizarSeleccion() {
 
     contadorEquipos.textContent = equiposSeleccionados.length;
 
-    btnLimpiar.disabled = equiposSeleccionados.length === 0;
+    btnLimpiar.disabled = generandoBaja || equiposSeleccionados.length === 0;
 
     if (equiposSeleccionados.length === 0) {
         equiposSeleccionadosContenedor.textContent =
@@ -443,12 +491,26 @@ function actualizarSeleccion() {
             botonEliminar.type = 'button';
             botonEliminar.textContent = 'QUITAR';
             botonEliminar.className = 'btn-quitar-equipo';
+            botonEliminar.disabled = generandoBaja;
 
             botonEliminar.addEventListener('click', () => {
                 eliminarEquipo(equipo.numeroInventario);
             });
 
-            tarjeta.append(contenido, botonEliminar);
+            const etiquetaMotivo = document.createElement('label');
+            etiquetaMotivo.textContent = 'Motivo técnico de baja';
+            const motivo = document.createElement('textarea');
+            motivo.className = 'input-field motivo-baja';
+            motivo.required = true;
+            motivo.disabled = generandoBaja;
+            motivo.value = equipo.motivoTecnicoBaja || '';
+            motivo.addEventListener('input', () => {
+                equipo.motivoTecnicoBaja = motivo.value;
+                actualizarFormatoExcel();
+            });
+            etiquetaMotivo.appendChild(motivo);
+
+            tarjeta.append(contenido, etiquetaMotivo, botonEliminar);
 
             equiposSeleccionadosContenedor.appendChild(tarjeta);
         });
@@ -537,18 +599,19 @@ function crearHojaActualizada() {
         N: 'noSerial',
         Q: 'marca',
         T: 'modelo',
-        W: 'fechaRegistro'
+        W: 'fechaRegistro',
+        Z: 'motivoTecnicoBaja'
 
     };
 
     // Modificar valor sin alterar la hoja original
-    function escribirCelda(direccion, valor) {
+    function escribirCelda(direccion, valor, tipo = 's') {
         const celdaOriginal = hojaOriginal[direccion] || {};
 
         hoja[direccion] = {
             ...celdaOriginal,
-            t: 's',
-            v: String(valor ?? '')
+            t: tipo,
+            v: tipo === 'n' ? valor : String(valor ?? '')
         };
 
         delete hoja[direccion].f;
@@ -587,6 +650,14 @@ function crearHojaActualizada() {
             ? dictamenSeleccionado.articulo
             : ''
     );
+
+    const datos = obtenerDatosBaja();
+    escribirCelda('A25', datos.dictaminador);
+    escribirCelda('A8', datos.ur);
+    escribirCelda('E8', datos.unidadResponsableOrigen);
+    if (datos.fechaBaja) {
+        escribirCelda('AG4', obtenerFechaExcel(datos.fechaBaja), 'n');
+    }
 
     return hoja;
 }
@@ -629,7 +700,7 @@ function actualizarEstadoBotonGenerar() {
         libroExcel !== null &&
         archivoExcelOriginal !== null;
 
-    btnGenerar.disabled = !(
+    btnGenerar.disabled = generandoBaja || !(
         hayEquipos &&
         hayDictamen &&
         hayFormato
@@ -729,21 +800,22 @@ function escribirCeldaXML(documento, direccion, valor) {
 // GENERAR Y DESCARGAR EXCEL CON FORMATO
 // ==========================================
 
-function obtenerFechaExcel() {
-    const hoy = new Date();
+function obtenerFechaExcel(fecha) {
+    const [anio, mes, dia] = fecha.split('-').map(Number);
 
     const inicioExcel = Date.UTC(1899, 11, 30);
 
     const fechaActual = Date.UTC(
-        hoy.getFullYear(),
-        hoy.getMonth(),
-        hoy.getDate()
+        anio,
+        mes - 1,
+        dia
     );
 
     return (fechaActual - inicioExcel) / 86400000;
 }
 
 async function generarExcel() {
+    if (generandoBaja) return;
 
     // ==========================================
     // VALIDACIONES
@@ -769,9 +841,29 @@ async function generarExcel() {
         return;
     }
 
+    const campos = [
+        ...datosBaja.querySelectorAll('input'),
+        ...equiposSeleccionadosContenedor.querySelectorAll('textarea')
+    ];
+    for (const campo of campos) {
+        if (campo.type !== 'date') campo.value = campo.value.trim();
+        if (!campo.reportValidity()) return;
+    }
+    const baja = obtenerDatosBaja();
+    const equiposDelFormato = equiposSeleccionados.map(equipo => ({ ...equipo,
+        motivoTecnicoBaja: equipo.motivoTecnicoBaja.trim()
+    }));
+    const articuloDelFormato = dictamenSeleccionado.articulo;
+
     try {
 
+        generandoBaja = true;
+        datosBaja.disabled = true;
+        comboDictamen.disabled = true;
         btnGenerar.disabled = true;
+        btnGenerar.textContent = 'REGISTRANDO BAJA...';
+        estadoBaja.textContent = 'Preparando el formato y registrando la baja...';
+        actualizarSeleccion();
 
         // ==========================================
         // 1. ABRIR PLANTILLA ORIGINAL
@@ -836,7 +928,8 @@ async function generarExcel() {
             N: 'noSerial',
             Q: 'marca',
             T: 'modelo',
-            W: 'fechaRegistro'
+            W: 'fechaRegistro',
+            Z: 'motivoTecnicoBaja'
 
         };
 
@@ -902,7 +995,7 @@ async function generarExcel() {
         // 5. INSERTAR EQUIPOS SELECCIONADOS
         // ==========================================
 
-        equiposSeleccionados
+        equiposDelFormato
             .slice(0, MAX_EQUIPOS)
             .forEach((equipo, indice) => {
 
@@ -933,7 +1026,7 @@ async function generarExcel() {
         escribirCeldaXML(
             documento,
             'U10',
-            dictamenSeleccionado.articulo
+            articuloDelFormato
         );
 
 
@@ -945,21 +1038,22 @@ async function generarExcel() {
         escribirCeldaXML(
             documento,
             'A25',
-            'Octavio Enrique Ochoa Martínez'
+            baja.dictaminador
         );
 
          escribirCeldaXML(
             documento,
             'E8',
-            'Facultad de Estadística e Informática'
+            baja.unidadResponsableOrigen
         );
 
         // Dependencia
         escribirCeldaXML(
             documento,
             'A8',
-            '0075'
+            baja.ur
         );
+        escribirFechaExcel(documento, 'AG4', obtenerFechaExcel(baja.fechaBaja));
 
         // ==========================================
         // 7. GUARDAR HOJA MODIFICADA
@@ -1101,7 +1195,7 @@ async function generarExcel() {
         });
 
         // ==========================================
-        // 13. DESCARGAR ARCHIVO
+        // 13. REGISTRAR EN LA BD ANTES DE INICIAR LA DESCARGA
         // ==========================================
 
         const url = URL.createObjectURL(
@@ -1115,16 +1209,31 @@ async function generarExcel() {
         enlace.download =
             'formato_baja.xlsx';
 
-        document.body.appendChild(enlace);
-
-        enlace.click();
-
-        enlace.remove();
-
-        // Liberar memoria
-        setTimeout(() => {
+        try {
+            await registrarBajas(baja);
+        } catch (error) {
             URL.revokeObjectURL(url);
-        }, 1000);
+            throw error;
+        }
+
+        if (urlUltimaDescarga) URL.revokeObjectURL(urlUltimaDescarga);
+        urlUltimaDescarga = url;
+        enlace.textContent = 'Volver a descargar el Excel';
+        estadoBaja.replaceChildren(
+            document.createTextNode(`Se registraron ${baja.equipos.length} baja(s). `),
+            enlace
+        );
+
+        const numerosRegistrados = new Set(baja.equipos.map(equipo => equipo.numeroInventario));
+        resultadosActuales.forEach(equipo => {
+            if (numerosRegistrados.has(equipo.numeroInventario)) {
+                equipo.estadoOperativo = 'EN_PROCESO_DE_BAJA';
+            }
+        });
+        equiposSeleccionados.length = 0;
+
+        // El enlace permanece disponible si el navegador bloquea la descarga automática.
+        enlace.click();
 
         console.log(
             'Archivo Excel generado correctamente.'
@@ -1138,13 +1247,18 @@ async function generarExcel() {
         );
 
         alert(
-            'No se pudo generar el formato Excel.\n\n' +
+            'No se pudo completar el registro y la descarga.\n\n' +
             'Motivo: ' + error.message
         );
+        estadoBaja.textContent = error.message;
 
     } finally {
 
-        actualizarEstadoBotonGenerar();
+        generandoBaja = false;
+        datosBaja.disabled = false;
+        comboDictamen.disabled = catalogoDictamen.length === 0;
+        btnGenerar.textContent = 'REGISTRAR BAJA Y DESCARGAR EXCEL';
+        actualizarSeleccion();
 
     }
 }
@@ -1172,6 +1286,7 @@ btnFiltroActivos.addEventListener(
 
 // Limpiar selección
 btnLimpiar.addEventListener('click', () => {
+    if (generandoBaja) return;
     equiposSeleccionados.length = 0;
 
     actualizarSeleccion();
@@ -1194,12 +1309,21 @@ comboDictamen.addEventListener('change', () => {
 
 // Descargar Excel
 btnGenerar.addEventListener('click', generarExcel);
+datosBaja.addEventListener('input', actualizarFormatoExcel);
+window.addEventListener('beforeunload', () => {
+    if (urlUltimaDescarga) URL.revokeObjectURL(urlUltimaDescarga);
+});
 
 // ==========================================
 // INICIALIZAR MÓDULO
 // ==========================================
 
 function inicializarModulo() {
+    const hoy = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/Mexico_City', year: 'numeric', month: '2-digit', day: '2-digit'
+    }).format(new Date());
+    inputFechaBaja.value = hoy;
+    inputFechaBaja.max = hoy;
     comboDictamen.disabled = true;
     btnGenerar.disabled = true;
 

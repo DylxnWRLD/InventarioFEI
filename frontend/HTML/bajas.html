@@ -106,6 +106,24 @@
 
       </div>
 
+      <fieldset id="datos-baja" class="datos-baja">
+        <legend>DATOS DE LA BAJA</legend>
+
+        <label for="dictaminador">Dictaminador</label>
+        <input id="dictaminador" class="input-field" maxlength="150" required
+          value="Octavio Enrique Ochoa Martínez" />
+
+        <label for="ur-baja">UR</label>
+        <input id="ur-baja" class="input-field" maxlength="20" required value="0075" />
+
+        <label for="unidad-responsable-origen">Unidad responsable de origen</label>
+        <input id="unidad-responsable-origen" class="input-field" maxlength="150" required
+          value="Facultad de Estadística e Informática" />
+
+        <label for="fecha-baja">Fecha de baja</label>
+        <input type="date" id="fecha-baja" class="input-field" required />
+      </fieldset>
+
     </aside>
 
     <!-- Panel derecho -->
@@ -136,18 +154,13 @@
 
       <!-- Botón para generar el documento -->
       <button type="button" id="btn-generar-excel" class="btn-guardar-equipo" disabled>
-        GENERAR EXCEL DE BAJA
+        REGISTRAR BAJA Y DESCARGAR EXCEL
       </button>
+      <p id="estado-baja" role="status" aria-live="polite"></p>
 
     </section>
 
   </main>
-
-  <!-- Librería para trabajar con Excel -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-  <!-- JavaScript del módulo de bajas -->
-  <script src="../JS/bajas.js"></script>
 
   <!-- SheetJS para la vista previa -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
