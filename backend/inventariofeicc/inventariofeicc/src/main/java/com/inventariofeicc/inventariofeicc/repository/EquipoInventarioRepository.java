@@ -169,11 +169,12 @@ public interface EquipoInventarioRepository {
      * @return equipo encontrado o null si no existe.
      */
     @Select("""
-        SELECT *
-        FROM inventariofei.equipo_inventario
-        WHERE no_serial = #{noSerial}
-    """)
-    EquipoInventarioModel obtenerEquipoPorNoSerial(
+        SELECT COUNT(*)
+            FROM inventariofei.equipo_inventario
+            WHERE no_serial = #{noSerial}
+            """
+    )
+    Integer verificarNumeroSerieExistente(
             @Param("noSerial") String noSerial
     );
 }
