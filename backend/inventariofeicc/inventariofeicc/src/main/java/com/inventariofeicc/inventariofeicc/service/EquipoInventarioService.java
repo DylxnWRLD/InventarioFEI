@@ -222,10 +222,16 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("La URL de la imagen es obligatoria.");
         }
 
-        int equiposIguales = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario() );
+        int noInventarioIgual = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario() );
 
-        if (equiposIguales > 0) {
+        if (noInventarioIgual > 0) {
             throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
+        }
+
+        int noSerialIgual = EIR.verificarNumeroSerieExistente(equipo.getNoSerial());
+
+        if (noSerialIgual > 0) {
+            throw new IllegalArgumentException("El número de serie ya existe en la base de datos.");
         }
 
         // Registrar equipo

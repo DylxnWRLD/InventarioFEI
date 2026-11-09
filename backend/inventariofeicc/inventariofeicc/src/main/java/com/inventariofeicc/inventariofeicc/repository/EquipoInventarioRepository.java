@@ -161,4 +161,19 @@ public interface EquipoInventarioRepository {
     EquipoInventarioModel obtenerEquipoPorNumeroInventario(
             @Param("numeroInventario") String numeroInventario
     );
+
+    /**
+     * Obtiene un equipo específico mediante su número de serie.
+     *
+     * @param noSerial número de serie del equipo.
+     * @return equipo encontrado o null si no existe.
+     */
+    @Select("""
+        SELECT *
+        FROM inventariofei.equipo_inventario
+        WHERE no_serial = #{noSerial}
+    """)
+    EquipoInventarioModel obtenerEquipoPorNoSerial(
+            @Param("noSerial") String noSerial
+    );
 }
