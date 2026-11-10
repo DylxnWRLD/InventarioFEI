@@ -171,8 +171,18 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("La información del equipo es obligatoria.");
         }
 
+        if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isBlank()) {
+            throw new IllegalArgumentException("Se necesita una imagen para dar de alta al equipo.");
+        }
+
         if (equipo.getNumeroInventario() == null || equipo.getNumeroInventario().isBlank()) {
             throw new IllegalArgumentException("El número de inventario es obligatorio.");
+        }
+
+        int noInventarioIgual = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario() );
+
+        if (noInventarioIgual > 0) {
+            throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
         }
 
         if (!equipo.getNumeroInventario().matches(CARACTERES_IDENTIFICADORES)) {
@@ -181,6 +191,12 @@ public class EquipoInventarioService {
 
         if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_TEXTO)) {
             throw new IllegalArgumentException("El número de serie contiene caracteres no permitidos.");
+        }
+
+        int noSerialIgual = EIR.verificarNumeroSerieExistente(equipo.getNoSerial());
+
+        if (noSerialIgual > 0) {
+            throw new IllegalArgumentException("El número de serie ya existe en la base de datos.");
         }
 
         if (equipo.getMarca() != null && !equipo.getMarca().isEmpty() && !equipo.getMarca().matches(CARACTERES_TEXTO)) {
@@ -216,22 +232,6 @@ public class EquipoInventarioService {
 
         if (fechaRegistro.isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de registro no puede ser posterior a la fecha actual.");
-        }
-
-        if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isBlank()) {
-            throw new IllegalArgumentException("La URL de la imagen es obligatoria.");
-        }
-
-        int noInventarioIgual = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario() );
-
-        if (noInventarioIgual > 0) {
-            throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
-        }
-
-        int noSerialIgual = EIR.verificarNumeroSerieExistente(equipo.getNoSerial());
-
-        if (noSerialIgual > 0) {
-            throw new IllegalArgumentException("El número de serie ya existe en la base de datos.");
         }
 
         // Registrar equipo
