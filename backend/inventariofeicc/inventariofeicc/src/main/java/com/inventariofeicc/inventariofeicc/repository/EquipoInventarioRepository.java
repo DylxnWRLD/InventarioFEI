@@ -113,8 +113,7 @@ public interface EquipoInventarioRepository {
             ubicacion,
             tipo_equipo,
             estado_operativo,
-            url_imagen,
-            fecha_registro
+            url_imagen
         ) VALUES (
             #{equipo.numero_inventario},
             #{equipo.marca},
