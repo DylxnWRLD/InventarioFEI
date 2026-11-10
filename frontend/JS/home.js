@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = './HTML/bajas.html';
   });
 
+  // Boton de Transferencias
   document.getElementById('btn-transferencias').addEventListener('click', () => {
     window.location.href = './HTML/transferencias.html';
   });
