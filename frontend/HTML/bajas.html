@@ -1,176 +1,190 @@
 <!doctype html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Baja de Equipos - Sistema de Inventario FEI</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Baja de Equipos - Sistema de Inventario FEI</title>
+    <link rel="stylesheet" href="../CSS/home.css" />
+    <link rel="stylesheet" href="../CSS/bajas.css" />
+  </head>
 
-  <link rel="stylesheet" href="../CSS/home.css" />
-  <link rel="stylesheet" href="../CSS/bajas.css" />
-</head>
+  <body>
+    <header class="header">
+      <div class="logo-uv">
+        <a href="../index.html" class="btn-back">⮌</a>
 
-<body>
+        <img
+          src="../images/logoUV.jpg"
+          alt="Logo Universidad Veracruzana"
+          loading="lazy"
+        />
 
-  <header class="header">
-
-    <div class="logo-uv">
-      <a href="../index.html" class="btn-back">⮌</a>
-
-      <img src="../images/logoUV.jpg" alt="Logo Universidad Veracruzana" loading="lazy" />
-
-      <div class="text-uv">
-        UNIVERSIDAD<br />
-        <span>VERACRUZANA</span>
-      </div>
-    </div>
-
-    <div class="logo-sistema">
-
-      <img src="../images/logoSistema.png" alt="Logo Sistema" />
-
-      <div class="text-sistema">
-        SISTEMA DE<br />
-        <span>INVENTARIO</span>
+        <div class="text-uv">
+          UNIVERSIDAD<br />
+          <span>VERACRUZANA</span>
+        </div>
       </div>
 
-    </div>
+      <div class="logo-sistema">
+        <img src="../images/logoSistema.png" alt="Logo Sistema" />
 
-  </header>
+        <div class="text-sistema">
+          SISTEMA DE<br />
+          <span>INVENTARIO</span>
+        </div>
+      </div>
+    </header>
 
-  <main class="registro-layout">
+    <main class="registro-layout">
+      <!-- Panel izquierdo -->
+      <aside class="registro-sidebar">
+        <!-- Dictamen técnico de baja -->
+        <div class="sidebar-section">
+          <fieldset id="datos-baja" class="datos-baja">
+            <h2 class="titulo-seccion">DATOS DE LA BAJA</h2>
 
-    <!-- Panel izquierdo -->
-    <aside class="registro-sidebar">
+            <label for="dictaminador">Dictaminador</label>
+            <input
+              id="dictaminador"
+              class="input-field"
+              maxlength="150"
+              required
+              value="Octavio Enrique Ochoa Martínez"
+            />
 
-      <h2 class="titulo-seccion">
-        BUSCAR EQUIPOS
-      </h2>
+            <label for="ur-baja">UR</label>
+            <input
+              id="ur-baja"
+              class="input-field"
+              maxlength="20"
+              required
+              value="0075"
+            />
 
-      <div class="form-group grupo-busqueda">
+            <label for="unidad-responsable-origen"
+              >Unidad responsable de origen</label
+            >
+            <input
+              id="unidad-responsable-origen"
+              class="input-field"
+              maxlength="150"
+              required
+              value="Facultad de Estadística e Informática"
+            />
 
-        <div class="fila-busqueda">
-          <input type="search" id="buscar-equipo" class="input-field" placeholder="Buscar equipo..."
-            autocomplete="on" />
+            <label for="fecha-baja">Fecha de baja</label>
+            <input type="date" id="fecha-baja" class="input-field" required />
+          </fieldset>
 
-          <button type="button" id="btn-buscar-equipo" class="btn-buscar-equipo">
-            Buscar
+          <h2 class="titulo-seccion">DICTAMEN</h2>
+
+          <div class="grupo-dictamen">
+            <label for="combo-dictamen"> Supuesto del artículo 54 </label>
+
+            <select id="combo-dictamen" class="select-field" disabled>
+              <option value="">Cargando dictámenes...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Búsqueda y selección de equipos -->
+        <div class="sidebar-section">
+          <h2 class="titulo-seccion">BUSCAR EQUIPOS</h2>
+
+          <div class="form-group grupo-busqueda">
+            <div class="fila-busqueda">
+              <input
+                type="search"
+                id="buscar-equipo"
+                class="input-field"
+                placeholder="Buscar equipo..."
+                autocomplete="on"
+              />
+
+              <button
+                type="button"
+                id="btn-buscar-equipo"
+                class="btn-buscar-equipo"
+              >
+                Buscar
+              </button>
+            </div>
+
+            <button
+              type="button"
+              id="btn-filtro-activos"
+              class="btn-filtro-activos"
+              aria-pressed="false"
+            >
+              Mostrar solo equipos activos
+            </button>
+          </div>
+
+          <!-- Resultados de la búsqueda -->
+          <h2 class="titulo-seccion">RESULTADOS</h2>
+
+          <div
+            id="resultados-busqueda"
+            class="resultados-busqueda"
+            aria-live="polite"
+          >
+            <p>Busca un equipo para visualizar sus datos.</p>
+          </div>
+
+          <!-- Lista de equipos para la baja -->
+          <h2 class="titulo-seccion">
+            EQUIPOS SELECCIONADOS (<span id="contador-equipos">0</span>)
+          </h2>
+
+          <div id="equipos-seleccionados" class="equipos-seleccionados">
+            <p>No hay equipos seleccionados.</p>
+          </div>
+
+          <button
+            type="button"
+            id="btn-limpiar-seleccion"
+            class="btn-limpiar-seleccion"
+            disabled
+          >
+            Quitar todos
           </button>
         </div>
+      </aside>
 
-        <button type="button" id="btn-filtro-activos" class="btn-filtro-activos" aria-pressed="false">
-          Mostrar solo equipos activos
-        </button>
+      <!-- Panel derecho -->
+      <section class="registro-main">
+        <div class="upload-card">
+          <h2 class="titulo-seccion">FORMATO DE BAJA - Vista previa</h2>
 
-      </div>
+          <p>Dictamen técnico de baja de los equipos seleccionados.</p>
 
+          <!-- Visualización del Excel -->
+          <div id="visor-excel" aria-live="polite">
+            Cargando formato de baja...
+          </div>
 
-
-      <!-- Resultados de la búsqueda -->
-      <h2 class="titulo-seccion">
-        RESULTADOS
-      </h2>
-
-      <div id="resultados-busqueda" class="resultados-busqueda" aria-live="polite">
-        <p>Busca un equipo para visualizar sus datos.</p>
-      </div>
-
-      <!-- Lista de equipos para la baja -->
-      <h2 class="titulo-seccion">
-        EQUIPOS SELECCIONADOS
-        (<span id="contador-equipos">0</span>)
-      </h2>
-
-      <div id="equipos-seleccionados" class="equipos-seleccionados">
-        <p>No hay equipos seleccionados.</p>
-      </div>
-
-      <button type="button" id="btn-limpiar-seleccion" class="btn-limpiar-seleccion" disabled>
-        Quitar todos
-      </button>
-
-      <!-- Dictamen técnico de baja -->
-      <h2 class="titulo-seccion">
-        DICTAMEN
-      </h2>
-
-      <div class="grupo-dictamen">
-
-        <label for="combo-dictamen">
-          Supuesto del artículo 54
-        </label>
-
-        <select id="combo-dictamen" class="select-field" disabled>
-          <option value="">Cargando dictámenes...</option>
-        </select>
-
-      </div>
-
-      <fieldset id="datos-baja" class="datos-baja">
-        <legend>DATOS DE LA BAJA</legend>
-
-        <label for="dictaminador">Dictaminador</label>
-        <input id="dictaminador" class="input-field" maxlength="150" required
-          value="Octavio Enrique Ochoa Martínez" />
-
-        <label for="ur-baja">UR</label>
-        <input id="ur-baja" class="input-field" maxlength="20" required value="0075" />
-
-        <label for="unidad-responsable-origen">Unidad responsable de origen</label>
-        <input id="unidad-responsable-origen" class="input-field" maxlength="150" required
-          value="Facultad de Estadística e Informática" />
-
-        <label for="fecha-baja">Fecha de baja</label>
-        <input type="date" id="fecha-baja" class="input-field" required />
-      </fieldset>
-
-    </aside>
-
-    <!-- Panel derecho -->
-    <section class="registro-main">
-
-      <div class="upload-card">
-
-        <h2 class="titulo-seccion">
-          FORMATO DE BAJA - Vista previa
-        </h2>
-
-        <p>
-          Dictamen técnico de baja de los equipos seleccionados.
-        </p>
-
-        <!-- Visualización del Excel -->
-        <div id="visor-excel" aria-live="polite">
-          Cargando formato de baja...
+          <!-- Botón para generar el documento -->
+          <button
+            type="button"
+            id="btn-generar-excel"
+            class="btn-guardar-equipo"
+            disabled
+          >
+            REGISTRAR BAJA Y DESCARGAR EXCEL
+          </button>
         </div>
+        <p id="estado-baja" role="status" aria-live="polite"></p>
+      </section>
+    </main>
 
-        <!-- Descargar formato -->
-        <a href="../formatos/abs-cb-f-25.xlsx" download="abs-cb-f-25.xlsx" id="btn-descargar-formato"
-          class="btn-subir-imagen">
-          DESCARGAR PLANTILLA ORIGINAL
-        </a>
+    <!-- SheetJS para la vista previa -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
-      </div>
+    <!-- JSZip para conservar el archivo Excel original -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-      <!-- Botón para generar el documento -->
-      <button type="button" id="btn-generar-excel" class="btn-guardar-equipo" disabled>
-        REGISTRAR BAJA Y DESCARGAR EXCEL
-      </button>
-      <p id="estado-baja" role="status" aria-live="polite"></p>
-
-    </section>
-
-  </main>
-
-  <!-- SheetJS para la vista previa -->
-  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-
-  <!-- JSZip para conservar el archivo Excel original -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-  <!-- JavaScript del módulo de bajas -->
-  <script src="../JS/bajas.js" defer></script>
-
-</body>
-
+    <!-- JavaScript del módulo de bajas -->
+    <script src="../JS/bajas.js" defer></script>
+  </body>
 </html>
