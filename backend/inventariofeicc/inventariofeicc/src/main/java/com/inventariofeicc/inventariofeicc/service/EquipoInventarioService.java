@@ -224,16 +224,6 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("La ubicación proporcionada no es válida." );
         }
 
-        LocalDate fechaRegistro = equipo.getFechaRegistro();
-
-        if (fechaRegistro == null) {
-            throw new IllegalArgumentException("La fecha de registro del equipo es obligatoria.");
-        }
-
-        if (fechaRegistro.isAfter(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de registro no puede ser posterior a la fecha actual.");
-        }
-
         // Registrar equipo
         EIR.registrarEquipo(equipo);
     }
