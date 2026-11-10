@@ -1,6 +1,5 @@
 package com.inventariofeicc.inventariofeicc.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -171,10 +170,6 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("La información del equipo es obligatoria.");
         }
 
-        if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isBlank()) {
-            throw new IllegalArgumentException("Se necesita una imagen para dar de alta al equipo.");
-        }
-
         if (equipo.getNumeroInventario() == null || equipo.getNumeroInventario().isBlank()) {
             throw new IllegalArgumentException("El número de inventario es obligatorio.");
         }
@@ -222,6 +217,10 @@ public class EquipoInventarioService {
 
         if (!UBICACIONES.contains(equipo.getUbicacion())) {
             throw new IllegalArgumentException("La ubicación proporcionada no es válida." );
+        }
+
+        if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isBlank()) {
+            throw new IllegalArgumentException("Se necesita una imagen para dar de alta al equipo.");
         }
 
         // Registrar equipo
