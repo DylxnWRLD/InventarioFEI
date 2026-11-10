@@ -41,53 +41,6 @@
         <!-- PANEL IZQUIERDO -->
         <aside class="transferencia-sidebar">
 
-            <!-- BÚSQUEDA Y SELECCIÓN -->
-            <div class="panel-transferencia">
-
-                <h2 class="titulo-seccion">
-                    BUSCAR EQUIPOS
-                </h2>
-
-                <div class="grupo-busqueda">
-                    <div class="fila-busqueda">
-
-                        <input type="search" id="buscar-equipo" class="input-field" placeholder="Buscar equipo..."
-                            autocomplete="on" />
-
-                        <button type="button" id="btn-buscar-equipo" class="btn-buscar-equipo">
-                            Buscar
-                        </button>
-
-                    </div>
-                </div>
-
-                <h2 class="titulo-seccion">
-                    RESULTADOS
-                </h2>
-
-                <div id="resultados-busqueda" class="resultados-busqueda" aria-live="polite">
-
-                    <p>Busca un equipo para visualizar sus datos.</p>
-
-                </div>
-
-                <h2 class="titulo-seccion">
-                    EQUIPOS SELECCIONADOS
-                    (<span id="contador-equipos">0</span>/14)
-                </h2>
-
-                <div id="equipos-seleccionados" class="equipos-seleccionados">
-
-                    <p>No hay equipos seleccionados.</p>
-
-                </div>
-
-                <button type="button" id="btn-limpiar-seleccion" class="btn-limpiar-seleccion" disabled>
-                    Quitar todos
-                </button>
-
-            </div>
-
             <!-- DATOS DEL PRÉSTAMO -->
             <div id="datos-transferencia" class="panel-transferencia datos-transferencia">
 
@@ -147,9 +100,53 @@
                     </label>
                     <input type="text" id="nombre-titular" class="input-field" maxlength="150" required />
                 </div>
-
             </div>
 
+            <!-- BÚSQUEDA Y SELECCIÓN -->
+            <div class="panel-transferencia">
+
+                <h2 class="titulo-seccion">
+                    BUSCAR EQUIPOS
+                </h2>
+
+                <div class="grupo-busqueda">
+                    <div class="fila-busqueda">
+
+                        <input type="search" id="buscar-equipo" class="input-field" placeholder="Buscar equipo..."
+                            autocomplete="on" />
+
+                        <button type="button" id="btn-buscar-equipo" class="btn-buscar-equipo">
+                            Buscar
+                        </button>
+
+                    </div>
+                </div>
+
+                <h2 class="titulo-seccion">
+                    RESULTADOS
+                </h2>
+
+                <div id="resultados-busqueda" class="resultados-busqueda" aria-live="polite">
+
+                    <p>Busca un equipo para visualizar sus datos.</p>
+
+                </div>
+
+                <h2 class="titulo-seccion">
+                    EQUIPOS SELECCIONADOS
+                    (<span id="contador-equipos">0</span>/14)
+                </h2>
+
+                <div id="equipos-seleccionados" class="equipos-seleccionados">
+
+                    <p>No hay equipos seleccionados.</p>
+
+                </div>
+
+                <button type="button" id="btn-limpiar-seleccion" class="btn-limpiar-seleccion" disabled>
+                    Quitar todos
+                </button>
+            </div>
         </aside>
 
         <!-- PANEL DERECHO -->

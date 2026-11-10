@@ -43,136 +43,134 @@
     <!-- Panel izquierdo -->
     <aside class="registro-sidebar">
 
-      <div class="form-group">
-        <label for="tipo-equipo">Tipo del equipo</label>
+      <!-- Sección Tipo de Equipo -->
+      <div class="sidebar-section">
+        <div class="form-group">
+          <label for="tipo-equipo">Tipo del equipo</label>
 
-        <select id="tipo-equipo" class="select-field">
-          <option value="Equipo de Comunicación">
-            Equipo de Comunicación (Switch, antenas, AP, Router, Teléfonos, Conmuntador)
-          </option>
+          <select id="tipo-equipo" class="select-field">
+            <option value="Equipo de Comunicación">
+              Equipo de Comunicación (Switch, antenas, AP, Router, Teléfonos, Conmuntador)
+            </option>
 
-          <option value="Equipo de Cómputo">
-            Equipo de Cómputo (PC, Laptop, Tabletas, Servidores)
-          </option>
+            <option value="Equipo de Cómputo">
+              Equipo de Cómputo (PC, Laptop, Tabletas, Servidores)
+            </option>
 
-          <option value="Periféricos">
-            Periféricos (Impresora, Scanner, Multifuncionales, Cámaras de videoconferencia, Discos duros externos)
-          </option>
-        </select>
+            <option value="Periféricos">
+              Periféricos (Impresora, Scanner, Multifuncionales, Cámaras de videoconferencia, Discos duros externos)
+            </option>
+          </select>
+        </div>
       </div>
 
-      <h2 class="titulo-seccion">
-        INFORMACIÓN DEL EQUIPO
-      </h2>
+      <!-- Sección Información del Equipo -->
+      <div class="sidebar-section">
+        <h2 class="titulo-seccion">
+          INFORMACIÓN DEL EQUIPO
+        </h2>
 
-      <div class="form-group">
-        <label for="numero-inventario">
-          Número de inventario
-        </label>
+        <div class="form-group">
+          <label for="numero-inventario">
+            Número de inventario
+          </label>
 
-        <input type="text" id="numero-inventario" class="input-field" placeholder="Escribe aquí..." />
+          <input type="text" id="numero-inventario" class="input-field" placeholder="Escribe aquí..." />
+        </div>
+
+        <div class="form-group">
+          <label for="marca-equipo">
+            Marca del equipo
+          </label>
+
+          <input type="text" id="marca-equipo" class="input-field" placeholder="Escribe aquí..." />
+        </div>
+
+        <div class="form-group">
+          <label for="modelo-equipo">
+            Modelo del equipo
+          </label>
+
+          <input type="text" id="modelo-equipo" class="input-field" placeholder="Escribe aquí..." />
+        </div>
+
+        <div class="form-group">
+          <label for="numero-serie">
+            Número de serie
+          </label>
+
+          <input type="text" id="numero-serie" class="input-field" placeholder="Escribe aquí..." />
+        </div>
+
+        <div class="form-group">
+          <label for="descripcion-equipo">
+            Descripción
+          </label>
+
+          <input type="text" id="descripcion-equipo" class="input-field" placeholder="Escribe aquí..." />
+        </div>
+
+        <div class="form-group">
+          <label for="ubicacion-equipo">
+            Ubicación
+          </label>
+
+          <select id="ubicacion-equipo" class="select-field">
+            <option value="CC1">CC1</option>
+            <option value="CC2">CC2</option>
+            <option value="CC3">CC3</option>
+            <option value="CC4">CC4</option>
+            <option value="AULA 4">Aula 4</option>
+            <option value="AULA 5">Aula 5</option>
+            <option value="AULA 6">Aula 6</option>
+            <option value="AULA 102">Aula 102</option>
+            <option value="AULA 103">Aula 103</option>
+            <option value="AULA 105">Aula 105</option>
+            <option value="AULA 106">Aula 106</option>
+            <option value="AULA 107">Aula 107</option>
+            <option value="AULA 111">Aula 111</option>
+            <option value="AULA 112">Aula 112</option>
+            <option value="AULA 113">Aula 113</option>
+            <option value="AULA F101">Aula F101</option>
+            <option value="AULA F102">Aula F102</option>
+            <option value="AULA F103">Aula F103</option>
+            <option value="AULA F402">Aula F402</option>
+            <option value="AULA F403">Aula F403</option>
+            <option value="AULA F404">Aula F404</option>
+            <option value="CUBICULO_42">Cubículo 42</option>
+            <option value="CUBICULO_44">Cubículo 44</option>
+            <option value="AREA_COMUN_CC">
+              Área común del CC
+            </option>
+            <option value="JEFATURA_CC">
+              Jefatura del CC
+            </option>
+            <option value="LAB. INNOVACION EN SOFTWARE">
+              Laboratorio de innovación en software
+            </option>
+            <option value="AUDIOVISUAL">Audiovisual</option>
+            <option value="ALMACEN">Almacén</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="estado-operativo">
+            Estado operativo
+          </label>
+
+          <select id="estado-operativo" class="select-field">
+            <option value="ACTIVO">Activo</option>
+
+            <option value="EN_PROCESO_DE_BAJA">
+              En proceso de baja
+            </option>
+
+            <option value="PRESTAMO">
+              Préstamo
+            </option>
+          </select>
+        </div>
       </div>
-
-      <div class="form-group">
-        <label for="marca-equipo">
-          Marca del equipo
-        </label>
-
-        <input type="text" id="marca-equipo" class="input-field" placeholder="Escribe aquí..." />
-      </div>
-
-      <div class="form-group">
-        <label for="modelo-equipo">
-          Modelo del equipo
-        </label>
-
-        <input type="text" id="modelo-equipo" class="input-field" placeholder="Escribe aquí..." />
-      </div>
-
-      <div class="form-group">
-        <label for="numero-serie">
-          Número de serie
-        </label>
-
-        <input type="text" id="numero-serie" class="input-field" placeholder="Escribe aquí..." />
-      </div>
-
-      <div class="form-group">
-        <label for="descripcion-equipo">
-          Descripción
-        </label>
-
-        <input type="text" id="descripcion-equipo" class="input-field" placeholder="Escribe aquí..." />
-      </div>
-
-      <div class="form-group">
-        <label for="ubicacion-equipo">
-          Ubicación
-        </label>
-
-        <select id="ubicacion-equipo" class="select-field">
-          <option value="CC1">CC1</option>
-          <option value="CC2">CC2</option>
-          <option value="CC3">CC3</option>
-          <option value="CC4">CC4</option>
-          <option value="AULA 4">Aula 4</option>
-          <option value="AULA 5">Aula 5</option>
-          <option value="AULA 6">Aula 6</option>
-          <option value="AULA 102">Aula 102</option>
-          <option value="AULA 103">Aula 103</option>
-          <option value="AULA 105">Aula 105</option>
-          <option value="AULA 106">Aula 106</option>
-          <option value="AULA 107">Aula 107</option>
-          <option value="AULA 111">Aula 111</option>
-          <option value="AULA 112">Aula 112</option>
-          <option value="AULA 113">Aula 113</option>
-          <option value="AULA F101">Aula F101</option>
-          <option value="AULA F102">Aula F102</option>
-          <option value="AULA F103">Aula F103</option>
-          <option value="AULA F402">Aula F402</option>
-          <option value="AULA F403">Aula F403</option>
-          <option value="AULA F404">Aula F404</option>
-          <option value="CUBICULO_42">Cubículo 42</option>
-          <option value="CUBICULO_44">Cubículo 44</option>
-          <option value="AREA_COMUN_CC">
-            Área común del CC
-          </option>
-          <option value="JEFATURA_CC">
-            Jefatura del CC
-          </option>
-          <option value="LAB. INNOVACION EN SOFTWARE">
-            Laboratorio de innovación en software
-          </option>
-          <option value="AUDIOVISUAL">Audiovisual</option>
-          <option value="ALMACEN">Almacén</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="estado-operativo">
-          Estado operativo
-        </label>
-
-        <select id="estado-operativo" class="select-field">
-          <option value="ACTIVO">Activo</option>
-
-          <option value="EN_PROCESO_DE_BAJA">
-            En proceso de baja
-          </option>
-
-          <option value="PRESTAMO">
-            Préstamo
-          </option>
-        </select>
-      </div>
-
-<!--       <div class="form-group">
-        <label for="fecha-registro">
-          Fecha de registro del equipo
-        </label>
-
-        <input type="date" id="fecha-registro" name="fechaRegistro" class="fecha-registro" required />
-      </div> -->
 
     </aside>
 
