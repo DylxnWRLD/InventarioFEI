@@ -61,9 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = './HTML/altas.html';
   });
 
-    // Boton de Bajas de Equipo
+  // Boton de Bajas de Equipo
   document.getElementById('btn-bajas-equipo').addEventListener('click', () => {
     window.location.href = './HTML/bajas.html';
+  });
+
+  document.getElementById('btn-transferencias').addEventListener('click', () => {
+    window.location.href = './HTML/transferencias.html';
   });
 });
 
