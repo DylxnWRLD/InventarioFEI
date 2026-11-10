@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transferencia de Equipos - Sistema de Inventario FEI</title>
+
+    <link rel="stylesheet" href="../CSS/home.css" />
+    <link rel="stylesheet" href="../CSS/transferencias.css" />
+</head>
+
+<body>
+
+    <header class="header">
+
+        <div class="logo-uv">
+            <a href="../index.html" class="btn-back">⮌</a>
+
+            <img src="../images/logoUV.jpg" alt="Logo Universidad Veracruzana" loading="lazy" />
+
+            <div class="text-uv">
+                UNIVERSIDAD<br />
+                <span>VERACRUZANA</span>
+            </div>
+        </div>
+
+        <div class="logo-sistema">
+            <img src="../images/logoSistema.png" alt="Logo Sistema" />
+
+            <div class="text-sistema">
+                SISTEMA DE<br />
+                <span>INVENTARIO</span>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="transferencia-layout">
+
+        <!-- PANEL IZQUIERDO -->
+        <aside class="transferencia-sidebar">
+
+            <!-- BÚSQUEDA Y SELECCIÓN -->
+            <div class="panel-transferencia">
+
+                <h2 class="titulo-seccion">
+                    BUSCAR EQUIPOS
+                </h2>
+
+                <div class="grupo-busqueda">
+                    <div class="fila-busqueda">
+
+                        <input type="search" id="buscar-equipo" class="input-field" placeholder="Buscar equipo..."
+                            autocomplete="on" />
+
+                        <button type="button" id="btn-buscar-equipo" class="btn-buscar-equipo">
+                            Buscar
+                        </button>
+
+                    </div>
+                </div>
+
+                <h2 class="titulo-seccion">
+                    RESULTADOS
+                </h2>
+
+                <div id="resultados-busqueda" class="resultados-busqueda" aria-live="polite">
+
+                    <p>Busca un equipo para visualizar sus datos.</p>
+
+                </div>
+
+                <h2 class="titulo-seccion">
+                    EQUIPOS SELECCIONADOS
+                    (<span id="contador-equipos">0</span>/14)
+                </h2>
+
+                <div id="equipos-seleccionados" class="equipos-seleccionados">
+
+                    <p>No hay equipos seleccionados.</p>
+
+                </div>
+
+                <button type="button" id="btn-limpiar-seleccion" class="btn-limpiar-seleccion" disabled>
+                    Quitar todos
+                </button>
+
+            </div>
+
+            <!-- DATOS DEL PRÉSTAMO -->
+            <div id="datos-transferencia" class="panel-transferencia datos-transferencia">
+
+                <h2 class="titulo-seccion">
+                    DATOS DEL PRÉSTAMO
+                </h2>
+
+                <div class="form-group">
+                    <label for="nombre-entrega">
+                        Nombre de quien entrega
+                    </label>
+                    <input type="text" id="nombre-entrega" class="input-field" maxlength="150" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="identificador-dependencia">
+                        Identificador de la dependencia
+                    </label>
+                    <input type="text" id="identificador-dependencia" class="input-field" maxlength="20" value="0075"
+                        required />
+                </div>
+
+                <div class="form-group">
+                    <label for="dependencia">
+                        Nombre de la dependencia
+                    </label>
+                    <input type="text" id="dependencia" class="input-field" maxlength="150"
+                        value="Facultad de Estadística e Informática" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre-recibe">
+                        Nombre del docente que recibe
+                    </label>
+                    <input type="text" id="nombre-recibe" class="input-field" maxlength="150"
+                        placeholder="Nombre completo del docente" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha-prestamo">
+                        Fecha del préstamo
+                    </label>
+                    <input type="date" id="fecha-prestamo" class="input-field" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="justificacion">
+                        Motivo o justificación del préstamo
+                    </label>
+                    <textarea id="justificacion" class="input-field" rows="4" maxlength="1000"
+                        placeholder="Describe el motivo del préstamo..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre-titular">
+                        Nombre del titular de la dependencia
+                    </label>
+                    <input type="text" id="nombre-titular" class="input-field" maxlength="150" required />
+                </div>
+
+            </div>
+
+        </aside>
+
+        <!-- PANEL DERECHO -->
+        <section class="transferencia-main">
+
+            <div class="panel-vista-previa">
+
+                <h2 class="titulo-seccion">
+                    VALE DE SALIDA - Vista previa
+                </h2>
+
+                <p>
+                    Vale de salida interno de bienes de los
+                    equipos seleccionados para préstamo.
+                </p>
+
+                <!-- VISTA PREVIA DEL EXCEL -->
+                <div id="visor-excel" aria-live="polite">
+                    Cargando formato de transferencia...
+                </div>
+
+                <!-- GENERAR Y DESCARGAR -->
+                <button type="button" id="btn-generar-excel" class="btn-guardar-equipo" disabled>
+                    REGISTRAR PRÉSTAMO Y DESCARGAR EXCEL
+                </button>
+
+                <p id="estado-transferencia" role="status" aria-live="polite"></p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- LIBRERÍAS -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <!-- JAVASCRIPT -->
+    <script src="../JS/transferencias.js" defer></script>
+
+</body>
+
+</html>

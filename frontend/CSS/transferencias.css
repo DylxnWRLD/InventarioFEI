@@ -1,0 +1,520 @@
+/* ==========================================
+   MÓDULO DE TRANSFERENCIAS
+========================================== */
+
+/* BOTÓN REGRESAR */
+
+.btn-back {
+    background-color: #0068b7;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    margin-right: 15px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.btn-back:hover {
+    background-color: #00a651;
+}
+
+/* ENCABEZADO */
+
+.header {
+    padding-left: 3%;
+}
+
+/* ==========================================
+   DISTRIBUCIÓN GENERAL
+========================================== */
+
+.transferencia-layout {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 85px);
+    min-height: 500px;
+    overflow: hidden;
+}
+
+/* PANEL IZQUIERDO */
+
+.transferencia-sidebar {
+    background-color: #0068b7;
+    flex: 0 0 350px;
+    min-width: 0;
+    padding: 20px 25px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* SCROLL DEL PANEL IZQUIERDO */
+
+.transferencia-sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.transferencia-sidebar::-webkit-scrollbar-track {
+    background: #005696;
+}
+
+.transferencia-sidebar::-webkit-scrollbar-thumb {
+    background: #e5dfd3;
+    border-radius: 10px;
+}
+
+/* ==========================================
+   RECUADROS
+========================================== */
+
+.panel-transferencia {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: white;
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+/* TÍTULOS */
+
+.titulo-seccion {
+    font-size: 16px;
+    font-weight: 900;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.panel-transferencia .titulo-seccion:first-child {
+    margin-top: 0;
+}
+
+/* ==========================================
+   BÚSQUEDA
+========================================== */
+
+.grupo-busqueda {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+}
+
+.fila-busqueda {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+/* CAMPOS */
+
+.input-field {
+    background-color: #f0f0f0;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 12px;
+    color: #333;
+    outline: none;
+    width: 100%;
+    min-width: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+.input-field:focus {
+    border-color: #00a651;
+}
+
+.fila-busqueda .input-field {
+    flex: 1;
+    width: 0;
+}
+
+/* BOTÓN BUSCAR */
+
+.btn-buscar-equipo {
+    background-color: #00a651;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+/* ==========================================
+   RESULTADOS Y EQUIPOS SELECCIONADOS
+========================================== */
+
+.resultados-busqueda,
+.equipos-seleccionados {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    min-width: 0;
+}
+
+.resultados-busqueda>p,
+.equipos-seleccionados>p {
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+/* TARJETAS */
+
+.tarjeta-resultado,
+.tarjeta-seleccionada {
+    background-color: white;
+    color: #333;
+    padding: 15px;
+    border-radius: 12px;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+.tarjeta-resultado p,
+.tarjeta-seleccionada p {
+    margin: 5px 0;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+/* CONTENIDO DE TARJETAS */
+
+.contenido-tarjeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.informacion-equipo {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.informacion-equipo strong {
+    font-weight: 700;
+}
+
+.informacion-equipo span {
+    font-weight: 400;
+}
+
+.descripcion-equipo {
+    margin-bottom: 10px !important;
+    font-weight: 400;
+}
+
+/* IMAGEN DEL EQUIPO */
+
+.imagen-equipo {
+    width: 100px;
+    height: 130px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background-color: white;
+    padding: 5px;
+}
+
+/* ==========================================
+   BOTONES DE EQUIPOS
+========================================== */
+
+.btn-agregar-equipo,
+.btn-quitar-equipo {
+    background-color: #00a651;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-top: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.btn-agregar-equipo:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+/* QUITAR TODOS */
+
+.btn-limpiar-seleccion {
+    background-color: #ff3038;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    align-self: flex-start;
+}
+
+.btn-limpiar-seleccion:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ==========================================
+   DATOS DEL PRÉSTAMO
+========================================== */
+
+.datos-transferencia {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.datos-transferencia .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.datos-transferencia label {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.datos-transferencia .input-field {
+    width: 100%;
+}
+
+.datos-transferencia textarea {
+    min-height: 90px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+/* ==========================================
+   PANEL DERECHO
+========================================== */
+
+.transferencia-main {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    background-color: #00a651;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    gap: 15px;
+}
+
+/* RECUADRO VISTA PREVIA */
+
+.panel-vista-previa {
+    background-color: white;
+    border-radius: 20px;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+}
+
+.panel-vista-previa .titulo-seccion {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.panel-vista-previa p {
+    font-size: 13px;
+    color: #555;
+    margin: 5px 0 15px;
+}
+
+/* ==========================================
+   VISOR DEL EXCEL
+========================================== */
+
+/* VISTA PREVIA DEL EXCEL */
+
+#visor-excel {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* ==========================================
+   VISTA PREVIA DEL EXCEL
+========================================== */
+
+#visor-excel {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+#visor-excel table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    font-size: 11px;
+    background-color: white;
+}
+
+#visor-excel td,
+#visor-excel th {
+    border: 1px solid #ddd;
+    padding: 4px;
+    vertical-align: middle;
+    text-align: left;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* ==========================================
+   BOTÓN GENERAR
+========================================== */
+
+.btn-guardar-equipo {
+    background-color: #0068b7;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    text-transform: uppercase;
+    align-self: center;
+    flex-shrink: 0;
+    margin-top: 15px;
+}
+
+.btn-guardar-equipo:hover:not(:disabled) {
+    background-color: #005696;
+}
+
+.btn-guardar-equipo:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ESTADO */
+
+#estado-transferencia {
+    margin: 10px 0 0;
+    text-align: center;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+#estado-transferencia:empty {
+    display: none;
+}
+
+/* ==========================================
+   RESPONSIVIDAD
+========================================== */
+
+@media (max-width: 900px) {
+
+    .transferencia-layout {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
+
+    .transferencia-sidebar {
+        flex: none;
+        width: 100%;
+        max-height: none;
+    }
+
+    .transferencia-main {
+        width: 100%;
+        min-height: 650px;
+    }
+
+    .panel-vista-previa {
+        min-height: 500px;
+    }
+
+    #visor-excel {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .imagen-equipo {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .transferencia-sidebar {
+        padding: 15px;
+    }
+
+    .transferencia-main {
+        padding: 10px;
+    }
+
+    .panel-vista-previa {
+        padding: 12px;
+        border-radius: 15px;
+    }
+
+    #visor-excel {
+        padding: 5px;
+    }
+
+    #visor-excel table {
+        font-size: 8px;
+    }
+
+    .btn-guardar-equipo {
+        font-size: 12px;
+        padding: 10px 20px;
+    }
+}
