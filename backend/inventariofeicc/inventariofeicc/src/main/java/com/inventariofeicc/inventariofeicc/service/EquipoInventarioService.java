@@ -190,7 +190,7 @@ public class EquipoInventarioService {
 
         int noSerialIgual = EIR.verificarNumeroSerieExistente(equipo.getNoSerial());
 
-        if (noSerialIgual > 0) {
+        if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && noSerialIgual > 0) {
             throw new IllegalArgumentException("El número de serie ya existe en la base de datos.");
         }
 
