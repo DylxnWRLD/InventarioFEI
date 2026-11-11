@@ -28,7 +28,7 @@ public interface PrestamoRepository {
     @Select(value = """
         INSERT INTO inventariofei.prestamo_inventario (
             nombre_entrega,
-            identificador_dependencia,
+            id_dependencia,
             dependencia,
             nombre_recibe,
             fecha_prestamo,
