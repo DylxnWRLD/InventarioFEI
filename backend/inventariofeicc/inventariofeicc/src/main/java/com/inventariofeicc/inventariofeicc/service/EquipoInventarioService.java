@@ -118,6 +118,26 @@ public class EquipoInventarioService {
      * @return equipos coincidentes y total de resultados.
      * @throws IllegalArgumentException si los parámetros son inválidos.
      */
+    public EquipoInventarioResponse buscarEquiposActivos(String textoBusqueda, int pagina) {
+        if (pagina < 1) {
+            throw new IllegalArgumentException("La página debe ser mayor o igual a 1");
+        }
+
+        if (textoBusqueda == null || textoBusqueda.trim().isEmpty()) {
+            throw new IllegalArgumentException("El texto de búsqueda no puede estar vacío.");
+        }
+
+        String textoNormalizado = textoBusqueda.trim();
+        int offset = Math.multiplyExact(pagina - 1, LIMITE);
+
+        List<EquipoInventarioModel> equipos = EIR.buscarEquiposActivos(
+                textoNormalizado, LIMITE, offset
+        );
+        int total = EIR.contarEquiposActivosBusqueda(textoNormalizado);
+
+        return new EquipoInventarioResponse(equipos, total);
+    }
+
     public EquipoInventarioResponse buscarEquipos(String textoBusqueda, int pagina) {
 
         if (pagina < 1) {

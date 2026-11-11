@@ -132,43 +132,114 @@ function crearTarjeta(equipo, seleccionado = false) {
 // BUSCAR EQUIPOS ACTIVOS
 // ==========================================
 
-async function buscarEquipos() {
-    const busqueda = inputBusqueda.value.trim();
+const TAMANO_PAGINA_EQUIPOS = 30; // Igual que LIMITE en el backend.
+
+const paginacionEquipos = $('paginacion-equipos');
+const btnPaginaAnterior = $('btn-pagina-anterior');
+const btnPaginaSiguiente = $('btn-pagina-siguiente');
+const infoPagina = $('info-pagina');
+
+let paginaEquipos = 1;
+let totalEquiposActivos = 0;
+let consultaEquipos = '';
+let cargandoEquipos = false;
+
+function actualizarPaginacionEquipos() {
+    const totalPaginas = Math.max(
+        1,
+        Math.ceil(totalEquiposActivos / TAMANO_PAGINA_EQUIPOS)
+    );
+
+    paginacionEquipos.hidden = totalEquiposActivos === 0;
+    infoPagina.textContent =
+        `Página ${paginaEquipos} de ${totalPaginas} ` +
+        `(${totalEquiposActivos} equipos activos)`;
+
+    btnPaginaAnterior.disabled = cargandoEquipos || paginaEquipos <= 1;
+    btnPaginaSiguiente.disabled = cargandoEquipos || paginaEquipos >= totalPaginas;
+}
+
+function buscarEquipos() {
+    consultaEquipos = inputBusqueda.value.trim();
+    return cargarPaginaEquipos(1);
+}
+
+async function cargarPaginaEquipos(pagina) {
     const actual = ++numeroBusqueda;
+    const busqueda = consultaEquipos;
+
+    cargandoEquipos = true;
+    resultadosActuales = [];
+    actualizarPaginacionEquipos();
 
     if (!busqueda) {
+        paginaEquipos = 1;
+        totalEquiposActivos = 0;
+        cargandoEquipos = false;
         resultados.textContent = 'Ingresa un dato para buscar.';
+        actualizarPaginacionEquipos();
         return;
     }
 
     resultados.textContent = 'Buscando equipos...';
 
     try {
+        const parametros = new URLSearchParams({
+            q: busqueda,
+            pagina: String(pagina)
+        });
+
         const respuesta = await fetch(
-            `${API_BASE}/Equipos/Buscar?q=${encodeURIComponent(busqueda)}&pagina=1`
+            `${API_BASE}/Equipos/BuscarActivos?${parametros}`
         );
 
-        if (!respuesta.ok) throw new Error('Error al consultar equipos.');
+        if (!respuesta.ok) throw new Error('Error al consultar equipos activos.');
 
         const datos = await respuesta.json();
         if (actual !== numeroBusqueda) return;
 
-        if (!Array.isArray(datos.equipos)) {
+        if (
+            !Array.isArray(datos.equipos) ||
+            !Number.isInteger(datos.total) ||
+            datos.total < 0
+        ) {
             throw new Error('Respuesta inválida del servidor.');
         }
 
-        resultadosActuales = datos.equipos.filter(
-            e => e.estadoOperativo === 'ACTIVO'
-        );
+        paginaEquipos = pagina;
+        totalEquiposActivos = datos.total;
+        resultadosActuales = datos.equipos;
 
         mostrarResultados();
 
     } catch (error) {
         if (actual !== numeroBusqueda) return;
         console.error(error);
+        totalEquiposActivos = 0;
+        resultadosActuales = [];
         resultados.textContent = 'No se pudo realizar la búsqueda.';
+
+    } finally {
+        if (actual === numeroBusqueda) {
+            cargandoEquipos = false;
+            actualizarPaginacionEquipos();
+        }
     }
 }
+
+btnPaginaAnterior.addEventListener('click', () => {
+    if (cargandoEquipos || paginaEquipos <= 1) return;
+    cargarPaginaEquipos(paginaEquipos - 1);
+});
+
+btnPaginaSiguiente.addEventListener('click', () => {
+    const totalPaginas = Math.ceil(
+        totalEquiposActivos / TAMANO_PAGINA_EQUIPOS
+    );
+
+    if (cargandoEquipos || paginaEquipos >= totalPaginas) return;
+    cargarPaginaEquipos(paginaEquipos + 1);
+});
 
 function mostrarResultados() {
     resultados.replaceChildren();

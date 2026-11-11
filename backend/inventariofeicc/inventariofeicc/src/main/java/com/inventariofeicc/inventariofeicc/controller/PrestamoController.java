@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Dylxn
  */
 @RestController
-@RequestMapping("/Prestamo")
+@RequestMapping("/InventarioFEI")
 public class PrestamoController {
 
     private final PrestamoService service;
@@ -26,7 +26,7 @@ public class PrestamoController {
         this.service = service;
     }
 
-    @PostMapping
+    @PostMapping("/Prestamo/Equipos")
     public ResponseEntity<Map<String, Object>> registrar(@RequestBody PrestamoRequest datos) {
         Long id = service.registrarPrestamo(datos);
 

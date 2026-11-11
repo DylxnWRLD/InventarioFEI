@@ -83,6 +83,22 @@ public class EquipoInventarioController {
         }
     }
 
+    @GetMapping("/Equipos/BuscarActivos")
+    public ResponseEntity<?> buscarEquiposActivos(
+            @RequestParam(value = "q", defaultValue = "") String q,
+            @RequestParam(value = "pagina", defaultValue = "1") int pagina
+    ) {
+        try {
+            return ResponseEntity.ok(EIS.buscarEquiposActivos(q, pagina));
+        } catch (IllegalArgumentException | ArithmeticException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body("Ocurrió un error al buscar los equipos activos.");
+        }
+    }
+
     @PostMapping("/Alta/Equipo")
     public ResponseEntity<?> altaEquipos(@RequestBody EquipoInventarioModel equipo) {
         try {

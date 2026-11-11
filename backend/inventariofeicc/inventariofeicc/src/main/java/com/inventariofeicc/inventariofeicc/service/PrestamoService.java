@@ -82,11 +82,11 @@ public class PrestamoService {
 
         if (datos == null || datos.equipos() == null
                 || datos.equipos().isEmpty()
-                || datos.equipos().size() > 14) {
+                || datos.equipos().size() > 15) {
 
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Debes seleccionar entre 1 y 14 equipos."
+                    "Debes seleccionar entre 1 y 15 equipos."
             );
         }
 

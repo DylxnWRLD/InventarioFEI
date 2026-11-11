@@ -175,4 +175,42 @@ public interface EquipoInventarioRepository {
     Integer verificarNumeroSerieExistente(
             @Param("noSerial") String noSerial
     );
+
+    @Select("""
+        SELECT *
+        FROM inventariofei.equipo_inventario
+        WHERE estado_operativo = 'ACTIVO'
+          AND (
+              numero_inventario ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR marca ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR no_serial ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR modelo ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR descripcion ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR ubicacion::text ILIKE CONCAT('%', #{textoBusqueda}, '%')
+          )
+        ORDER BY numero_inventario ASC
+        LIMIT #{limite} OFFSET #{offset}
+        """)
+    List<EquipoInventarioModel> buscarEquiposActivos(
+            @Param("textoBusqueda") String textoBusqueda,
+            @Param("limite") int limite,
+            @Param("offset") int offset
+    );
+
+    @Select("""
+        SELECT COUNT(*)
+        FROM inventariofei.equipo_inventario
+        WHERE estado_operativo = 'ACTIVO'
+          AND (
+              numero_inventario ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR marca ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR no_serial ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR modelo ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR descripcion ILIKE CONCAT('%', #{textoBusqueda}, '%')
+              OR ubicacion::text ILIKE CONCAT('%', #{textoBusqueda}, '%')
+          )
+        """)
+    int contarEquiposActivosBusqueda(
+            @Param("textoBusqueda") String textoBusqueda
+    );
 }
