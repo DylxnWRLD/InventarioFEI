@@ -26,7 +26,7 @@ public class PrestamoController {
         this.service = service;
     }
 
-    @PostMapping("/Prestamo")
+    @PostMapping
     public ResponseEntity<Map<String, Object>> registrar(@RequestBody PrestamoRequest datos) {
         Long id = service.registrarPrestamo(datos);
 
