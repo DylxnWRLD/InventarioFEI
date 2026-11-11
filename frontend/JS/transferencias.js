@@ -602,7 +602,7 @@ async function generarTransferencia() {
 
         const enlace = document.createElement('a');
         enlace.href = urlDescarga;
-        enlace.download = `vale_salida_${$('fecha-prestamo').value}.xlsx`;
+        enlace.download = `vale_prestamo${$('fecha-prestamo').value}.xlsx`;
         enlace.textContent = 'Volver a descargar el Excel';
 
         estado.replaceChildren(
