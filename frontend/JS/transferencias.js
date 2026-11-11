@@ -6,7 +6,7 @@ const IMAGEN_PREDETERMINADA = '../images/noEncontrado.png';
 const HOJA = 'ABS-CB-F-16';
 const MAX_EQUIPOS = 15;
 const FILA_INICIAL = 15;
-const REGISTRAR_EN_BD = false;
+const REGISTRAR_EN_BD = true;
 
 const NS = 'http://schemas.openxmlformats.org/spreadsheetml/2006/main';
 
@@ -467,19 +467,25 @@ async function crearExcel() {
 // ==========================================
 
 async function registrarPrestamo() {
+
+    const datos = obtenerDatos();
+
     const respuesta = await fetch(`${API_BASE}/Prestamo/Equipos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+            ...datos,
             equipos: equipos.map(e => e.numeroInventario)
         })
     });
 
     if (!respuesta.ok) {
         throw new Error(
-            'No se confirmó el préstamo. Consulta el estado de los equipos antes de reintentar.'
+            'No se pudo registrar el préstamo. Verifica los datos y la disponibilidad de los equipos.'
         );
     }
+
+    return await respuesta.json();
 }
 
 // ==========================================
