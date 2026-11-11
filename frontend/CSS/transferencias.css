@@ -450,6 +450,23 @@
     display: none;
 }
 
+#paginacion-equipos{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+#paginacion-equipos button{
+    background-color: #0068b7;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 12px;
+}
+
 /* ==========================================
    RESPONSIVIDAD
 ========================================== */
