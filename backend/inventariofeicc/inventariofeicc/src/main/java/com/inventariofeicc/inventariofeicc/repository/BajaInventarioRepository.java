@@ -27,23 +27,42 @@ public interface BajaInventarioRepository {
 
     @Select("""
         SELECT EXISTS (
-            SELECT 1 FROM inventariofei.baja_inventario
+            SELECT 1 FROM inventariofei.baja_inventario_detalle
             WHERE numero_inventario = #{numeroInventario}
         )
         """)
     boolean existeBaja(@Param("numeroInventario") String numeroInventario);
 
-    // created_at usa su valor por defecto y el trigger actualiza el estado del equipo.
-    @Insert("""
+    /*
+     * La baja es el evento principal y se registra una sola vez por solicitud.
+     * RETURNING permite recuperar el id generado sin una consulta adicional.
+     * created_at usa su valor por defecto.
+     */
+    @Select("""
         INSERT INTO inventariofei.baja_inventario (
-            numero_inventario, dictaminador, ur, unidad_responsable_origen,
-            fecha_baja, motivo_tecnico_baja, id_articulo
+            fecha_baja, motivo_tecnico_baja, dictaminador, ur, unidad_responsable_origen
         ) VALUES (
-            #{equipo.numeroInventario}, #{baja.dictaminador}, #{baja.ur},
-            #{baja.unidadResponsableOrigen}, #{baja.fechaBaja},
-            #{equipo.motivoTecnicoBaja}, #{baja.idArticulo}
+            #{baja.fechaBaja}, #{motivoTecnicoBaja}, #{baja.dictaminador},
+            #{baja.ur}, #{baja.unidadResponsableOrigen}
+        )
+        RETURNING id_baja
+        """)
+    int registrarBaja(@Param("baja") BajaInventarioRequest baja,
+            @Param("motivoTecnicoBaja") String motivoTecnicoBaja);
+
+    /*
+     * Cada detalle relaciona un equipo con el evento de baja. El trigger
+     * actualizar_estado_baja() se ejecuta después de este INSERT.
+     */
+    @Insert("""
+        INSERT INTO inventariofei.baja_inventario_detalle (
+            id_baja, numero_inventario, id_articulo, motivo_tecnico_baja
+        ) VALUES (
+            #{idBaja}, #{equipo.numeroInventario}, #{idArticulo},
+            #{equipo.motivoTecnicoBaja}
         )
         """)
-    void registrarBaja(@Param("baja") BajaInventarioRequest baja,
+    void registrarDetalle(@Param("idBaja") int idBaja,
+            @Param("idArticulo") int idArticulo,
             @Param("equipo") BajaInventarioRequest.EquipoBaja equipo);
 }

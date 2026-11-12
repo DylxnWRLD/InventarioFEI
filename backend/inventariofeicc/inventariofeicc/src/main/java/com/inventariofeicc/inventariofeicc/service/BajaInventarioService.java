@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,10 +42,24 @@ public class BajaInventarioService {
                 throw new IllegalStateException("El equipo " + numero + " ya tiene una baja registrada.");
             }
         }
+        // Una sola fila maestra por formato; los equipos van al detalle.
+        int idBaja = repositorio.registrarBaja(baja, obtenerMotivoComun(equiposOrdenados));
         for (EquipoBaja equipo : equiposOrdenados) {
-            repositorio.registrarBaja(baja, equipo);
+            repositorio.registrarDetalle(idBaja, baja.idArticulo(), equipo);
         }
         return equiposOrdenados.size();
+    }
+
+    /**
+     * Si todos los equipos comparten el mismo motivo se conserva también en la
+     * cabecera para facilitar consultas. Cuando son distintos, la fuente de
+     * verdad es el motivo guardado en cada detalle.
+     */
+    private String obtenerMotivoComun(List<EquipoBaja> equipos) {
+        String primero = equipos.get(0).motivoTecnicoBaja();
+        boolean todosIguales = equipos.stream()
+                .allMatch(equipo -> primero.equals(equipo.motivoTecnicoBaja()));
+        return todosIguales ? primero : null;
     }
 
     private void validarSolicitud(BajaInventarioRequest baja) {

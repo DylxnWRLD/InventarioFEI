@@ -14,7 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -45,6 +49,7 @@ class BajaInventarioServiceTests {
         var baja = solicitud(List.of(segundo, primero));
         when(repositorio.existeArticulo(3)).thenReturn(true);
         when(repositorio.bloquearEquipo(anyString())).thenReturn("ACTIVO");
+        when(repositorio.registrarBaja(any(BajaInventarioRequest.class), nullable(String.class))).thenReturn(10);
 
         assertEquals(2, servicio.registrarBajas(baja));
 
@@ -54,8 +59,26 @@ class BajaInventarioServiceTests {
         orden.verify(repositorio).existeBaja("INV-1");
         orden.verify(repositorio).bloquearEquipo("INV-2");
         orden.verify(repositorio).existeBaja("INV-2");
-        orden.verify(repositorio).registrarBaja(baja, primero);
-        orden.verify(repositorio).registrarBaja(baja, segundo);
+        // Motivos distintos: la cabecera queda sin un motivo común.
+        orden.verify(repositorio).registrarBaja(eq(baja), isNull());
+        orden.verify(repositorio).registrarDetalle(10, 3, primero);
+        orden.verify(repositorio).registrarDetalle(10, 3, segundo);
+    }
+
+    @Test
+    void guardaElMotivoEnLaCabeceraCuandoTodosLosEquiposCompartenElMismo() {
+        var primero = new EquipoBaja("INV-1", "Falla general");
+        var segundo = new EquipoBaja("INV-2", "Falla general");
+        var baja = solicitud(List.of(primero, segundo));
+        when(repositorio.existeArticulo(3)).thenReturn(true);
+        when(repositorio.bloquearEquipo(anyString())).thenReturn("ACTIVO");
+        when(repositorio.registrarBaja(baja, "Falla general")).thenReturn(10);
+
+        servicio.registrarBajas(baja);
+
+        verify(repositorio).registrarBaja(baja, "Falla general");
+        verify(repositorio).registrarDetalle(10, 3, primero);
+        verify(repositorio).registrarDetalle(10, 3, segundo);
     }
 
     @Test
@@ -63,10 +86,12 @@ class BajaInventarioServiceTests {
         var baja = solicitud(List.of(new EquipoBaja("INV-1", "Falla"), new EquipoBaja("INV-2", "Falla")));
         when(repositorio.existeArticulo(3)).thenReturn(true);
         when(repositorio.bloquearEquipo(anyString())).thenReturn("ACTIVO");
+        when(repositorio.existeBaja("INV-1")).thenReturn(false);
         when(repositorio.existeBaja("INV-2")).thenReturn(true);
 
         assertThrows(IllegalStateException.class, () -> servicio.registrarBajas(baja));
         verify(repositorio, never()).registrarBaja(any(), any());
+        verify(repositorio, never()).registrarDetalle(anyInt(), anyInt(), any());
     }
 
     @Test
@@ -77,6 +102,7 @@ class BajaInventarioServiceTests {
         assertThrows(IllegalStateException.class, () -> servicio.registrarBajas(
                 solicitud(List.of(new EquipoBaja("INV-1", "Falla")))));
         verify(repositorio, never()).registrarBaja(any(), any());
+        verify(repositorio, never()).registrarDetalle(anyInt(), anyInt(), any());
     }
 
     @Test
@@ -85,6 +111,7 @@ class BajaInventarioServiceTests {
         assertThrows(IllegalArgumentException.class, () -> servicio.registrarBajas(
                 solicitud(List.of(new EquipoBaja("INV-1", "Falla")))));
         verify(repositorio, never()).registrarBaja(any(), any());
+        verify(repositorio, never()).registrarDetalle(anyInt(), anyInt(), any());
     }
 
     @Test
