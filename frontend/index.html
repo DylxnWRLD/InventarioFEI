@@ -62,6 +62,280 @@
     </button>
   </div>
 
+
+  <!-- ============================================================
+     MODAL DE EDICIÓN DE EQUIPOS
+     ============================================================ -->
+
+  <dialog id="modal-editar-equipo" class="modal-editar-equipo">
+
+    <!-- Encabezado -->
+    <div class="modal-encabezado">
+      <div>
+        <h2>EDITAR EQUIPO</h2>
+        <p>Consulta y modifica la información del equipo seleccionado.</p>
+      </div>
+
+      <button type="button" id="btn-cerrar-modal" class="btn-cerrar-modal" aria-label="Cerrar ventana de edición">
+        &times;
+      </button>
+    </div>
+
+    <!-- Formulario de edición -->
+    <form id="form-editar-equipo">
+
+      <!-- ========================================================
+         IMAGEN DEL EQUIPO
+         ======================================================== -->
+
+      <div class="seccion-imagen-edicion">
+
+        <img id="editar-imagen-preview" src="./images/noEncontrado.png" alt="Imagen actual del equipo">
+
+        <div class="contenedor-input-imagen">
+          <label for="editar-imagen">Imagen del equipo</label>
+
+          <input type="file" id="editar-imagen" accept=".jpg,.jpeg,.png,.webp">
+
+          <small>
+            Formatos permitidos: JPG, JPEG, PNG y WebP.
+            Si no seleccionas una imagen, se conservará la actual.
+          </small>
+        </div>
+
+      </div>
+
+      <!-- ========================================================
+         INFORMACIÓN GENERAL
+         ======================================================== -->
+
+      <h3 class="subtitulo-edicion">INFORMACIÓN DEL EQUIPO</h3>
+
+      <div class="grid-edicion">
+
+        <!-- Número de inventario -->
+        <div class="campo-edicion">
+          <label for="editar-numero-inventario">
+            Número de inventario
+          </label>
+
+          <input type="text" id="editar-numero-inventario" readonly>
+
+          <small>
+            Este identificador no puede modificarse.
+          </small>
+        </div>
+
+        <!-- Número de activo -->
+        <div class="campo-edicion">
+          <label for="editar-numero-activo">
+            Número de activo
+          </label>
+
+          <input type="text" id="editar-numero-activo" placeholder="Número de activo" readonly>
+        </div>
+
+        <!-- Tipo de equipo -->
+        <div class="campo-edicion">
+          <label for="editar-tipo-equipo">
+            Tipo de equipo
+          </label>
+
+          <select id="editar-tipo-equipo" required>
+
+            <option value="" disabled>
+              Selecciona una opción
+            </option>
+
+            <option value="Equipo de Comunicación">
+              Equipo de Comunicación (Switch, antenas, AP,
+              Router, Teléfonos, Conmutador)
+            </option>
+
+            <option value="Equipo de Cómputo">
+              Equipo de Cómputo (PC, Laptop, Tabletas, Servidores)
+            </option>
+
+            <option value="Periféricos">
+              Periféricos (Impresora, Scanner, Multifuncionales,
+              Cámaras de videoconferencia, Discos duros externos)
+            </option>
+
+          </select>
+        </div>
+
+        <!-- Marca -->
+        <div class="campo-edicion">
+          <label for="editar-marca">
+            Marca del equipo
+          </label>
+
+          <input type="text" id="editar-marca" placeholder="Marca del equipo">
+        </div>
+
+        <!-- Modelo -->
+        <div class="campo-edicion">
+          <label for="editar-modelo">
+            Modelo del equipo
+          </label>
+
+          <input type="text" id="editar-modelo" placeholder="Modelo del equipo">
+        </div>
+
+        <!-- Número de serie -->
+        <div class="campo-edicion">
+          <label for="editar-serial">
+            Número de serie
+          </label>
+
+          <input type="text" id="editar-serial" placeholder="Número de serie">
+        </div>
+
+        <!-- Descripción -->
+        <div class="campo-edicion campo-completo">
+          <label for="editar-descripcion">
+            Descripción
+          </label>
+
+          <textarea id="editar-descripcion" rows="3" placeholder="Descripción del equipo"></textarea>
+        </div>
+
+        <!-- Ubicación -->
+        <div class="campo-edicion">
+          <label for="editar-ubicacion">
+            Ubicación
+          </label>
+
+          <select id="editar-ubicacion" required>
+
+            <option value="" disabled>
+              Selecciona una opción
+            </option>
+
+            <option value="CC1">CC1</option>
+            <option value="CC2">CC2</option>
+            <option value="CC3">CC3</option>
+            <option value="CC4">CC4</option>
+
+            <option value="AULA 4">Aula 4</option>
+            <option value="AULA 5">Aula 5</option>
+            <option value="AULA 6">Aula 6</option>
+            <option value="AULA 102">Aula 102</option>
+            <option value="AULA 103">Aula 103</option>
+            <option value="AULA 105">Aula 105</option>
+            <option value="AULA 106">Aula 106</option>
+            <option value="AULA 107">Aula 107</option>
+            <option value="AULA 111">Aula 111</option>
+            <option value="AULA 112">Aula 112</option>
+            <option value="AULA 113">Aula 113</option>
+
+            <option value="AULA F101">Aula F101</option>
+            <option value="AULA F102">Aula F102</option>
+            <option value="AULA F103">Aula F103</option>
+            <option value="AULA F402">Aula F402</option>
+            <option value="AULA F403">Aula F403</option>
+            <option value="AULA F404">Aula F404</option>
+
+            <option value="CUBICULO_42">
+              Cubículo 42
+            </option>
+
+            <option value="CUBICULO_44">
+              Cubículo 44
+            </option>
+
+            <option value="AREA_COMUN_CC">
+              Área común del CC
+            </option>
+
+            <option value="JEFATURA_CC">
+              Jefatura del CC
+            </option>
+
+            <option value="LAB. INNOVACION EN SOFTWARE">
+              Laboratorio de innovación en software
+            </option>
+
+            <option value="AUDIOVISUAL">
+              Audiovisual
+            </option>
+
+            <option value="ALMACEN">
+              Almacén
+            </option>
+
+          </select>
+        </div>
+
+        <!-- Estado operativo -->
+        <div class="campo-edicion">
+          <label for="editar-estado">
+            Estado operativo
+          </label>
+
+          <select id="editar-estado" disabled>
+
+            <option value="" disabled>
+              Sin estado asignado
+            </option>
+
+            <option value="ACTIVO">
+              Activo
+            </option>
+
+            <option value="EN_PROCESO_DE_BAJA">
+              En proceso de baja
+            </option>
+
+            <option value="PRESTAMO">
+              Préstamo
+            </option>
+
+          </select>
+
+          <small>
+            El estado operativo se modifica mediante
+            los procesos de bajas y transferencias.
+          </small>
+        </div>
+
+        <!-- Fecha de registro -->
+        <div class="campo-edicion">
+          <label for="editar-fecha-registro">
+            Fecha de registro
+          </label>
+
+          <input type="date" id="editar-fecha-registro" readonly>
+
+          <small>
+            Fecha original de registro del equipo.
+          </small>
+        </div>
+
+      </div>
+
+      <!-- ========================================================
+         MENSAJES Y ACCIONES
+         ======================================================== -->
+
+      <p id="mensaje-edicion" role="status" aria-live="polite">
+      </p>
+
+      <div class="acciones-edicion">
+
+        <button type="button" id="btn-cancelar-edicion" class="btn-cancelar-edicion">
+          CANCELAR
+        </button>
+
+        <button type="submit" id="btn-guardar-edicion" class="btn-guardar-edicion">
+          GUARDAR CAMBIOS
+        </button>
+
+      </div>
+    </form>
+  </dialog>
+
+
   <script src="./JS/home.js"></script>
 
 </body>

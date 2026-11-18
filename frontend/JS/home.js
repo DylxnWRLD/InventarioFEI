@@ -70,6 +70,69 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-transferencias').addEventListener('click', () => {
     window.location.href = './HTML/transferencias.html';
   });
+
+
+  // EVENTOS DEL MODAL DE EDICIÓN
+  const modalEdicion = document.getElementById('modal-editar-equipo');
+
+  // Cerrar mediante el botón X.
+  document.getElementById('btn-cerrar-modal').addEventListener('click', () => {
+    modalEdicion.close();
+  });
+
+  // Cerrar mediante el botón Cancelar.
+  document.getElementById('btn-cancelar-edicion').addEventListener('click', () => {
+    modalEdicion.close();
+  });
+
+
+  // Vista previa de la nueva imagen seleccionada.
+  document.getElementById('editar-imagen').addEventListener('change', (e) => {
+    const archivo = e.target.files[0];
+    if (!archivo) return;
+
+    const formatosPermitidos = [
+      'image/jpeg',
+      'image/png',
+      'image/webp'
+    ];
+
+    const mensaje = document.getElementById('mensaje-edicion');
+
+    if (!formatosPermitidos.includes(archivo.type)) {
+      mensaje.textContent =
+        'Solo se permiten imágenes JPG, JPEG, PNG y WebP.';
+      e.target.value = '';
+      return;
+    }
+
+    // Tamaño máximo de 5 MB.
+    if (archivo.size > 5 * 1024 * 1024) {
+      mensaje.textContent =
+        'La imagen no puede superar los 5 MB.';
+      e.target.value = '';
+      return;
+    }
+
+    mensaje.textContent = '';
+
+    const imagen = document.getElementById('editar-imagen-preview');
+    imagen.src = URL.createObjectURL(archivo);
+
+    imagen.onload = () => {
+      URL.revokeObjectURL(imagen.src);
+    };
+  });
+
+  document.getElementById('form-editar-equipo')
+    .addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      document.getElementById('mensaje-edicion').textContent =
+        'El guardado estará disponible al implementar la actualización en la API.';
+    });
+
+
 });
 
 /* ============================================================
@@ -264,15 +327,17 @@ function renderizarEquipos(equipos, contenedor) {
         </p>
 
         <div class="equipo-botones">
-          <button
-            class="btn-editar"
-            onclick="editarEquipo('${equipo.numeroInventario || ''}')"
-          >
+          <button type="button" class="btn-editar">
             Editar
-          </button>
+        </button>
         </div>
       </div>
     `;
+
+    tarjeta.querySelector('.btn-editar').addEventListener('click', () => {
+      editarEquipo(equipo.numeroInventario);
+    });
+
     contenedor.appendChild(tarjeta);
   });
 }
@@ -321,6 +386,90 @@ function solicitarBaja(numeroInventario) {
   window.location.href = `HTML/bajas.html?numeroInventario=${encodeURIComponent(numeroInventario)}`;
 }
 
-function editarEquipo(numeroInventario) {
-  console.log('Editar equipo:', numeroInventario);
+
+/* ============================================================
+ * EDICIÓN DE EQUIPOS
+ * ============================================================ */
+
+/**
+ * Consulta la información de un equipo y abre el modal de edición.
+ *
+ * @param {string} numeroInventario - Identificador del equipo.
+ * @returns {Promise<void>}
+ */
+async function editarEquipo(numeroInventario) {
+  const modal = document.getElementById('modal-editar-equipo');
+  const formulario = document.getElementById('form-editar-equipo');
+  const mensaje = document.getElementById('mensaje-edicion');
+
+  if (!numeroInventario) return;
+
+  try {
+    formulario.reset();
+    mensaje.textContent = '';
+
+    // Consultar el equipo seleccionado.
+    const response = await fetch(
+      `${API_BASE}/Equipos/${encodeURIComponent(numeroInventario)}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const equipo = await response.json();
+
+    // Número de inventario (no editable).
+    document.getElementById('editar-numero-inventario').value =
+      equipo.numeroInventario ?? '';
+
+    // Información general.
+    document.getElementById('editar-numero-activo').value =
+      equipo.numeroActivo ?? '';
+
+    document.getElementById('editar-tipo-equipo').value =
+      equipo.tipoEquipo ?? '';
+
+    document.getElementById('editar-marca').value =
+      equipo.marca ?? '';
+
+    document.getElementById('editar-modelo').value =
+      equipo.modelo ?? '';
+
+    document.getElementById('editar-serial').value =
+      equipo.noSerial ?? '';
+
+    document.getElementById('editar-descripcion').value =
+      equipo.descripcion ?? '';
+
+    document.getElementById('editar-ubicacion').value =
+      equipo.ubicacion ?? '';
+
+    // Estado operativo (no editable).
+    document.getElementById('editar-estado').value =
+      equipo.estadoOperativo ?? '';
+
+    // Fecha de registro (no editable).
+    document.getElementById('editar-fecha-registro').value =
+      equipo.fechaRegistro
+        ? String(equipo.fechaRegistro).substring(0, 10)
+        : '';
+
+    // Imagen actual.
+    const imagen = document.getElementById('editar-imagen-preview');
+
+    imagen.onerror = () => {
+      imagen.onerror = null;
+      imagen.src = './images/noEncontrado.png';
+    };
+
+    imagen.src = equipo.urlImagen || './images/noEncontrado.png';
+
+    // Mostrar el modal.
+    modal.showModal();
+
+  } catch (error) {
+    console.error('Error al consultar el equipo:', error);
+    alert('No fue posible cargar la información del equipo.');
+  }
 }

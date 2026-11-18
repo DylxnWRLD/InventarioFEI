@@ -343,6 +343,267 @@ body {
 }
 
 
+
+
+/* ============================================================
+   MODAL DE EDICIÓN DE EQUIPOS
+   ============================================================ */
+
+.modal-editar-equipo {
+  box-sizing: border-box;
+  width: min(90%, 800px);
+  max-height: 90vh;
+  max-height: 90dvh;
+  margin: auto;
+  padding: 25px;
+  border: none;
+  border-radius: 12px;
+  background: #fff;
+  color: #333;
+  overflow-y: auto;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.modal-editar-equipo::backdrop {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* Encabezado */
+.modal-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-encabezado h2,
+.subtitulo-edicion {
+  margin: 0 0 10px;
+  color: #003b70;
+}
+
+.modal-encabezado p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.btn-cerrar-modal {
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* Imagen */
+.seccion-imagen-edicion {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  margin-bottom: 25px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+#editar-imagen-preview {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.contenedor-input-imagen {
+  flex: 1;
+  min-width: 0;
+}
+
+.contenedor-input-imagen input {
+  display: block;
+  max-width: 100%;
+  margin: 10px 0;
+}
+
+/* Campos */
+.subtitulo-edicion {
+  padding-bottom: 10px;
+  border-bottom: 2px solid #005a9c;
+  font-size: 17px;
+}
+
+.grid-edicion {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.campo-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.campo-completo {
+  grid-column: 1 / -1;
+}
+
+.campo-edicion label,
+.contenedor-input-imagen label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.campo-edicion input,
+.campo-edicion select,
+.campo-edicion textarea {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  font: inherit;
+  font-size: 14px;
+}
+
+.campo-edicion textarea {
+  resize: vertical;
+}
+
+.campo-edicion input:focus,
+.campo-edicion select:focus,
+.campo-edicion textarea:focus {
+  outline: 2px solid #0077cc;
+  outline-offset: 1px;
+}
+
+.campo-edicion input[readonly],
+.campo-edicion select:disabled {
+  background: #eee;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.campo-edicion small,
+.contenedor-input-imagen small {
+  color: #777;
+  font-size: 12px;
+}
+
+/* Mensajes y botones */
+#mensaje-edicion {
+  margin-top: 15px;
+  color: #b00020;
+}
+
+#mensaje-edicion:empty {
+  display: none;
+}
+
+.acciones-edicion {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.acciones-edicion button {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancelar-edicion {
+  background: #e5e5e5;
+  color: #333;
+}
+
+.btn-guardar-edicion {
+  background: #005a9c;
+  color: #fff;
+}
+
+.btn-guardar-edicion:hover {
+  background: #003f70;
+}
+
+.btn-guardar-edicion:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+
+/* ============================================================
+   DISEÑO RESPONSIVO
+   ============================================================ */
+
+/* Tablets */
+@media (max-width: 768px) {
+  .modal-editar-equipo {
+    width: 94%;
+    padding: 24px;
+  }
+
+  .grid-edicion {
+    column-gap: 15px;
+    row-gap: 18px;
+  }
+
+  #editar-imagen-preview {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+  .modal-editar-equipo {
+    width: 95%;
+    max-height: 95vh;
+    max-height: 95dvh;
+    padding: 18px;
+  }
+
+  .modal-encabezado h2 {
+    font-size: 20px;
+  }
+
+  .grid-edicion {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .seccion-imagen-edicion {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+
+    padding: 15px;
+  }
+
+  #editar-imagen-preview {
+    width: 150px;
+    height: 150px;
+    align-self: center;
+  }
+
+  .acciones-edicion {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .acciones-edicion button {
+    width: 100%;
+  }
+}
+
+
 /* Responsividad */
 @media (max-width: 1024px) {
   .equipos-grid {

@@ -73,6 +73,12 @@ public class EquipoInventarioService {
             "PRESTAMO"
     );
 
+    private static final Set<String> TIPOS_EQUIPO = Set.of(
+            "Equipo de Comunicación",
+            "Equipo de Cómputo",
+            "Periféricos"
+    );
+
     /**
      * Cantidad máxima de equipos por página.
      */
@@ -152,10 +158,10 @@ public class EquipoInventarioService {
         String textoNormalizado = textoBusqueda.trim();
 
         List<EquipoInventarioModel> equipos = EIR.buscarEquipos(
-                        textoNormalizado,
-                        LIMITE,
-                        offset
-                );
+                textoNormalizado,
+                LIMITE,
+                offset
+        );
 
         int total = EIR.contarEquiposBusqueda(textoNormalizado);
         return new EquipoInventarioResponse(equipos, total);
@@ -194,14 +200,14 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("El número de inventario es obligatorio.");
         }
 
-        int noInventarioIgual = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario() );
+        int noInventarioIgual = EIR.verificarNumeroInventarioExistente(equipo.getNumeroInventario());
 
         if (noInventarioIgual > 0) {
             throw new IllegalArgumentException("El número de inventario ya existe en la base de datos.");
         }
 
         if (!equipo.getNumeroInventario().matches(CARACTERES_IDENTIFICADORES)) {
-            throw new IllegalArgumentException( "El número de inventario contiene caracteres no permitidos.");
+            throw new IllegalArgumentException("El número de inventario contiene caracteres no permitidos.");
         }
 
         if (equipo.getNoSerial() != null && !equipo.getNoSerial().isEmpty() && !equipo.getNoSerial().matches(CARACTERES_TEXTO)) {
@@ -218,12 +224,12 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("La marca contiene caracteres no permitidos.");
         }
 
-        if (equipo.getModelo() != null && !equipo.getModelo().isEmpty()&& !equipo.getModelo().matches(CARACTERES_TEXTO)) {
+        if (equipo.getModelo() != null && !equipo.getModelo().isEmpty() && !equipo.getModelo().matches(CARACTERES_TEXTO)) {
             throw new IllegalArgumentException("El modelo contiene caracteres no permitidos.");
         }
 
         if (equipo.getEstadoOperativo() == null || equipo.getEstadoOperativo().isBlank()) {
-            throw new IllegalArgumentException( "El estado operativo es obligatorio.");
+            throw new IllegalArgumentException("El estado operativo es obligatorio.");
         }
 
         if (!ESTADOS_OPERATIVOS.contains(equipo.getEstadoOperativo())) {
@@ -236,7 +242,7 @@ public class EquipoInventarioService {
         }
 
         if (!UBICACIONES.contains(equipo.getUbicacion())) {
-            throw new IllegalArgumentException("La ubicación proporcionada no es válida." );
+            throw new IllegalArgumentException("La ubicación proporcionada no es válida.");
         }
 
         if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isBlank()) {
@@ -246,4 +252,87 @@ public class EquipoInventarioService {
         // Registrar equipo
         EIR.registrarEquipo(equipo);
     }
+
+    /**
+     * Valida y actualiza la información editable de un equipo.
+     *
+     * @param numeroInventario identificador del equipo.
+     * @param equipo información que se desea actualizar.
+     * @return true si se actualizó; false si no existe.
+     */
+    public boolean actualizarEquipoService(String numeroInventario, EquipoInventarioModel equipo) {
+
+        if (numeroInventario == null || numeroInventario.isBlank()) {
+            throw new IllegalArgumentException("El número de inventario es obligatorio.");
+        }
+
+        numeroInventario = numeroInventario.trim();
+
+        if (equipo == null) {
+            throw new IllegalArgumentException("La información del equipo es obligatoria.");
+        }
+
+        if (equipo.getNumeroInventario() != null && !numeroInventario.equals(equipo.getNumeroInventario())) {
+            throw new IllegalArgumentException("No se permite modificar el número de inventario.");
+        }
+
+        // Comprobar que el equipo exista.
+        EquipoInventarioModel equipoActual = EIR.obtenerEquipoPorNumeroInventario(numeroInventario);
+
+        if (equipoActual == null) {
+            return false;
+        }
+
+        // Validar tipo de equipo.
+        if (equipo.getTipoEquipo() == null || !TIPOS_EQUIPO.contains(equipo.getTipoEquipo())) {
+            throw new IllegalArgumentException("El tipo de equipo proporcionado no es válido.");
+        }
+
+        // Validar ubicación.
+        if (equipo.getUbicacion() == null || !UBICACIONES.contains(equipo.getUbicacion())) {
+            throw new IllegalArgumentException("La ubicación proporcionada no es válida.");
+        }
+
+        // Validar número de activo.
+        if (equipo.getNumeroActivo() != null && !equipo.getNumeroActivo().isBlank() && !equipo.getNumeroActivo()
+                        .matches(CARACTERES_IDENTIFICADORES)) {
+            throw new IllegalArgumentException("El número de activo contiene caracteres no permitidos.");
+        }
+
+        // Validar marca y modelo.
+        if (equipo.getMarca() != null && !equipo.getMarca().isBlank() && !equipo.getMarca().matches(CARACTERES_TEXTO)) {
+            throw new IllegalArgumentException("La marca contiene caracteres no permitidos.");
+        }
+
+        if (equipo.getModelo() != null && !equipo.getModelo().isBlank() && !equipo.getModelo().matches(CARACTERES_TEXTO)) {
+            throw new IllegalArgumentException("El modelo contiene caracteres no permitidos.");
+        }
+
+        // Validar número de serie.
+        String noSerial = equipo.getNoSerial();
+
+        if (noSerial != null && !noSerial.isBlank()) {
+
+            if (!noSerial.matches(CARACTERES_TEXTO)) {
+                throw new IllegalArgumentException("El número de serie contiene caracteres no permitidos.");
+            }
+
+            if (EIR.verificarNumeroSerieOtroEquipo(noSerial, numeroInventario) > 0) {
+                throw new IllegalArgumentException( "El número de serie ya pertenece a otro equipo.");
+            }
+        }
+
+        // Validar la URL de una imagen nueva.
+        if (equipo.getUrlImagen() != null) {
+            String prefijoImagen = "https://idsdkpdonldeaqrfcttq.supabase.co/" + "storage/v1/object/public/equipos_inventario/";
+
+            if (!equipo.getUrlImagen().startsWith(prefijoImagen) || equipo.getUrlImagen().length() <= prefijoImagen.length()) {
+                throw new IllegalArgumentException("La URL de la imagen no es válida.");
+            }
+        }
+
+        // Actualizar solo los atributos permitidos.
+        return EIR.actualizarEquipo(numeroInventario, equipo) > 0;
+    }
+
 }

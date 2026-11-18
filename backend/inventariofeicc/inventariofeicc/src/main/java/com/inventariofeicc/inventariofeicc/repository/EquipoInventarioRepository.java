@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.inventariofeicc.inventariofeicc.model.EquipoInventarioModel;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * Repositorio MyBatis para la persistencia y consulta de equipos de inventario.
@@ -213,4 +214,53 @@ public interface EquipoInventarioRepository {
     int contarEquiposActivosBusqueda(
             @Param("textoBusqueda") String textoBusqueda
     );
+
+    /**
+     * Verifica si un número de serie pertenece a otro equipo.
+     *
+     * @param noSerial número de serie que se desea validar.
+     * @param numeroInventario identificador del equipo actual.
+     * @return cantidad de equipos que utilizan ese número de serie.
+     */
+    @Select("""
+    SELECT COUNT(*)
+    FROM inventariofei.equipo_inventario
+    WHERE no_serial = #{noSerial}
+      AND numero_inventario <> #{numeroInventario}
+    """)
+    int verificarNumeroSerieOtroEquipo(
+            @Param("noSerial") String noSerial,
+            @Param("numeroInventario") String numeroInventario
+    );
+
+    /**
+     * Actualiza la información editable de un equipo.
+     *
+     * No modifica el número de inventario, estado operativo ni fecha de
+     * registro.
+     *
+     * @param numeroInventario identificador del equipo.
+     * @param equipo información actualizada.
+     * @return cantidad de registros modificados.
+     */
+    @Update("""
+    UPDATE inventariofei.equipo_inventario
+    SET
+        tipo_equipo = #{equipo.tipoEquipo},
+        marca = #{equipo.marca},
+        modelo = #{equipo.modelo},
+        no_serial = #{equipo.noSerial},
+        descripcion = #{equipo.descripcion},
+        ubicacion = #{equipo.ubicacion}::inventariofei.tipo_ubicacion,
+        url_imagen = COALESCE(
+            #{equipo.urlImagen},
+            url_imagen
+        )
+    WHERE numero_inventario = #{numeroInventario}
+    """)
+    int actualizarEquipo(
+            @Param("numeroInventario") String numeroInventario,
+            @Param("equipo") EquipoInventarioModel equipo
+    );
+
 }

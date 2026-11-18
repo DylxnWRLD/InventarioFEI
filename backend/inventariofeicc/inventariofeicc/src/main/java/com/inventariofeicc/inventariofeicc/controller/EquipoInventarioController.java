@@ -12,6 +12,7 @@ import com.inventariofeicc.inventariofeicc.model.EquipoInventarioResponse;
 import com.inventariofeicc.inventariofeicc.service.EquipoInventarioService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -133,6 +134,37 @@ public class EquipoInventarioController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Ocurrió un error al obtener el equipo.");
+        }
+    }
+
+    /**
+     * Actualiza los datos editables de un equipo.
+     *
+     * @param numeroInventario identificador del equipo.
+     * @param equipo información actualizada.
+     * @return resultado de la operación.
+     */
+    @PutMapping("/Equipos/{numeroInventario}")
+    public ResponseEntity<?> actualizarEquipo(@PathVariable String numeroInventario, @RequestBody EquipoInventarioModel equipo) {
+
+        try {
+            boolean actualizado = EIS.actualizarEquipoService(numeroInventario, equipo);
+
+            if (!actualizado) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok("Equipo actualizado correctamente: " + numeroInventario);
+
+        } catch (IllegalArgumentException iae) {
+            return ResponseEntity.badRequest()
+                    .body(iae.getMessage());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ResponseEntity.internalServerError()
+                    .body("Ocurrió un error al actualizar el equipo.");
         }
     }
 
