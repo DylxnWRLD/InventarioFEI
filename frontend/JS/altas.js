@@ -2,7 +2,7 @@ const SUPABASE_URL = 'https://idsdkpdonldeaqrfcttq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkc2RrcGRvbmxkZWFxcmZjdHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMDMzMjIsImV4cCI6MjEwNTU3OTMyMn0.-II-i_C9dpKSqleN1E15eAiOQw_HVQA32gly2SPlN5M';
 const BUCKET_NAME = 'equipos_inventario';
 
-const IMAGEN_PREDETERMINADA = 'https://idsdkpdonldeaqrfcttq.supabase.co/storage/v1/object/public/equipos_inventario/equipos/defecto.png';
+const IMAGEN_PREDETERMINADA = 'https://idsdkpdonldeaqrfcttq.supabase.co/storage/v1/object/public/equipos_inventario/equipos/defecto2.png';
 
 const API_BASE = 'https://inventariofeicc-api.onrender.com/InventarioFEI';
 
