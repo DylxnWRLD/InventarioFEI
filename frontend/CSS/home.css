@@ -240,7 +240,10 @@ body {
   border-radius: 15px;
   color: #fff;
   font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
+  margin-left: 140px;
+
 }
 
 .btn-baja {
