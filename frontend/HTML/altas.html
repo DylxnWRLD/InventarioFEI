@@ -171,7 +171,7 @@
             <option value="" disabled selected>
               Selecciona una opción
             </option>
-            
+
             <option value="ACTIVO">Activo</option>
 
             <option value="EN_PROCESO_DE_BAJA">
@@ -194,48 +194,36 @@
 
     </aside>
 
+
     <!-- Panel derecho -->
     <section class="registro-main">
 
       <div class="upload-card">
 
-        <!-- Iconos iniciales -->
-        <div id="placeholder-iconos" class="upload-icon-container">
-          <svg class="plus-svg" viewBox="0 0 24 24">
-            <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z" />
-          </svg>
+        <!-- Vista previa con imagen predeterminada -->
+        <img id="preview-imagen" src="../images/noEncontrado.png" alt="Vista previa del equipo"
+          style="display: block;" />
 
-          <svg class="camera-svg" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="3.2" fill="#fff" />
-
-            <path
-              d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" />
-          </svg>
-        </div>
-
-        <!-- Vista previa -->
-        <img id="preview-imagen" src="" alt="Vista previa del equipo" style="display: none;" />
-
-        <!-- Input oculto -->
-        <input type="file" id="input-imagen" accept="image/*" style="display: none;" />
+        <!-- Input oculto para seleccionar imagen -->
+        <input type="file" id="input-imagen" accept=".jpg,.jpeg,.png,.webp" style="display: none;" />
 
         <!-- URL de Supabase -->
         <input type="hidden" id="url-imagen-supabase" />
 
-        <!-- Botón subir -->
+        <!-- Botón para seleccionar o cambiar imagen -->
         <button type="button" id="btn-trigger-upload" class="btn-subir-imagen">
-          SUBIR IMAGEN
+          CAMBIAR IMAGEN
         </button>
 
       </div>
 
-
-      <!-- Botón guardar -->
+      <!-- Botón guardar equipo -->
       <button type="button" id="btn-guardar-equipo" class="btn-guardar-equipo">
         GUARDAR EQUIPO
       </button>
 
     </section>
+
 
   </main>
 

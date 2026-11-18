@@ -2,6 +2,8 @@ const SUPABASE_URL = 'https://idsdkpdonldeaqrfcttq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkc2RrcGRvbmxkZWFxcmZjdHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMDMzMjIsImV4cCI6MjEwNTU3OTMyMn0.-II-i_C9dpKSqleN1E15eAiOQw_HVQA32gly2SPlN5M';
 const BUCKET_NAME = 'equipos_inventario';
 
+const IMAGEN_PREDETERMINADA = 'https://idsdkpdonldeaqrfcttq.supabase.co/storage/v1/object/public/equipos_inventario/equipos/defecto.png';
+
 const API_BASE = 'https://inventariofeicc-api.onrender.com/InventarioFEI';
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -9,37 +11,68 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const btnSubir = document.getElementById('btn-trigger-upload');
 const inputImagen = document.getElementById('input-imagen');
 const imgPreview = document.getElementById('preview-imagen');
-const iconosUpload = document.getElementById('placeholder-iconos');
-const inputUrlSupabase = document.getElementById('url-imagen-supabase');
+imgPreview.src = IMAGEN_PREDETERMINADA;
+imgPreview.style.display = 'block';
+
 const btnGuardar = document.getElementById('btn-guardar-equipo');
 
-let archivoSeleccionado = null;
 
+let archivoSeleccionado = null;
+let urlPreview = null;
+
+// Abrir explorador de archivos.
 btnSubir.addEventListener('click', () => {
   inputImagen.click();
 });
 
+// Selección y vista previa de imagen.
 inputImagen.addEventListener('change', (event) => {
   const archivo = event.target.files[0];
   if (!archivo) return;
 
-  if (!archivo.type.startsWith('image/')) {
-    alert('Selecciona un archivo de imagen válido.');
+  const formatosPermitidos = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ];
+
+  // Validar formato y tamaño.
+  if (!formatosPermitidos.includes(archivo.type) ||
+      archivo.size > 5 * 1024 * 1024) {
+
+    alert('Solo se permiten imágenes JPG, PNG y WebP de máximo 5 MB.');
+
+    archivoSeleccionado = null;
     inputImagen.value = '';
+
+    // Liberar vista previa anterior.
+    if (urlPreview) {
+      URL.revokeObjectURL(urlPreview);
+      urlPreview = null;
+    }
+
+    // Restaurar imagen predeterminada.
+    imgPreview.src = IMAGEN_PREDETERMINADA;
+    btnSubir.textContent = 'CAMBIAR IMAGEN';
     return;
   }
 
   archivoSeleccionado = archivo;
 
-  imgPreview.src = URL.createObjectURL(archivo);
-  imgPreview.style.display = 'block';
-
-  if (iconosUpload) {
-    iconosUpload.style.display = 'none';
+  // Liberar URL anterior si existe.
+  if (urlPreview) {
+    URL.revokeObjectURL(urlPreview);
   }
+
+  // Crear nueva vista previa.
+  urlPreview = URL.createObjectURL(archivo);
+  imgPreview.src = urlPreview;
+  imgPreview.style.display = 'block';
 
   btnSubir.textContent = 'CAMBIAR IMAGEN';
 });
+
+
 
 async function subirImagen() {
   if (!archivoSeleccionado) return null;
@@ -102,7 +135,7 @@ if (btnGuardar) {
         descripcion,
         ubicacion,
         estadoOperativo,
-        urlImagen: imagenSubida?.url || null
+        urlImagen: imagenSubida?.url || IMAGEN_PREDETERMINADA
       };
 
       const response = await fetch(`${API_BASE}/Alta/Equipo`, {

@@ -1,3 +1,12 @@
+const SUPABASE_URL = 'https://idsdkpdonldeaqrfcttq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlkc2RrcGRvbmxkZWFxcmZjdHRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAwMDMzMjIsImV4cCI6MjEwNTU3OTMyMn0.-II-i_C9dpKSqleN1E15eAiOQw_HVQA32gly2SPlN5M';
+const BUCKET_NAME = 'equipos_inventario';
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
 // Página que se está mostrando actualmente
 let paginaActual = 1;
 
@@ -124,13 +133,109 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   });
 
+
+  /* ============================================================
+   * GUARDAR CAMBIOS DEL EQUIPO
+   * ============================================================ */
+
   document.getElementById('form-editar-equipo')
-    .addEventListener('submit', (e) => {
+    .addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      document.getElementById('mensaje-edicion').textContent =
-        'El guardado estará disponible al implementar la actualización en la API.';
+      const modal = document.getElementById('modal-editar-equipo');
+      const mensaje = document.getElementById('mensaje-edicion');
+      const botonGuardar = document.getElementById('btn-guardar-edicion');
+
+      if (botonGuardar.disabled) return;
+
+      const numeroInventario =
+        document.getElementById('editar-numero-inventario').value;
+
+      const archivoImagen =
+        document.getElementById('editar-imagen').files[0];
+
+      // Recopilar los campos editables.
+      const equipoActualizado = {
+        tipoEquipo: document.getElementById('editar-tipo-equipo').value,
+        marca: document.getElementById('editar-marca').value.trim(),
+        modelo: document.getElementById('editar-modelo').value.trim(),
+        noSerial: document.getElementById('editar-serial').value.trim(),
+        descripcion: document.getElementById('editar-descripcion').value.trim(),
+        ubicacion: document.getElementById('editar-ubicacion').value,
+        urlImagen: null
+      };
+
+      botonGuardar.disabled = true;
+      botonGuardar.textContent = 'GUARDANDO...';
+      mensaje.textContent = '';
+
+      let imagenSubida = null;
+      let respuestaConfirmada = false;
+
+      try {
+        // 1. Subir imagen únicamente si seleccionó una nueva.
+        if (archivoImagen) {
+          imagenSubida = await subirImagenEdicion(archivoImagen);
+          equipoActualizado.urlImagen = imagenSubida.url;
+        }
+
+        // 2. Actualizar el equipo en PostgreSQL.
+        const response = await fetch(
+          `${API_BASE}/Equipos/${encodeURIComponent(numeroInventario)}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(equipoActualizado)
+          }
+        );
+
+        // 3. Si el servidor rechaza la actualización, eliminar la imagen recién subida.
+        if (!response.ok) {
+          respuestaConfirmada = true;
+          const errorTexto = await response.text();
+          throw new Error(errorTexto || `Error HTTP ${response.status}`);
+        }
+
+        // 4. Confirmar que el equipo se actualizó.
+        modal.close();
+        alert('Equipo actualizado correctamente.');
+
+        // 5. Actualizar el listado.
+        if (terminoBusqueda) {
+          await buscarEquipos(paginaActual);
+        } else {
+          await cargarEquipos(paginaActual);
+        }
+
+      } catch (error) {
+        console.error('Error durante la actualización:', error);
+
+        // Eliminar una imagen nueva solo cuando sabemos que el servidor rechazó la actualización.
+        if (imagenSubida && respuestaConfirmada) {
+          const { error: errorEliminar } = await supabaseClient.storage
+            .from(BUCKET_NAME)
+            .remove([imagenSubida.path]);
+
+          if (errorEliminar) {
+            console.error(
+              'No se pudo eliminar la imagen nueva:',
+              errorEliminar
+            );
+          }
+        }
+
+        if (modal.open) {
+          mensaje.textContent = error.message;
+        }
+
+      } finally {
+        botonGuardar.disabled = false;
+        botonGuardar.textContent = 'GUARDAR CAMBIOS';
+      }
     });
+
 
 
 });
@@ -473,3 +578,51 @@ async function editarEquipo(numeroInventario) {
     alert('No fue posible cargar la información del equipo.');
   }
 }
+
+
+/**
+ * Sube una nueva imagen a Supabase Storage.
+ *
+ * @param {File} archivo archivo seleccionado.
+ * @returns {Promise<{url: string, path: string}>}
+ */
+async function subirImagenEdicion(archivo) {
+  const extensiones = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/webp': 'webp'
+  };
+
+  const extension = extensiones[archivo.type];
+
+  if (!extension || archivo.size > 5 * 1024 * 1024) {
+    throw new Error(
+      'La imagen debe ser JPG, PNG o WebP y no superar 5 MB.'
+    );
+  }
+
+  const nombreArchivo = `${crypto.randomUUID()}.${extension}`;
+  const rutaArchivo = `equipos/${nombreArchivo}`;
+
+  const { error } = await supabaseClient.storage
+    .from(BUCKET_NAME)
+    .upload(rutaArchivo, archivo, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: archivo.type
+    });
+
+  if (error) {
+    throw new Error(`Error al subir la imagen: ${error.message}`);
+  }
+
+  const { data } = supabaseClient.storage
+    .from(BUCKET_NAME)
+    .getPublicUrl(rutaArchivo);
+
+  return {
+    url: data.publicUrl,
+    path: rutaArchivo
+  };
+}
+
