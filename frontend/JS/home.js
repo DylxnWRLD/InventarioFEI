@@ -161,6 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
         noSerial: document.getElementById('editar-serial').value.trim(),
         descripcion: document.getElementById('editar-descripcion').value.trim(),
         ubicacion: document.getElementById('editar-ubicacion').value,
+        // Un input de fecha vacío se envía como null (no como cadena vacía).
+        fechaRegistro: document.getElementById('editar-fecha-registro').value.trim() || null,
         urlImagen: null
       };
 
@@ -180,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. Actualizar el equipo en PostgreSQL.
         const response = await fetch(
-          `${API_BASE}/Equipos/${encodeURIComponent(numeroInventario)}`,
+          `${API_BASE}/Equipos/Editar/${encodeURIComponent(numeroInventario)}`,
           {
             method: 'PUT',
             headers: {
@@ -544,7 +546,7 @@ async function mostrarDetalle(numeroInventario) {
     document.getElementById('editar-estado').value =
       equipo.estadoOperativo ?? '';
 
-    // Fecha de registro (no editable).
+    // Fecha de registro (editable; vacía = null).
     document.getElementById('editar-fecha-registro').value =
       equipo.fechaRegistro
         ? String(equipo.fechaRegistro).substring(0, 10)
@@ -560,84 +562,13 @@ async function mostrarDetalle(numeroInventario) {
 
     imagen.src = equipo.urlImagen || './images/noEncontrado.png';
 
-    // Mostrar el modal.
+    // Mostrar el modal. El guardado lo maneja el submit del formulario.
     modal.showModal();
-
-    let btnEditar = modal.getElementById('btn-guardar-edicion');
-    if (btnEditar) {
-      btnEditar.addEventListener('click', async () => {
-        await editarEquipo(
-          equipo.numeroInventario,
-          document.getElementById('editar-tipo-equipo').value,
-          document.getElementById('editar-marca').value.trim(),
-          document.getElementById('editar-modelo').value.trim(),
-          document.getElementById('editar-serial').value.trim(),
-          document.getElementById('editar-descripcion').value.trim(),
-          document.getElementById('editar-ubicacion').value,
-          document.getElementById('editar-fecha-registro').value,
-          equipo.urlImagen,
-          document.getElementById('editar-imagen').files[0]
-        );
-      }, { once: true });
-    }
 
   } catch (error) {
     console.error('Error al consultar el equipo:', error);
     alert('No fue posible cargar la información del equipo.');
   }
-}
-
-/**
- * Edita un equipo existente en la base de datos desde el modal.
- * 
- * @param {*} numeroInvetario 
- * @param {*} tipoEquipo 
- * @param {*} marca 
- * @param {*} modelo 
- * @param {*} noSerial 
- * @param {*} descripcion 
- * @param {*} ubicacion 
- * @param {*} fechaRegistro 
- * @param {*} imagen 
- * @param {*} archivo 
- */
-async function editarEquipo(numeroInvetario, tipoEquipo, marca, modelo, noSerial, descripcion, ubicacion, fechaRegistro, imagen, archivo) {
-  let imagenSubida = null;
-
-  try {
-      imagenSubida = await subirImagenEdicion(archivo);
-
-      const equipoEditar = {
-        tipoEquipo,
-        marca,
-        modelo,
-        noSerial,
-        descripcion,
-        ubicacion,
-        fechaRegistro,
-        urlImagen: imagenSubida?.url || imagen
-      };
-
-      const response = await fetch(`${API_BASE}/Equipo/Editar/${numeroInvetario}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(equipoEditar)
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || `Error ${response.status}`);
-      }
-
-      console.log('¡Equipo editado con éxito!');
-      window.location.href = '/';
-
-    } catch (error) {
-      console.error('Error al guardar el equipo:', error);
-      alert('No se pudo guardar el equipo: ' + error.message);
-    }
 }
 
 /**
