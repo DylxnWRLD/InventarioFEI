@@ -104,6 +104,8 @@ async function subirImagen() {
 if (btnGuardar) {
   btnGuardar.addEventListener('click', async () => {
     const numeroInventario = document.getElementById('numero-inventario')?.value.trim();
+    // Un valor vacío se envía como null (no como cadena vacía).
+    const numeroActivo = document.getElementById('numero-activo')?.value.trim() || null;
     const tipoEquipo = document.getElementById('tipo-equipo')?.value;
     const marca = document.getElementById('marca-equipo')?.value.trim();
     const modelo = document.getElementById('modelo-equipo')?.value.trim();
@@ -130,6 +132,7 @@ if (btnGuardar) {
 
       const nuevoEquipo = {
         numeroInventario,
+        numeroActivo,
         tipoEquipo,
         marca,
         modelo,

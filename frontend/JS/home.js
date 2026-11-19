@@ -95,9 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
+  // El botón estilizado abre el explorador de archivos.
+  document.getElementById('btn-seleccionar-imagen')
+    .addEventListener('click', () => {
+      document.getElementById('editar-imagen').click();
+    });
+
   // Vista previa de la nueva imagen seleccionada.
   document.getElementById('editar-imagen').addEventListener('change', (e) => {
     const archivo = e.target.files[0];
+    const botonImagen = document.getElementById('btn-seleccionar-imagen');
     if (!archivo) return;
 
     const formatosPermitidos = [
@@ -112,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
       mensaje.textContent =
         'Solo se permiten imágenes JPG, JPEG, PNG y WebP.';
       e.target.value = '';
+      botonImagen.textContent = 'Seleccionar imagen';
       return;
     }
 
@@ -120,10 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
       mensaje.textContent =
         'La imagen no puede superar los 5 MB.';
       e.target.value = '';
+      botonImagen.textContent = 'Seleccionar imagen';
       return;
     }
 
     mensaje.textContent = '';
+    botonImagen.textContent = 'Cambiar imagen';
 
     const imagen = document.getElementById('editar-imagen-preview');
     imagen.src = URL.createObjectURL(archivo);
@@ -155,6 +165,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Recopilar los campos editables.
       const equipoActualizado = {
+        // Un valor vacío se envía como null (no como cadena vacía).
+        numeroActivo: document.getElementById('editar-numero-activo').value.trim() || null,
         tipoEquipo: document.getElementById('editar-tipo-equipo').value,
         marca: document.getElementById('editar-marca').value.trim(),
         modelo: document.getElementById('editar-modelo').value.trim(),
@@ -434,7 +446,7 @@ function renderizarEquipos(equipos, contenedor) {
 
         <div class="equipo-botones">
           <button type="button" class="btn-editar">
-            Detalle
+            Editar equipo
         </button>
         </div>
       </div>
@@ -489,6 +501,51 @@ function escapeHtml(str) {
  * ============================================================ */
 
 /**
+ * Selecciona la opción correspondiente de un combo.
+ *
+ * Compara ignorando acentos, mayúsculas y espacios. Si el valor guardado en la
+ * base de datos no existe entre las opciones, lo agrega para que no aparezca
+ * en blanco y no se pierda al guardar.
+ *
+ * @param {HTMLSelectElement} select - Combo donde se hará la selección.
+ * @param {string} valor - Valor obtenido del equipo.
+ */
+function seleccionarOpcion(select, valor) {
+  const normalizar = (texto) => String(texto)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
+  // Quitar opciones agregadas en aperturas anteriores.
+  select.querySelectorAll('option[data-dinamica]')
+    .forEach((opcion) => opcion.remove());
+
+  if (!valor) {
+    select.value = '';
+    return;
+  }
+
+  const buscado = normalizar(valor);
+  const coincidencia = Array.from(select.options).find((opcion) =>
+    normalizar(opcion.value) === buscado ||
+    normalizar(opcion.textContent) === buscado
+  );
+
+  if (coincidencia) {
+    select.value = coincidencia.value;
+    return;
+  }
+
+  const opcion = document.createElement('option');
+  opcion.value = valor;
+  opcion.textContent = valor;
+  opcion.dataset.dinamica = 'true';
+  select.appendChild(opcion);
+  select.value = valor;
+}
+
+/**
  * Consulta la información de un equipo y abre el modal de edición.
  *
  * @param {string} numeroInventario - Identificador del equipo.
@@ -504,6 +561,8 @@ async function mostrarDetalle(numeroInventario) {
   try {
     formulario.reset();
     mensaje.textContent = '';
+    document.getElementById('btn-seleccionar-imagen').textContent =
+      'Seleccionar imagen';
 
     // Consultar el equipo seleccionado.
     const response = await fetch(
@@ -524,8 +583,10 @@ async function mostrarDetalle(numeroInventario) {
     document.getElementById('editar-numero-activo').value =
       equipo.numeroActivo ?? '';
 
-    document.getElementById('editar-tipo-equipo').value =
-      equipo.tipoEquipo ?? '';
+    seleccionarOpcion(
+      document.getElementById('editar-tipo-equipo'),
+      equipo.tipoEquipo
+    );
 
     document.getElementById('editar-marca').value =
       equipo.marca ?? '';

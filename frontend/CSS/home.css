@@ -423,10 +423,41 @@ body {
   min-width: 0;
 }
 
-.contenedor-input-imagen input {
-  display: block;
-  max-width: 100%;
+/* El input se oculta y se dispara mediante el botón estilizado. */
+.input-imagen-edicion {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.btn-seleccionar-imagen {
+  display: inline-block;
   margin: 10px 0;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 25px;
+  background-color: #0068b7;
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-seleccionar-imagen:hover {
+  opacity: 0.9;
+}
+
+.btn-seleccionar-imagen:focus-visible {
+  outline: 2px solid #005a9c;
+  outline-offset: 2px;
 }
 
 /* Campos */

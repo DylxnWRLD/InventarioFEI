@@ -107,6 +107,7 @@ public interface EquipoInventarioRepository {
     @Insert("""
         INSERT INTO inventariofei.equipo_inventario (
             numero_inventario,
+            numero_activo,
             marca,
             no_serial,
             modelo,
@@ -118,6 +119,7 @@ public interface EquipoInventarioRepository {
             fecha_registro
         ) VALUES (
             #{equipo.numero_inventario},
+            #{equipo.numeroActivo},
             #{equipo.marca},
             #{equipo.no_serial},
             #{equipo.modelo},
@@ -238,8 +240,9 @@ public interface EquipoInventarioRepository {
     /**
      * Actualiza la información editable de un equipo.
      *
-     * No modifica el número de inventario ni el estado operativo. Si la fecha
-     * de registro llega null queda guardada como NULL en la base de datos.
+     * No modifica el número de inventario ni el estado operativo. Si el número
+     * de activo o la fecha de registro llegan null quedan guardados como NULL
+     * en la base de datos.
      *
      * @param numeroInventario identificador del equipo.
      * @param equipo información actualizada.
@@ -247,6 +250,7 @@ public interface EquipoInventarioRepository {
     @Update("""
     UPDATE inventariofei.equipo_inventario
     SET
+        numero_activo = #{equipo.numeroActivo},
         tipo_equipo = #{equipo.tipoEquipo},
         marca = #{equipo.marca},
         modelo = #{equipo.modelo},

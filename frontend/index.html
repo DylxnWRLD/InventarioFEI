@@ -99,7 +99,11 @@
         <div class="contenedor-input-imagen">
           <label for="editar-imagen">Imagen del equipo</label>
 
-          <input type="file" id="editar-imagen" accept=".jpg,.jpeg,.png,.webp">
+          <input type="file" id="editar-imagen" class="input-imagen-edicion" accept=".jpg,.jpeg,.png,.webp">
+
+          <button type="button" id="btn-seleccionar-imagen" class="btn-seleccionar-imagen">
+            Seleccionar imagen
+          </button>
 
           <small>
             Formatos permitidos: JPG, JPEG, PNG y WebP.
@@ -136,7 +140,11 @@
             Número de activo
           </label>
 
-          <input type="text" id="editar-numero-activo" placeholder="Número de activo" readonly>
+          <input type="text" id="editar-numero-activo" placeholder="Número de activo">
+
+          <small>
+            Opcional. Si se deja vacío se guardará como nulo.
+          </small>
         </div>
 
         <!-- Tipo de equipo -->

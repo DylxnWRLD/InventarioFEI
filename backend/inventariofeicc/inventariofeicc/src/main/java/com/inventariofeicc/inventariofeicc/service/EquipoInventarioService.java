@@ -234,6 +234,10 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("El modelo contiene caracteres no permitidos.");
         }
 
+        if (equipo.getTipoEquipo() == null || !TIPOS_EQUIPO.contains(equipo.getTipoEquipo())) {
+            throw new IllegalArgumentException("El tipo de equipo proporcionado no es válido.");
+        }
+
         if (equipo.getEstadoOperativo() == null || equipo.getEstadoOperativo().isBlank()) {
             throw new IllegalArgumentException("El estado operativo es obligatorio.");
         }
@@ -253,6 +257,9 @@ public class EquipoInventarioService {
         if (equipo.getUrlImagen() == null || equipo.getUrlImagen().isBlank()) {
             throw new IllegalArgumentException("Se necesita una imagen para dar de alta al equipo.");
         }
+
+        // Normalizar el número de activo antes de guardarlo.
+        equipo.setNumeroActivo(normalizarNumeroActivo(equipo.getNumeroActivo()));
 
         // Registrar equipo
         EIR.registrarEquipo(equipo);
@@ -298,12 +305,6 @@ public class EquipoInventarioService {
             throw new IllegalArgumentException("La ubicación proporcionada no es válida.");
         }
 
-        // Validar número de activo.
-        if (equipo.getNumeroActivo() != null && !equipo.getNumeroActivo().isBlank() && !equipo.getNumeroActivo()
-                        .matches(CARACTERES_IDENTIFICADORES)) {
-            throw new IllegalArgumentException("El número de activo contiene caracteres no permitidos.");
-        }
-
         // Validar marca y modelo.
         if (equipo.getMarca() != null && !equipo.getMarca().isBlank() && !equipo.getMarca().matches(CARACTERES_TEXTO)) {
             throw new IllegalArgumentException("La marca contiene caracteres no permitidos.");
@@ -336,8 +337,34 @@ public class EquipoInventarioService {
             }
         }
 
+        // Normalizar el número de activo antes de guardarlo.
+        equipo.setNumeroActivo(normalizarNumeroActivo(equipo.getNumeroActivo()));
+
         // Actualizar solo los atributos permitidos.
         EIR.actualizarEquipo(numeroInventario, equipo);
+    }
+
+    /**
+     * Valida y normaliza el número de activo.
+     *
+     * Un valor vacío se convierte en null para que se guarde como NULL en la
+     * base de datos.
+     *
+     * @param numeroActivo valor ingresado por el usuario.
+     * @return el número de activo recortado o null si estaba vacío.
+     */
+    private String normalizarNumeroActivo(String numeroActivo) {
+        if (numeroActivo == null || numeroActivo.isBlank()) {
+            return null;
+        }
+
+        String valor = numeroActivo.trim();
+
+        if (!valor.matches(CARACTERES_IDENTIFICADORES)) {
+            throw new IllegalArgumentException("El número de activo contiene caracteres no permitidos.");
+        }
+
+        return valor;
     }
 
 }
