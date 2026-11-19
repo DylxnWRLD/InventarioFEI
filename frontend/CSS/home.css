@@ -438,7 +438,7 @@ body {
 
 .btn-seleccionar-imagen {
   display: inline-block;
-  margin: 10px 0;
+  margin: 10px 0 0;
   padding: 12px 30px;
   border: none;
   border-radius: 25px;
@@ -490,6 +490,11 @@ body {
   font-weight: 600;
 }
 
+.contenedor-input-imagen label {
+  display: block;
+  margin-bottom: 4px;
+}
+
 .campo-edicion input,
 .campo-edicion select,
 .campo-edicion textarea {
@@ -526,6 +531,13 @@ body {
 .contenedor-input-imagen small {
   color: #777;
   font-size: 12px;
+}
+
+/* El texto de ayuda va debajo del botón, no a su lado. */
+.contenedor-input-imagen small {
+  display: block;
+  margin-top: 10px;
+  line-height: 1.4;
 }
 
 /* Mensajes y botones */

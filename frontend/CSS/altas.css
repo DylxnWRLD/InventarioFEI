@@ -84,6 +84,11 @@
   color: white;
 }
 
+.form-group small {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
 .titulo-seccion {
   font-size: 16px;
   font-weight: 900;
