@@ -133,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   });
 
-
   /* ============================================================
    * GUARDAR CAMBIOS DEL EQUIPO
    * ============================================================ */
@@ -433,14 +432,14 @@ function renderizarEquipos(equipos, contenedor) {
 
         <div class="equipo-botones">
           <button type="button" class="btn-editar">
-            Editar
+            Detalle
         </button>
         </div>
       </div>
     `;
 
     tarjeta.querySelector('.btn-editar').addEventListener('click', () => {
-      editarEquipo(equipo.numeroInventario);
+      mostrarDetalle(equipo.numeroInventario);
     });
 
     contenedor.appendChild(tarjeta);
@@ -484,15 +483,6 @@ function escapeHtml(str) {
 }
 
 /* ============================================================
- *  ACCIONES DE TARJETA
- * ============================================================ */
-
-function solicitarBaja(numeroInventario) {
-  window.location.href = `HTML/bajas.html?numeroInventario=${encodeURIComponent(numeroInventario)}`;
-}
-
-
-/* ============================================================
  * EDICIÓN DE EQUIPOS
  * ============================================================ */
 
@@ -502,7 +492,7 @@ function solicitarBaja(numeroInventario) {
  * @param {string} numeroInventario - Identificador del equipo.
  * @returns {Promise<void>}
  */
-async function editarEquipo(numeroInventario) {
+async function mostrarDetalle(numeroInventario) {
   const modal = document.getElementById('modal-editar-equipo');
   const formulario = document.getElementById('form-editar-equipo');
   const mensaje = document.getElementById('mensaje-edicion');
@@ -573,12 +563,82 @@ async function editarEquipo(numeroInventario) {
     // Mostrar el modal.
     modal.showModal();
 
+    let btnEditar = modal.getElementById('btn-guardar-edicion');
+    if (btnEditar) {
+      btnEditar.addEventListener('click', async () => {
+        await editarEquipo(
+          equipo.numeroInventario,
+          document.getElementById('editar-tipo-equipo').value,
+          document.getElementById('editar-marca').value.trim(),
+          document.getElementById('editar-modelo').value.trim(),
+          document.getElementById('editar-serial').value.trim(),
+          document.getElementById('editar-descripcion').value.trim(),
+          document.getElementById('editar-ubicacion').value,
+          document.getElementById('editar-fecha-registro').value,
+          equipo.urlImagen,
+          document.getElementById('editar-imagen').files[0]
+        );
+      }, { once: true });
+    }
+
   } catch (error) {
     console.error('Error al consultar el equipo:', error);
     alert('No fue posible cargar la información del equipo.');
   }
 }
 
+/**
+ * Edita un equipo existente en la base de datos desde el modal.
+ * 
+ * @param {*} numeroInvetario 
+ * @param {*} tipoEquipo 
+ * @param {*} marca 
+ * @param {*} modelo 
+ * @param {*} noSerial 
+ * @param {*} descripcion 
+ * @param {*} ubicacion 
+ * @param {*} fechaRegistro 
+ * @param {*} imagen 
+ * @param {*} archivo 
+ */
+async function editarEquipo(numeroInvetario, tipoEquipo, marca, modelo, noSerial, descripcion, ubicacion, fechaRegistro, imagen, archivo) {
+  let imagenSubida = null;
+
+  try {
+      imagenSubida = await subirImagenEdicion(archivo);
+
+      const equipoEditar = {
+        tipoEquipo,
+        marca,
+        modelo,
+        noSerial,
+        descripcion,
+        ubicacion,
+        fechaRegistro,
+        urlImagen: imagenSubida?.url || imagen
+      };
+
+      const response = await fetch(`${API_BASE}/Equipo/Editar/${numeroInvetario}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(equipoEditar)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || `Error ${response.status}`);
+      }
+
+      console.log('¡Equipo editado con éxito!');
+      window.location.href = '/';
+
+    } catch (error) {
+      console.error('Error al guardar el equipo:', error);
+      alert('No se pudo guardar el equipo: ' + error.message);
+    }
+}
 
 /**
  * Sube una nueva imagen a Supabase Storage.

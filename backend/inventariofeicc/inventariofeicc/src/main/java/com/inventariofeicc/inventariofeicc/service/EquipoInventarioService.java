@@ -117,7 +117,7 @@ public class EquipoInventarioService {
     }
 
     /**
-     * Busca equipos mediante un texto de búsqueda.
+     * Busca equipos activos mediante un texto de búsqueda.
      *
      * @param textoBusqueda texto utilizado para la búsqueda.
      * @param pagina número de página solicitado.
@@ -144,6 +144,12 @@ public class EquipoInventarioService {
         return new EquipoInventarioResponse(equipos, total);
     }
 
+    /**
+     * Busca equipos mediante un texto de búsqueda.
+     * @param textoBusqueda
+     * @param pagina
+     * @return
+     */
     public EquipoInventarioResponse buscarEquipos(String textoBusqueda, int pagina) {
 
         if (pagina < 1) {
@@ -237,7 +243,6 @@ public class EquipoInventarioService {
         }
 
         if (equipo.getUbicacion() == null || equipo.getUbicacion().isBlank()) {
-
             throw new IllegalArgumentException("La ubicación es obligatoria.");
         }
 
@@ -258,9 +263,9 @@ public class EquipoInventarioService {
      *
      * @param numeroInventario identificador del equipo.
      * @param equipo información que se desea actualizar.
-     * @return true si se actualizó; false si no existe.
+     * @throws IllegalStateException si el equipo no existe.
      */
-    public boolean actualizarEquipoService(String numeroInventario, EquipoInventarioModel equipo) {
+    public void actualizarEquipoService(String numeroInventario, EquipoInventarioModel equipo) {
 
         if (numeroInventario == null || numeroInventario.isBlank()) {
             throw new IllegalArgumentException("El número de inventario es obligatorio.");
@@ -280,7 +285,7 @@ public class EquipoInventarioService {
         EquipoInventarioModel equipoActual = EIR.obtenerEquipoPorNumeroInventario(numeroInventario);
 
         if (equipoActual == null) {
-            return false;
+            throw new IllegalStateException("El equipo esta vacio o no existe");
         }
 
         // Validar tipo de equipo.
@@ -332,7 +337,7 @@ public class EquipoInventarioService {
         }
 
         // Actualizar solo los atributos permitidos.
-        return EIR.actualizarEquipo(numeroInventario, equipo) > 0;
+        EIR.actualizarEquipo(numeroInventario, equipo);
     }
 
 }

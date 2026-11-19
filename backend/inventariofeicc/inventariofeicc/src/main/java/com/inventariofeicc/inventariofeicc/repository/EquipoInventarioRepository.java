@@ -114,7 +114,8 @@ public interface EquipoInventarioRepository {
             ubicacion,
             tipo_equipo,
             estado_operativo,
-            url_imagen
+            url_imagen,
+            fecha_registro
         ) VALUES (
             #{equipo.numero_inventario},
             #{equipo.marca},
@@ -124,7 +125,8 @@ public interface EquipoInventarioRepository {
             #{equipo.ubicacion}::inventariofei.tipo_ubicacion,
             #{equipo.tipo_equipo},
             #{equipo.estado_operativo}::inventariofei.estado_operativo_equipo,
-            #{equipo.url_imagen}
+            #{equipo.url_imagen},
+            #{equipo.fechaRegistro, jdbcType=DATE}
         )
         """)
     void registrarEquipo(
@@ -236,12 +238,11 @@ public interface EquipoInventarioRepository {
     /**
      * Actualiza la información editable de un equipo.
      *
-     * No modifica el número de inventario, estado operativo ni fecha de
-     * registro.
+     * No modifica el número de inventario ni el estado operativo. Si la fecha
+     * de registro llega null queda guardada como NULL en la base de datos.
      *
      * @param numeroInventario identificador del equipo.
      * @param equipo información actualizada.
-     * @return cantidad de registros modificados.
      */
     @Update("""
     UPDATE inventariofei.equipo_inventario
@@ -255,10 +256,11 @@ public interface EquipoInventarioRepository {
         url_imagen = COALESCE(
             #{equipo.urlImagen},
             url_imagen
-        )
+        ),
+        fecha_registro = #{equipo.fechaRegistro, jdbcType=DATE}
     WHERE numero_inventario = #{numeroInventario}
     """)
-    int actualizarEquipo(
+    void actualizarEquipo(
             @Param("numeroInventario") String numeroInventario,
             @Param("equipo") EquipoInventarioModel equipo
     );

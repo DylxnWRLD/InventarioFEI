@@ -1,5 +1,6 @@
 package com.inventariofeicc.inventariofeicc.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,7 +101,7 @@ public class EquipoInventarioController {
         }
     }
 
-    @PostMapping("/Alta/Equipo")
+    @PostMapping("/Equipo/Alta")
     public ResponseEntity<?> altaEquipos(@RequestBody EquipoInventarioModel equipo) {
         try {
             EIS.registrarNuevoEquipoService(equipo);
@@ -144,27 +145,22 @@ public class EquipoInventarioController {
      * @param equipo información actualizada.
      * @return resultado de la operación.
      */
-    @PutMapping("/Equipos/{numeroInventario}")
+    @PutMapping("/Equipos/Editar/{numeroInventario}")
     public ResponseEntity<?> actualizarEquipo(@PathVariable String numeroInventario, @RequestBody EquipoInventarioModel equipo) {
 
         try {
-            boolean actualizado = EIS.actualizarEquipoService(numeroInventario, equipo);
-
-            if (!actualizado) {
-                return ResponseEntity.notFound().build();
-            }
-
+           EIS.actualizarEquipoService(numeroInventario, equipo);
             return ResponseEntity.ok("Equipo actualizado correctamente: " + numeroInventario);
 
         } catch (IllegalArgumentException iae) {
-            return ResponseEntity.badRequest()
-                    .body(iae.getMessage());
+            return ResponseEntity.badRequest().body(iae.getMessage());
+
+        } catch (IllegalStateException ise) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ise.getMessage());
 
         } catch (Exception e) {
             e.printStackTrace();
-
-            return ResponseEntity.internalServerError()
-                    .body("Ocurrió un error al actualizar el equipo.");
+            return ResponseEntity.internalServerError().body("Ocurrió un error al actualizar el equipo.");
         }
     }
 

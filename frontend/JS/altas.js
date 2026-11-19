@@ -111,6 +111,8 @@ if (btnGuardar) {
     const descripcion = document.getElementById('descripcion-equipo')?.value.trim();
     const ubicacion = document.getElementById('ubicacion-equipo')?.value;
     const estadoOperativo = document.getElementById('estado-operativo')?.value;
+    // Un input de fecha vacío se envía como null (no como cadena vacía).
+    const fechaRegistro = document.getElementById('fecha-registro')?.value.trim() || null;
 
 
     if (!numeroInventario) {
@@ -135,10 +137,11 @@ if (btnGuardar) {
         descripcion,
         ubicacion,
         estadoOperativo,
+        fechaRegistro,
         urlImagen: imagenSubida?.url || IMAGEN_PREDETERMINADA
       };
 
-      const response = await fetch(`${API_BASE}/Alta/Equipo`, {
+      const response = await fetch(`${API_BASE}/Equipo/Alta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
